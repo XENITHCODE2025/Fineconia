@@ -1,5 +1,3 @@
-Home - Díaz 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -27,17 +25,19 @@ Home - Díaz
     </div>
   </nav>
 
-  <div class="container hero">
-    <div class="row align-items-center">
-      <div class="col-md-4 text-center">
-        <!-- Imagen decorativa -->
-        <img src="familia-finanzas.jpg" alt="Imagen de bienvenida" class="img-fluid rounded">
-      </div>
-      <div class="col-md-8">
-        <h1 class="fw-bold mb-3">FINECONIA</h1>
-        <p>
-          Fineconia es un espacio pensado para que las familias aprendan juntas sobre finanzas y economía. Con un enfoque simple y accesible, promueve hábitos responsables como el ahorro, la planificación y el consumo consciente, ayudando a construir un futuro financiero más estable.
-        </p>
+  <div class="container">
+    <div class="hero">
+      <div class="row align-items-center">
+        <div class="col-md-4 text-center">
+          <!-- Imagen decorativa -->
+          <img src="familia-finanzas.jpg" alt="Imagen de bienvenida" class="img-fluid rounded">
+        </div>
+        <div class="col-md-8">
+          <h1 class="fw-bold mb-3">FINECONIA</h1>
+          <p>
+            Fineconia es un espacio pensado para que las familias aprendan juntas sobre finanzas y economía. Con un enfoque simple y accesible, promueve hábitos responsables como el ahorro, la planificación y el consumo consciente, ayudando a construir un futuro financiero más estable.
+          </p>
+        </div>
       </div>
     </div>
   </div>

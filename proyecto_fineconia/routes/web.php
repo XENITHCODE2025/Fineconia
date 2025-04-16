@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+/*
 Route::get('/resources/css/{file}', function ($file) {
     $path = resource_path('css/'.$file);
     
@@ -13,8 +13,10 @@ Route::get('/resources/css/{file}', function ($file) {
         'Content-Type' => 'text/css'
     ]);
 })->where('file', '.*\.css$');
-
+*/
 Route::get('/', function () {
-    return view('REGRISTRO');
+    return view('LOGIN');
 
 });
+
+

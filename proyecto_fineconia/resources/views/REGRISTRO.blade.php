@@ -23,25 +23,27 @@
       <!-- Formulario de Registro -->
       <div class="register-box">
         <h3>Regístrate</h3>
-        <form>
-          <input type="text" class="form-control" placeholder="Nombre" required>
-          <input type="text" class="form-control" placeholder="Apellido" required>
-          <input type="number" class="form-control" placeholder="Edad" required>
+        <form method="POST" action="{{ route('register') }}">
+          @csrf
 
-          <select class="form-select" required>
+          <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+          <input type="text" name="apellido" class="form-control" placeholder="Apellido" required>
+          <input type="number" name="edad" class="form-control" placeholder="Edad" required>
+
+          <select name="miembro" class="form-select" required>
             <option value="" disabled selected>Miembro Familiar:</option>
             <option value="padre">Padre</option>
             <option value="madre">Madre</option>
             <option value="hijo">Hijo</option>
           </select>
 
-          <input type="email" class="form-control" placeholder="Correo Electrónico" required>
+          <input type="email" name="email" class="form-control" placeholder="Correo Electrónico" required>
           <small>Recibirás un código para verificar tu cuenta</small>
 
-          <input type="password" class="form-control" placeholder="Contraseña" required>
+          <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
           <small>Mínimo 8 caracteres, incluye números y símbolos</small>
 
-          <input type="password" class="form-control" placeholder="Confirmar contraseña" required>
+          <input type="password" name="password_confirmation" class="form-control" placeholder="Confirmar contraseña" required>
 
           <button type="submit" class="btn btn-crear">CREAR</button>
         </form>

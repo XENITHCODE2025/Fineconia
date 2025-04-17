@@ -64,7 +64,7 @@ Iconos feos arreglados - Díaz
   </div>
 
   <div class="footer">
-    Ayuda | Opiniones y Sugerencias
+    Ayuda Opiniones y Sugerencias
   </div>
 </body>
 </html>

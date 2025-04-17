@@ -12,6 +12,7 @@ export default defineConfig({
                  'resources/css/Bienvenida.css',
                  'resources/css/Secciones.css',
                  'resources/css/Home.css',
+                'resources/css/GastosIngresos.css',
                  'resources/js/app.js'],
             refresh: true,
         }),

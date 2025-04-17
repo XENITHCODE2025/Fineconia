@@ -115,134 +115,102 @@ body {
     font-size: 0.9rem;
   }
   
-  /* Estilos para la página de registro */
-  .register-wrapper {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .register-wrapper .background-box {
-    background-color: #2C4E53;
-    width: 90%;
-    height: 600px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    padding: 0 40px;
-  }
-  
-  .register-wrapper .register-box {
-    background-color: #92BDC5;
-    width: 550px;
-    padding: 3rem;
-    border-radius: 12px;
-    position: absolute;
-    left: 60%;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 2;
-  }
-  
-  .register-wrapper .register-box h3 {
-    color: white;
-    margin-bottom: 2rem;
-    text-align: center;
-    font-size: 1.8rem;
-  }
-  
-  .register-wrapper .register-box .form-control, 
-  .register-wrapper .register-box .form-select {
-    border-radius: 8px;
-    margin-bottom: 1.2rem;
-    padding: 14px;
-    font-size: 1rem;
-  }
-  
-  .register-wrapper .register-box small {
-    color: #f8f9fa;
-    margin-top: -10px;
-    margin-bottom: 1.2rem;
-    display: block;
-    font-size: 0.9rem;
-  }
-  
-  .register-wrapper .btn-crear {
-    background-color: #2C4E53;
-    color: white;
-    border-radius: 8px;
-    font-weight: bold;
-    padding: 14px;
-    font-size: 1.1rem;
-    width: 100%;
-    margin-top: 1.5rem;
-    border: none;
-  }
-  
-  .register-wrapper .login-box {
-    color: white;
-    padding: 2.5rem;
-    text-align: center;
-    width: 350px;
-    position: absolute;
-    right: 55%;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .register-wrapper .login-box h5 {
-    font-size: 1.3rem;
-    margin-bottom: 1.2rem;
-  }
-  
-  .register-wrapper .login-box p {
-    margin-bottom: 1.8rem;
-    font-size: 1rem;
-  }
-  
-  .register-wrapper .btn-login {
-    background-color: white;
-    color: #2C4E53;
-    border-radius: 8px;
-    font-weight: bold;
-    padding: 12px 35px;
-    font-size: 1.1rem;
-    border: none;
-  }
-  
-  /* Estilos comunes */
-  .logo {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #2C4E53;
-  }
-  
-  .register-wrapper .logo {
-    top: 40px;
-    left: 40px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .register-wrapper .logo img {
-    height: 45px;
-  }
-  
-  .logo-text {
-    font-size: 26px;
-    font-weight: bold;
-    color: #2C4E53;
-  }
-  
-  .logo-text i {
-    color: #1A9C68;
-  }
+  /* REGISTRO */
+.register-wrapper {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-wrapper .background-box {
+  background-color: #2C4E53;
+  width: 90%;
+  height: 350px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  padding: 0 30px;
+}
+
+.register-wrapper .register-box {
+  background-color: #92BDC5;
+  width: 320px;
+  padding: 1.5rem;
+  border-radius: 10px;
+  position: absolute;
+  left: 60%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.register-wrapper .register-box h3 {
+  color: white;
+  margin-bottom: 0.8rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.register-wrapper .register-box .form-control, 
+.register-wrapper .register-box .form-select {
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+  padding: 7px;
+  font-size: 0.8rem;
+}
+
+.register-wrapper .register-box small {
+  color: #f8f9fa;
+  margin-top: -8px;
+  margin-bottom: 0.8rem;
+  display: block;
+  font-size: 0.7rem;
+}
+
+.register-wrapper .btn-crear {
+  background-color: #2C4E53;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  padding: 9px;
+  font-size: 0.85rem;
+  width: 100%;
+  margin-top: 0.8rem;
+  border: none;
+}
+
+.register-wrapper .login-box {
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  width: 250px;
+  position: absolute;
+  right: 55%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.register-wrapper .login-box h5 {
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+}
+
+.register-wrapper .login-box p {
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+}
+
+.register-wrapper .btn-login {
+  background-color: white;
+  color: #2C4E53;
+  border-radius: 6px;
+  font-weight: bold;
+  padding: 8px 22px;
+  font-size: 0.85rem;
+  border: none;
+}

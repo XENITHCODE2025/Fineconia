@@ -12,6 +12,7 @@
 <body>
 
   <!-- Logo -->
+   <!-- Logo -->
   <div class="logo">FINEC®NIA</div>
 
   <div class="login-wrapper">
@@ -42,7 +43,7 @@
         </form>
       </div>
     </div>
-  </div>1
+  </div>
 
   <!-- Bootstrap JS (opcional) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

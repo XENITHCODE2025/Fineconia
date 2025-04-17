@@ -42,7 +42,7 @@
         </form>
       </div>
     </div>
-  </div>
+  </div>1
 
   <!-- Bootstrap JS (opcional) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

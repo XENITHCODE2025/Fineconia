@@ -32,11 +32,12 @@ Verificación de código - Elena
         </div>
         <h3>Verificación de código</h3>
         <p>Por favor ingrese el código de verificación que te enviamos a tu correo</p>
-        <form id="verificationForm">
-          <label for="codigo">Código</label>
-          <input type="text" id="codigo" class="form-control" placeholder="Ingresa tu código" required>
-          <button type="submit" class="btn-verificar">Verificar</button>
-        </form>
+        <form action="{{ route('verificar.codigo') }}" method="POST">
+        @csrf
+       <label for="codigo">Código</label>
+       <input type="text" name="codigo" id="codigo" class="form-control" required>
+       <button type="submit" class="btn-verificar">Verificar</button>
+       </form>
       </div>
 
       <!-- Panel derecho con dos estados -->

@@ -1,5 +1,3 @@
-Verificación por correo - Díaz 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,7 +10,6 @@ Verificación por correo - Díaz
   <!-- Iconos Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
   @vite('resources/css/VeriCorreo.css')
- 
 </head>
 <body>
 
@@ -32,11 +29,19 @@ Verificación por correo - Díaz
         </div>
         <h3>Verificación de Código</h3>
         <p>Por favor, ingresá tu dirección de correo electrónico.<br>Te enviaremos un código de verificación a ese correo</p>
-        <form>
+        <form method="POST" action="{{ route('enviar.codigo') }}">
+
+        
+          @csrf
           <label for="email">Correo electrónico</label>
-          <input type="email" id="email" class="form-control" placeholder="Ingresa tu correo electrónico" required>
+          <input type="email" id="email" name="email" class="form-control" placeholder="Ingresa tu correo electrónico" required>
           <button type="submit" class="btn-verificar">Enviar</button>
         </form>
+        @if(session('message'))
+          <div class="alert alert-success mt-3">
+            {{ session('message') }}
+          </div>
+        @endif
       </div>
 
       <!-- Panel derecho para recuperación de contraseña -->

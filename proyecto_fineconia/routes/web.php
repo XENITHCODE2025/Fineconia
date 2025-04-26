@@ -3,31 +3,34 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-
-Route::get('/email/verify', function () {
-    return view('auth.verify-email'); // Asegurate de tener esta vista
-})->middleware('auth')->name('verification.notice');
-
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill(); // Marca como verificado
-    return redirect('/dashboard'); // o donde quieras
-})->middleware(['auth', 'signed'])->name('verification.verify');
-
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-
-    return back()->with('message', '¡Correo de verificación enviado!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\VerificationCodeController;
+use App\Http\Controllers\Auth\RegisterController;
 
 
+
+
+// Página principal muestra el registro
 Route::get('/', function () {
-    return view('REGRISTRO');
-
+    return view('REGRISTRO'); // Asumiendo que tienes esta vista en resources/views
 });
 
-Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
+// Registro de usuario
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 
-Route::get('/verificacion-correo', function () {
-    return view('verificacion_correo');
-})->name('verificacion.correo')->middleware('auth');
+
+Route::get('/login', function () {
+    return view('LOGIN'); // Asegurate de que el archivo se llame LOGIN.blade.php y esté en la carpeta resources/views
+})->name('login');
+
+Route::post('login', [LoginController::class, 'login']);
+
+
+Route::get('/verificacion-de-codigo', [VerificationCodeController::class, 'show'])->name('verificacion.codigo');
+Route::post('/verificar-codigo', [VerificationCodeController::class, 'verificar'])->name('verificar.codigo');
+
+Route::get('/bienvenida', function () {
+    return view('Bienvenida');
+})->name('bienvenida');
+

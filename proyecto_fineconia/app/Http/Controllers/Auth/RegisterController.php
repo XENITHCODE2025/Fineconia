@@ -6,14 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CodigoVerificacionMail; 
+
 use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
     public function showRegistrationForm()
     {
-        return view('auth.REGRISTRO'); // Asegurate que el archivo esté en views/auth
+        return view('REGRISTRO'); // Asegurate que el archivo esté en views/auth
     }
+    
 
     public function register(Request $request)
     {
@@ -35,7 +41,19 @@ class RegisterController extends Controller
         ]);
         
 
-        Auth::login($user);
-        return redirect('/verificacion_correo');
+        
+     // Generar código y guardarlo en base de datos
+      $codigo = Str::random(6);
+      $user->verification_code = $codigo;
+      $user->save();
+
+    // Enviar el correo con el código
+      Mail::to($user->email)->send(new CodigoVerificacionMail($codigo));
+
+    // Redirigir a la vista de verificación de código
+      return redirect()->route('verificacion.codigo');
+
+ 
+        
     }
 }

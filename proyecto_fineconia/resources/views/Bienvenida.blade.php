@@ -1,4 +1,3 @@
-Bienvenido a FINECONIA - Elena 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -46,7 +45,8 @@ Bienvenido a FINECONIA - Elena
     <div class="card">
       <div class="card-title">Finanzas Personales</div>
       <div class="card-text">Organiza tus gastos e ingresos, crea presupuestos y alcanza tus metas de ahorro.</div>
-      <button class="btn">Acceder</button>
+      <button class="btn" id="btn-finanzas-personales">Acceder</button>
+
     </div>
 
     <div class="card">
@@ -83,5 +83,14 @@ Bienvenido a FINECONIA - Elena
   <div class="footer">
     Ayuda Opiniones y Sugerencias
   </div>
+
+  <!-- Enlace a la vista de Finanzas Personales -->
+  <script>
+       document.getElementById('btn-finanzas-personales').addEventListener('click', function() {
+       window.location.href = "{{ route('finanzas.personales') }}";
+      });
+  </script>
+
+
 </body>
 </html>

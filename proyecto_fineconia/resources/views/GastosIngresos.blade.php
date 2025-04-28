@@ -16,10 +16,10 @@
     </div>
     <div class="right-side">
       <div class="nav-links">
-        <a href="#" class="nav-link">Finanzas Personales</a>
-        <a href="#" class="nav-link">Gastos e Ingresos</a>
-        <a href="#" class="nav-link">Presupuestos</a>
-        <a href="#" class="nav-link">Ahorro</a>
+        <a class="btn nav-link" id ="finanzas_personales">Finanzas Personales</a>
+        <a class="btn nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
+        <a class="btn nav-link" id="presupuestos">Presupuestos</a>
+        <a class="btn nav-link" id="ahorros">Ahorro</a>
       </div>
       <div class="user-icon"><i class="bi bi-person-circle"></i></div>
     </div>
@@ -127,6 +127,23 @@
       </tbody>
     </table>
   </section>
+
+<!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro -->
+<script>
+  document.getElementById('finanzas_personales').addEventListener('click', function() {
+    window.location.href = "{{ route('finanzas.personales') }}";
+  });
+  document.getElementById('gastos_ingresos').addEventListener('click', function() {
+    window.location.href = "{{ route('gastos-ingresos') }}";
+  })
+  document.getElementById('presupuestos').addEventListener('click', function() {
+    window.location.href = "{{ route('presupuesto') }}";
+  });
+  document.getElementById('ahorros').addEventListener('click', function() {
+    window.location.href = "{{ route('ahorro') }}";
+  });
+</script>
+
 
 </body>
 </html>

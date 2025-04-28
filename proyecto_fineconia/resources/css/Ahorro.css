@@ -1,0 +1,154 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  /* Navbar */
+  .navbar {
+    background-color: #1d4d4f;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .brand {
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .right-side {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 25px;
+  }
+
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .nav-link:hover {
+    text-decoration: underline;
+  }
+
+  .user-icon {
+    font-size: 28px;
+    color: white;
+  }
+
+  /* Encabezado */
+  .header {
+    background-color: #1f4c55;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-weight: 700;
+  }
+
+  /* Tarjetas */
+  .custom-card {
+    background-color: #2d5d63;
+    border-radius: 10px;
+    margin: 30px auto;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    max-width: 900px;
+  }
+
+  .custom-card-header {
+    background-color: #a3d4dd;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .custom-card-body {
+    padding: 20px;
+  }
+
+  .custom-btn {
+    background-color: white;
+    color: #1f4c55;
+    border-radius: 999px;
+    padding: 8px 20px;
+    border: none;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  .custom-btn:hover {
+    background-color: #e8e8e8;
+  }
+
+  /* Sección Objetivos */
+  .goal-section {
+    max-width: 900px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+  }
+
+  .goal-card {
+    background-color: #2d5d63;
+    color: white;
+    padding: 30px 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .goal-card .progress {
+    height: 10px;
+    border-radius: 10px;
+    background-color: #dcdcdc;
+    margin: 10px 0;
+  }
+
+  .goal-card .progress-bar {
+    background-color: #66d066;
+  }
+
+  .btn-goal {
+    background-color: #a3d4dd;
+    color: black;
+    font-weight: 500;
+    border-radius: 20px;
+    border: none;
+    padding: 8px 30px;
+  }
+
+  @media (max-width: 576px) {
+    .custom-card, .goal-section {
+      margin: 15px;
+    }
+    .nav-links {
+      display: none;
+    }
+  }

@@ -19,8 +19,8 @@
         <button class="btn btn-link nav-link">Quienes somos</button>
         <button class="btn btn-link nav-link">Opinión / Sugerencias</button>
         <button class="btn btn-link nav-link">Ayuda</button>
-        <button class="btn btn-custom">Registrate</button>
-        <button class="btn btn-custom">Iniciar sesión</button>
+        <button class="btn btn-custom" id = "btn-registro">Registrate</button>
+        <button class="btn btn-custom" id = "btn-login">Iniciar sesión</button>
       </div>
     </div>
   </nav>
@@ -85,5 +85,14 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>  
+    document.getElementById("btn-registro").addEventListener("click", function() {
+      window.location.href = "{{ route('register') }}";
+    }); 
+
+    document.getElementById("btn-login").addEventListener("click", function() {
+      window.location.href = "{{ route('login') }}";
+    }); 
+  </script>
 </body>
 </html>

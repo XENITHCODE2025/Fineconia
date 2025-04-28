@@ -1,4 +1,3 @@
-Iconos feos arreglados - Díaz 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -37,7 +36,7 @@ Iconos feos arreglados - Díaz
       <p class="section-text">
         Registrá tus entradas y salidas de dinero día a día. Clasificá por categorías (alimentación, transporte, ocio, etc.)
       </p>
-      <button class="btn">Acceder</button>
+      <button class="btn" id="btn-gastos-ingresos">Acceder</button>
     </div>
 
     <div class="section">
@@ -48,7 +47,7 @@ Iconos feos arreglados - Díaz
       <p class="section-text">
         Establecé cuánto querés gastar por categoría cada mes. Ajustá límites, recibí alertas si te pasás y compará tu presupuesto planificado con lo que realmente gastás.
       </p>
-      <button class="btn">Acceder</button>
+      <button class="btn" id = "btn-presupuesto">Acceder</button>
     </div>
 
     <div class="section">
@@ -59,12 +58,27 @@ Iconos feos arreglados - Díaz
       <p class="section-text">
         Fijá metas de ahorro (como un viaje o una emergencia). Seguimiento visual de tu progreso, consejos personalizados y opción de ahorrar automáticamente lo que te sobra del presupuesto.
       </p>
-      <button class="btn">Acceder</button>
+      <button class="btn" id = "btn-ahorro">Acceder</button>
     </div>
   </div>
 
   <div class="footer">
     Ayuda Opiniones y Sugerencias
   </div>
+  <!-- Enlace a la vista de Finanzas Personales -->
+  <script> 
+    document.getElementById('btn-gastos-ingresos').addEventListener('click', function() {
+      window.location.href = "{{ route('gastos-ingresos') }}";
+    });
+
+    document.getElementById('btn-presupuesto').addEventListener('click', function() {
+      window.location.href = "{{ route('presupuesto') }}";
+    });
+
+    document.getElementById('btn-ahorro').addEventListener('click', function() {
+      window.location.href = "{{ route('ahorro') }}";
+    });
+  </script>
+
 </body>
 </html>

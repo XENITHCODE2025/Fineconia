@@ -57,7 +57,6 @@
   color: white;
 }
 
-
  /* Encabezado */
  .header {
   background-color: #1f4c55;
@@ -69,6 +68,7 @@
 .header h1 {
   font-weight: 700;
 }
+
 
 .header p {
   color: #e0e0e0;
@@ -132,35 +132,35 @@
   gap: 8px;
 }
 
-.btn-expense {
-  background-color: #ffebee;
-  color: #d32f2f;
-}
-
-.btn-expense:hover {
-  background-color: #ffcdd2;
-}
-
-.btn-income {
-  background-color: #e8f5e9;
-  color: #388e3c;
-}
-
-.btn-income:hover {
-  background-color: #c8e6c9;
-}
-
-.btn-dark {
+.btn-primary {
   background-color: #1d4d4f;
-  color: rgb(255, 255, 255);
+  color: white;
 }
 
-.btn-dark:hover {
-  background-color: #555;
+.btn-primary:hover {
+  background-color: #2a6b6d;
 }
 
-/* Transactions table */
-.transactions-section {
+.btn-success {
+  background-color: #388e3c;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #4caf50;
+}
+
+.btn-info {
+  background-color: #1976d2;
+  color: white;
+}
+
+.btn-info:hover {
+  background-color: #2196f3;
+}
+
+/* Budgets table */
+.budgets-section {
   background-color: white;
   padding: 25px;
   border-radius: 5px;
@@ -169,7 +169,7 @@
   margin: 30px auto;
 }
 
-.transactions-title {
+.budgets-title {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
@@ -194,28 +194,30 @@ td {
   border-bottom: 1px solid #eee;
 }
 
-.expense {
-  color: #d32f2f;
+.progress-container {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  height: 10px;
+  margin-top: 5px;
 }
 
-.income {
-  color: #388e3c;
+.progress-bar {
+  height: 100%;
+  border-radius: 10px;
+  background-color: #4caf50;
 }
 
-.type-badge {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  color: white;
+.under-budget {
+  background-color: #4caf50;
 }
 
-.badge-expense {
-  background-color: #d32f2f;
+.over-budget {
+  background-color: #f44336;
 }
 
-.badge-income {
-  background-color: #388e3c;
+.near-budget {
+  background-color: #ff9800;
 }
 
 /* Divider */
@@ -226,17 +228,17 @@ td {
 }
 
 /* Colores de contenedores */
-.transactions-header {
+.create-header {
   background-color: #1d4d4f;
   color: white;
 }
 
-.reports-header {
+.adjust-header {
   background-color: #1d4d4f;
   color: white;
 }
 
-.charts-header {
+.compare-header {
   background-color: #1d4d4f;
   color: white;
 }

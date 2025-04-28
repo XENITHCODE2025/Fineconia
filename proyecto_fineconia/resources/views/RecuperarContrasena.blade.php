@@ -29,9 +29,8 @@
         </div>
         <h3>Verificación de Código</h3>
         <p>Por favor, ingresá tu dirección de correo electrónico.<br>Te enviaremos un código de verificación a ese correo</p>
-        <form method="POST" action="{{ route('enviar.codigo') }}">
+        <form>
 
-        
           @csrf
           <label for="email">Correo electrónico</label>
           <input type="email" id="email" name="email" class="form-control" placeholder="Ingresa tu correo electrónico" required>

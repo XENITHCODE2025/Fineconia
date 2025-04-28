@@ -53,7 +53,7 @@
       <div class="login-box">
         <h5>¿Ya tienes una cuenta?</h5>
         <p>Si ya tienes una cuenta solo lógrate aquí</p>
-        <button class="btn btn-login">Iniciar Sección</button>
+        <button class="btn btn-login" id="btn-login">Iniciar Sección</button>
       </div>
 
     </div>
@@ -61,5 +61,10 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById("btn-login").addEventListener("click", function() {
+      window.location.href = "{{ route('login') }}";
+    });
+  </script>
 </body>
 </html>

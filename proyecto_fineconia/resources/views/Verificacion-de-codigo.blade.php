@@ -1,4 +1,4 @@
-Verificación de código - Elena
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -47,8 +47,8 @@ Verificación de código - Elena
           <div class="icon-lock">
             <i class="bi bi-shield-lock"></i>
           </div>
-          <h4>¿Olvidaste tu contraseña?</h4>
-          <a href="#">Aquí puedes restablecerla</a>
+          <h4>Gracias por verificar tu cuenta</h4> 
+          <a href="#"></a>
         </div>
 
         <!-- Estado después de verificación -->

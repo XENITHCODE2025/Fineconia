@@ -7,7 +7,13 @@
 
   <!-- Bootstrap 5 CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- AlertifyJS CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" rel="stylesheet"/>
+
   @vite('resources/css/login-registro.css')
+
 </head>
 <body>
 
@@ -28,23 +34,7 @@
       <div class="login-box">
         <h3>Iniciar Sesión</h3>
 
-        {{-- Mensaje de éxito desde la verificación --}}
-        @if(session('success'))
-          <div class="alert alert-success">
-            {{ session('success') }}
-          </div>
-        @endif
-
-        {{-- Errores de validación --}}
-        @if($errors->any())
-          <div class="alert alert-danger">
-            <ul class="mb-0">
-              @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-              @endforeach
-            </ul>
-          </div>
-        @endif
+       
 
         <form method="POST" action="{{ route('login') }}">
           @csrf
@@ -75,8 +65,9 @@
           @enderror
           
           <div class="forgot-password mt-2">
-            <a href="#">¿Olvidaste tu contraseña?</a>
+            <a href="{{ route('recuperar.contrasena') }}">¿Olvidaste tu contraseña?</a>
           </div>
+
           
           <button type="submit" class="btn-login mt-3">INICIAR</button>
         </form>
@@ -86,5 +77,21 @@
 
   <!-- Bootstrap JS (opcional) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<script>
+  // Mostrar alertas personalizadas con AlertifyJS
+  @if(session('success'))
+    alertify.success("{{ session('success') }}");
+  @endif
+
+  @if($errors->any())
+    let errors = @json($errors->all());
+    errors.forEach(error => {
+      alertify.error(error);
+    });
+  @endif
+</script>
+
+
 </body>
 </html>

@@ -13,11 +13,8 @@
 </head>
 <body>
 
-  <!-- Logo -->
-  <div class="logo">
-    <img src="https://i.imgur.com/bFQ2H1g.png" alt="Logo" />
-    <span class="logo-text">FINEC<i>ONIA</i></span>
-  </div>
+<!-- Logo -->
+<img src="img/LogoConDerecho.jpg"  alt="Logo"  style="height: 100px;">
 
   <div class="register-wrapper">
     <div class="background-box">

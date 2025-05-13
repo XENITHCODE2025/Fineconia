@@ -12,11 +12,10 @@
   <div class="header">
     <div class="top-bar">
       <div class="logo-container">
-        <img src="Imagen/Logo.jpg" alt="Logo de Fineconia" style="height: 40px;">
+       <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
       </div>
       <div class="user-section">
         <div class="user-icon"><i class="bi bi-person-circle"></i></div>
-        <div>José</div>
       </div>
     </div>
     <div class="logo-container" style="justify-content: center; margin-top: 10px;">
@@ -35,7 +34,7 @@
       Tu espacio para aprender, organizar y crecer en familia. Aquí descubrirás herramientas sencillas para manejar tus finanzas, ahorrar juntos y entender la economía de forma clara y práctica.
     </div>
     <div class="welcome-image">
-      <img src="Imagen/Bienvenido.jpg" alt="Bienvenida a Fineconia">
+      <img src="img/Bienvenida.jpg" alt="Bienvenida a Fineconia">
     </div>
   </div>
 

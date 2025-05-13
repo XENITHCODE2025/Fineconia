@@ -11,11 +11,8 @@
 </head>
 <body>
 
-  <!-- Logo -->
-  <div class="logo">
-    <img src="https://i.imgur.com/bFQ2H1g.png" alt="Logo" />
-    <span class="logo-text">FINEC<i>ONIA</i></span>
-  </div>
+<!-- Logo -->
+<img src="img/LogoConDerecho.jpg"  alt="Logo"  style="height: 100px;">
 
   <div class="register-wrapper">
     <div class="background-box">
@@ -28,7 +25,7 @@
 
           <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
           <input type="text" name="apellido" class="form-control" placeholder="Apellido" required>
-          <input type="number" name="edad" class="form-control" placeholder="Edad" required>
+          
 
           <select name="miembro" class="form-select" required>
             <option value="" disabled selected>Miembro Familiar:</option>

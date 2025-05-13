@@ -16,8 +16,11 @@
 </head>
 <body>
 
-<!-- Logo -->
-<img src="img/LogoConDerecho.jpg"  alt="Logo"  style="height: 100px;">
+  <!-- Logo -->
+  <div class="logo">
+    <img src="https://i.imgur.com/bFQ2H1g.png" alt="Logo" />
+    <span class="logo-text">FINEC<i>ONIA</i></span>
+  </div>
 
   <div class="register-wrapper">
     <div class="background-box">
@@ -29,7 +32,7 @@
         </div>
         <h3>Verificación de código</h3>
         <p>Por favor ingrese el código de verificación que te enviamos a tu correo</p>
-        <form action="{{ route('verificar.codigo') }}" method="POST">
+        <form method="POST" action="{{ route('codigo.verificado.post') }}">
         @csrf
        <label for="codigo">Código</label>
        <input type="text" name="codigo" id="codigo" class="form-control" required>
@@ -44,7 +47,7 @@
           <div class="icon-lock">
             <i class="bi bi-shield-lock"></i>
           </div>
-          <h4>Gracias por verificar tu cuenta</h4> 
+          <h4>Soporte de fineconia</h4> 
           <a href="#"></a>
         </div>
 
@@ -53,7 +56,7 @@
           <div class="icon-check">
             <i class="bi bi-check-circle-fill"></i>
           </div>
-          <p>Tu correo electrónico ha sido verificado correctamente</p>
+          <p>Se esta recuperando la contraseña</p>
         </div>
       </div>
 
@@ -64,18 +67,5 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   
   <!-- Script para manejar la verificación -->
-  <script>
-    document.getElementById('verificationForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Simular verificación exitosa
-      document.getElementById('passwordRecovery').style.display = 'none';
-      document.getElementById('verifiedMessage').style.display = 'flex';
-      
-      // Aquí iría la lógica real de verificación
-      // const codigo = document.getElementById('codigo').value;
-      // ...validación con backend...
-    });
-  </script>
 </body>
 </html>

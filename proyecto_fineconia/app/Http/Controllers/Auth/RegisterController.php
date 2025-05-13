@@ -26,7 +26,6 @@ class RegisterController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
-            'edad' => 'required|integer',
             'miembro' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
@@ -36,7 +35,6 @@ class RegisterController extends Controller
             'name' => $request->nombre . ' ' . $request->apellido,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'edad' => $request->edad,
             'miembro' => $request->miembro,
         ]);
         

@@ -12,7 +12,7 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="logo-container">
-      <img src="Imagen/Logo.jpg" alt="Logo de Fineconia" style="height: 40px;">
+     <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
     </div>
     <div class="right-side">
       <div class="nav-links">

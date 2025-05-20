@@ -1,0 +1,166 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #333;
+}
+
+header {
+    background-color: #0c3a41;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo img {
+    height: 40px;
+}
+
+nav a {
+    color: white;
+    margin: 0 1rem;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.perfil img {
+    height: 35px;
+    border-radius: 50%;
+}
+
+main {
+    padding: 2rem;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #153f47;
+}
+
+.descripcion {
+    text-align: center;
+    max-width: 700px;
+    margin: 1rem auto 2rem auto;
+    font-size: 1rem;
+    color: #444;
+}
+
+.tarjeta {
+    background-color: #e0f1f4;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.tarjeta h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #153f47;
+}
+
+.tarjeta p {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.botones {
+    display: flex;
+    gap: 1rem;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button.gasto {
+    background-color: #ee5253;
+    color: white;
+}
+
+button.gasto:hover {
+    background-color: #c0392b;
+}
+
+button.ingreso {
+    background-color: #10ac84;
+    color: white;
+}
+
+button.ingreso:hover {
+    background-color: #1e7e59;
+}
+
+button.reporte, button.grafica {
+    background-color: #ffffff;
+    color: #153f47;
+    border: 2px solid #153f47;
+    font-weight: bold;
+}
+
+button.reporte:hover,
+button.grafica:hover {
+    background-color: #153f47;
+    color: white;
+}
+
+.transacciones {
+    margin-top: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+thead {
+    background-color: #153f47;
+    color: white;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.monto.negativo {
+    color: #e74c3c;
+}
+
+.monto.positivo {
+    color: #2ecc71;
+}
+
+.etiqueta {
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.etiqueta.gasto {
+    background-color: #f8d7da;
+    color: #c0392b;
+}
+
+.etiqueta.ingreso {
+    background-color: #d4edda;
+    color: #1e7e34;
+}

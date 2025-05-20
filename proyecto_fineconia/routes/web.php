@@ -9,6 +9,11 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\RecuperarContrasenaController;
 use App\Http\Controllers\CodigoVerificacionController;
 use App\Http\Controllers\CambiarContrasenaController;
+use App\Http\Controllers\GastoController;  // Importar el controlador
+use App\Http\Controllers\IngresoController;
+use App\Http\Controllers\TransaccionesController;
+use App\Models\Gasto;
+use App\Models\Ingreso;
 
 
 
@@ -21,6 +26,7 @@ Route::get('/', function () {
 // Registro de usuario
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
+
 
 
 Route::get('/login', function () {
@@ -51,9 +57,9 @@ Route::get('/finanzas-personales', function () {
 })->name('finanzas.personales');
 
 // Enlace a la vista de Finanzas Personales
-Route::get('/gastos-ingresos', function () {
-    return view('GastosIngresos'); 
-})->name('gastos-ingresos');
+/*Route::get('/gastos-ingresos', function () {
+    return view('welcome'); 
+})->name('gastos-ingresos');*/
 
 Route::get('/ahorro', function () {
     return view('Ahorro'); 
@@ -81,4 +87,47 @@ Route::post('/codigo-verificado-validar', [CodigoVerificacionController::class, 
 
 Route::get('/cambiar-contrasena', [CambiarContrasenaController::class, 'show'])->name('cambiar.contrasena');
 Route::post('/cambiar-contrasena', [CambiarContrasenaController::class, 'guardar'])->name('cambiar.contrasena.post');
+
+//gastos e ingresos
+
+Route::get('/gastos-ingresos', function () {
+    $gastos = Gasto::select('id_Gasto','fecha', 'descripcion', 'categoria', 'monto')
+        ->get()
+        ->map(function ($item) {
+            $item->tipo = 'Gasto';
+            return $item;
+        });
+
+    $ingresos = Ingreso::select('id_Ingreso','fecha', 'descripcion', 'categoria', 'monto')
+        ->get()
+        ->map(function ($item) {
+            $item->tipo = 'Ingreso';
+            return $item;
+        });
+
+    $transacciones = $gastos->concat($ingresos)->sortByDesc('fecha')->values();
+
+    return view('welcome', compact('transacciones'));
+})->name('gastos-ingresos'); // ← agrega esto
+
+// Rutas para el CRUD de Gastos
+
+Route::get('/gastos/crear', function () {
+    return view('gastos');
+})->name('gastos.create');
+
+Route::post('/gastos', [GastoController::class, 'store'])->name('gastos.store');
+
+// Rutas para el CRUD de Ingresos
+
+Route::get('/ingresos/crear', function () {
+    return view('ingresos');
+})->name('ingresos.create');
+
+Route::post('/ingresos', [IngresoController::class, 'store'])->name('ingresos.store');
+
+// Rutas para eliminar gastos e ingresos
+
+Route::delete('/gastos/{id_Gasto}', [GastoController::class, 'destroy'])->name('gastos.destroy');
+Route::delete('/ingresos/{id_Ingreso}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
 

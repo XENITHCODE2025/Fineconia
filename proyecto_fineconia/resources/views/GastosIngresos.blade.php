@@ -12,7 +12,7 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="logo-container">
-     <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
+     <img src="img/Bienvenida.jpg"  alt="Logo"  style="height: 100px;">
     </div>
     <div class="right-side">
       <div class="nav-links">

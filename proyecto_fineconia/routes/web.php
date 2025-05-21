@@ -6,9 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\VerificationCodeController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\RecuperarContrasenaController;
-use App\Http\Controllers\CodigoVerificacionController;
-use App\Http\Controllers\CambiarContrasenaController;
 use App\Http\Controllers\GastoController;  // Importar el controlador
 use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\TransaccionesController;
@@ -69,24 +66,25 @@ Route::get('/presupuesto', function () {
     return view('Presupuesto'); 
 })->name('presupuesto');
 
+// Ruta para recuperar la contraseña
+// Recuperación de contraseña
+Route::get('/recuperar-contrasena', [VerificationCodeController::class, 'showRecoveryForm'])->name('password.request');
+Route::post('/recuperar-contrasena', [VerificationCodeController::class, 'sendRecoveryCode'])->name('password.email');
+// Ruta para mostrar el formulario de "Olvidé mi contraseña"
 
 
-Route::get('/recuperar-contrasena', [RecuperarContrasenaController::class, 'index'])->name('recuperar.contrasena');
-Route::post('/recuperar-contrasena', [RecuperarContrasenaController::class, 'enviarCodigo'])->name('enviar.codigo');
+// Ruta para procesar el envío del código (POST)
+Route::post('/recuperar-contrasena', [VerificationCodeController::class, 'sendRecoveryCode'])
+    ->name('password.email');
 
+// Verificación de código
+Route::get('/verificar-codigo', [VerificationCodeController::class, 'showVerifyForm'])->name('password.verify');
+Route::post('/verificar-codigo', [VerificationCodeController::class, 'verifyCode'])->name('password.verify.submit');
 
-// Muestra el formulario para ingresar el código
-Route::get('/codigo-verificado', [CodigoVerificacionController::class, 'index'])->name('codigo.verificado');
+// Cambio de contraseña
+Route::get('/cambiar-contrasena', [VerificationCodeController::class, 'showResetForm'])->name('password.reset');
+Route::post('/cambiar-contrasena', [VerificationCodeController::class, 'updatePassword'])->name('password.update');
 
-
-
-Route::get('/verificar-codigo', [CodigoVerificacionController::class, 'index'])->name('VerificacionDeCodigo');
-
-// Procesa el código ingresado
-Route::post('/codigo-verificado-validar', [CodigoVerificacionController::class, 'verificarCodigo'])->name('codigo.verificado.post');
-
-Route::get('/cambiar-contrasena', [CambiarContrasenaController::class, 'show'])->name('cambiar.contrasena');
-Route::post('/cambiar-contrasena', [CambiarContrasenaController::class, 'guardar'])->name('cambiar.contrasena.post');
 
 //gastos e ingresos
 

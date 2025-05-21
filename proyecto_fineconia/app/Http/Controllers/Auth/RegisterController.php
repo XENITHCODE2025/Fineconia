@@ -49,9 +49,6 @@ class RegisterController extends Controller
       Mail::to($user->email)->send(new CodigoVerificacionMail($codigo));
 
     // Redirigir a la vista de verificación de código
-      return redirect()->route('verificacion.codigo');
-
- 
-        
+            return redirect()->route('verificacion.codigo');  
     }
 }

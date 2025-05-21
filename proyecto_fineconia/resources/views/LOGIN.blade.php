@@ -53,7 +53,7 @@
           >
 
           <div class="forgot-password mt-2">
-            <a href="#">¿Olvidaste tu contraseña?</a>
+           <a href="{{ route('password.request') }}" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
           </div>
           
           <button type="submit" class="btn-login mt-3">INICIAR</button>

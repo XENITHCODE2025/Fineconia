@@ -16,20 +16,20 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:8',
-        ]);
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|min:8',
+    ]);
 
-        // Verificar las credenciales del usuario
-        $user = User::where('email', $request->email)->first();
+    $user = User::where('email', $request->email)->first();
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user);
-            return redirect()->route('bienvenida')->with('success', 'Bienvenido!');
-        }
-
-        return back()->withErrors(['email' => 'Las credenciales son incorrectas.']);
+    if ($user && Hash::check($request->password, $user->password)) {
+        Auth::login($user);
+        $request->session()->regenerate();  // Muy importante
+        return redirect()->route('bienvenida')->with('success', 'Bienvenido!');
     }
+
+    return back()->withErrors(['email' => 'Las credenciales son incorrectas.']);
+}
 }

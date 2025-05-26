@@ -6,6 +6,10 @@
   <title>Fineconia - Ahorro</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
   @vite('resources/css/Ahorro.css')
 </head>
 <body>
@@ -84,6 +88,45 @@
 
   </div>
 
+  <!-- Botón para mostrar el modal -->
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearObjetivo">
+    Crear Objetivo
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalCrearObjetivo" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 15px;">
+      <div class="modal-header">
+        <h5 class="modal-title">Nuevo Objetivo</h5>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearObjetivo">
+  Crear Objetivo
+</button>
+
+      </div>
+      <div class="modal-body">
+        <form id="formObjetivo">
+          @csrf
+          <div class="mb-3">
+            <label>Nombre</label>
+            <input type="text" name="nombre" class="form-control" maxlength="100" required>
+          </div>
+          <div class="mb-3">
+            <label>Monto meta</label>
+            <input type="number" name="monto" class="form-control" step="0.01" min="1" required>
+          </div>
+          <div class="mb-3">
+            <label>Fecha límite</label>
+            <input type="date" name="fecha" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Guardar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -102,6 +145,42 @@
       });
     });
   </script>
+ 
+  <script>
+document.getElementById('formObjetivo').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  try {
+    const res = await fetch("{{ route('objetivos.store') }}", {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+      },
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.status === 'ok') {
+      alertify.success('¡Objetivo guardado con éxito!');
+      form.reset();
+      const modalElement = document.getElementById('modalCrearObjetivo');
+      const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+      modal.hide();
+    } else {
+      alertify.error('Algo salió mal al guardar.');
+    }
+  } catch (error) {
+    alertify.error('Error en la conexión con el servidor.');
+    console.error(error);
+  }
+});
+
+</script>
+
   <!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro -->
 <script>
   document.getElementById('finanzas_personales').addEventListener('click', function() {

@@ -16,25 +16,40 @@ class VerificationCodeController extends Controller
         return view('verificacion-de-codigo');
     }
 
-    public function verificar(Request $request)
-    {
-        $request->validate([
-            'codigo' => 'required|string',
+   public function verificar(Request $request)
+{
+    $request->validate([
+        'codigo' => 'required|string',
+    ]);
+
+    $datos = session('registro_pendiente');
+
+    if (!$datos) {
+        return redirect()->route('registro.form')->withErrors(['registro' => 'No hay un registro pendiente.']);
+    }
+
+    if ($request->codigo === $datos['verification_code']) {
+        // Crear el usuario
+        $user = User::create([
+            'name' => $datos['name'],
+            'email' => $datos['email'],
+            'password' => $datos['password'],
+            'miembro' => $datos['miembro'],
+            'email_verified_at' => now(),
         ]);
 
-        $user = User::where('verification_code', $request->codigo)->first();
+        // Limpiar la sesión
+        session()->forget('registro_pendiente');
 
-        if ($user) {
-            $user->email_verified_at = now();
-            $user->verification_code = null;
-            $user->save();
+        // Loguear al usuario si deseas (opcional)
+        // Auth::login($user);
 
-            return redirect()->route('login')->with('success', 'Correo verificado correctamente');
-
-        } else {
-            return back()->withErrors(['codigo' => 'El código ingresado es incorrecto.'])->withInput();
-        }
+        return redirect()->route('login')->with('success', 'Registro y verificación exitosos');
+    } else {
+        return back()->withErrors(['codigo' => 'El código ingresado es incorrecto.'])->withInput();
     }
+}
+
 
     public function showRecoveryForm()
     {

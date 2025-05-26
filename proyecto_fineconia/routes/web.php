@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\IngresoController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ObjetivoAhorroController;
 
 use App\Models\Gasto;
 use App\Models\Ingreso;
@@ -61,6 +62,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ingresos/crear', fn() => view('ingresos'))->name('ingresos.create');
     Route::post('/ingresos', [IngresoController::class, 'store'])->name('ingresos.store');
     Route::delete('/ingresos/{id_Ingreso}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
+
+    
+});
+
+
+Route::get('/verificacion-de-codigo', [VerificationCodeController::class, 'show'])->name('verificacion.codigo');
+Route::post('/verificar-codigo-registro', [VerificationCodeController::class, 'verificar'])->name('registro.verificar.codigo');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/objetivos', [ObjetivoAhorroController::class, 'store'])->name('objetivos.store');
 });
 
 

@@ -6,12 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\CodigoVerificacionMail; 
-
-use Illuminate\Support\Facades\Auth;
+use App\Mail\CodigoVerificacionMail;
+use Illuminate\Support\Facades\Session;
 
 class RegisterController extends Controller
 {
@@ -19,7 +17,6 @@ class RegisterController extends Controller
     {
         return view('REGRISTRO'); // Asegurate que el archivo esté en views/auth
     }
-    
 
     public function register(Request $request)
     {
@@ -31,24 +28,24 @@ class RegisterController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $request->nombre . ' ' . $request->apellido,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'miembro' => $request->miembro,
+        // Generar código de verificación
+        $codigo = Str::random(6);
+
+        // Guardar los datos del usuario en la sesión (NO se crea en la base aún)
+        session([
+            'registro_pendiente' => [
+                'name' => $request->nombre . ' ' . $request->apellido,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'miembro' => $request->miembro,
+                'verification_code' => $codigo,
+            ],
         ]);
-        
 
-        
-     // Generar código y guardarlo en base de datos
-      $codigo = Str::random(6);
-      $user->verification_code = $codigo;
-      $user->save();
+        // Enviar el código de verificación por correo
+        Mail::to($request->email)->send(new CodigoVerificacionMail($codigo));
 
-    // Enviar el correo con el código
-      Mail::to($user->email)->send(new CodigoVerificacionMail($codigo));
-
-    // Redirigir a la vista de verificación de código
-            return redirect()->route('verificacion.codigo');  
+        // Redirigir a la vista donde el usuario va a ingresar el código
+        return redirect()->route('verificacion.codigo');
     }
 }

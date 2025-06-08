@@ -34,11 +34,14 @@
                 <p>Por favor ingrese el código de verificación que te enviamos a tu correo</p>
                 <form method="POST" action="{{ route('password.verify.submit') }}">
                     @csrf
+                    <label for="codigo">Código</label>
                     <input type="hidden" name="email" value="{{ session('email') }}">
-                    <input type="text" name="codigo" required>
-                    <button type="submit">Verificar</button>
+                    <input type="text" name="codigo" id="codigo" class="form-control" required>
+
+                    <button type="submit" class="btn-verificar">Verificar</button>
                 </form>
             </div>
+
 
             <!-- Panel derecho con dos estados -->
             <div class="right-panel">
@@ -47,7 +50,8 @@
                     <div class="icon-lock">
                         <i class="bi bi-shield-lock"></i>
                     </div>
-                    <h4>Soporte de fineconia</h4>
+                    <h4>¿Olvidaste tu contraseña?</h4>
+                    <a href="#">Aquí puedes restablecerla</a>
                     <a href="#"></a>
                 </div>
 

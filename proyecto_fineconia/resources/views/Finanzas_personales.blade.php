@@ -15,7 +15,7 @@
         <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
       </div>
       <div class="user-section">
-        <div class="user-icon"><i class="bi bi-person-circle"></i></div>
+         @include('partials.header-user')  {{-- ← nuevo partial --}}
       </div>
     </div>
     <div class="logo-container" style="justify-content: center; margin-top: 10px;">

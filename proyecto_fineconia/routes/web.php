@@ -5,10 +5,12 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\VerificationCodeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GastoController;
+use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\IngresoController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ObjetivoAhorroController;
-
+use App\Http\Controllers\TransaccionesController;
+use App\Http\Controllers\ReporteController;
 use App\Models\Gasto;
 use App\Models\Ingreso;
 
@@ -33,8 +35,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/finanzas-personales', fn() => view('Finanzas_personales'))->name('finanzas.personales');
     Route::get('/ahorro', fn() => view('Ahorro'))->name('ahorro');
     Route::get('/presupuesto', fn() => view('Presupuesto'))->name('presupuesto');
+    Route::get('/reportes', [ReporteController::class, 'index'])
+        ->name('reportes');
+    Route::get('/graficas',                 [GraficasController::class, 'index'])->name('graficas');
+    Route::get('/graficas/gastos-data',     [GraficasController::class, 'gastosAgrupados'])->name('graficas.gastos.data');
+    Route::get('/graficas/ingresos-data',   [GraficasController::class, 'ingresosAgrupados'])->name('graficas.ingresos.data');
+    Route::get(
+        '/graficas/ingresos-gastos',
+        [GraficasController::class, 'ingresosYGastosPorMes']
+    )->name('graficas.ingresos-gastos');    
 
-    // Mostrar todos los ingresos y gastos
+    // Mostrar todos los ingresos y gastos 
     Route::get('/gastos-ingresos', function () {
         $gastos = Gasto::select('id_Gasto','fecha', 'descripcion', 'categoria', 'monto')
             ->get()->map(function ($item) {
@@ -53,17 +64,22 @@ Route::middleware(['auth'])->group(function () {
         return view('welcome', compact('transacciones'));
     })->name('gastos-ingresos');
 
-    // CRUD Gastos
+     // CRUD Gastos
     Route::get('/gastos/crear', fn() => view('gastos'))->name('gastos.create');
     Route::post('/gastos', [GastoController::class, 'store'])->name('gastos.store');
     Route::delete('/gastos/{id_Gasto}', [GastoController::class, 'destroy'])->name('gastos.destroy');
-
+    Route::put('/gastos/{id}', [GastoController::class, 'update']);
+    
     // CRUD Ingresos
     Route::get('/ingresos/crear', fn() => view('ingresos'))->name('ingresos.create');
     Route::post('/ingresos', [IngresoController::class, 'store'])->name('ingresos.store');
     Route::delete('/ingresos/{id_Ingreso}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
+    Route::put('/ingresos/{id}', [IngresoController::class, 'update']);
 
     
+        
+    Route::get('/transacciones', [TransaccionesController::class, 'lista'])
+     ->name('transacciones.lista');     
 });
 
 

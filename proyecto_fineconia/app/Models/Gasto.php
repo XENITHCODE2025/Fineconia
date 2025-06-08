@@ -9,14 +9,26 @@ class Gasto extends Model
 {
     use HasFactory;
 
-    // Opcionalmente, si cambiaste el nombre de tu ID a "id_Gasto":
+    protected $table = 'gastos';
     protected $primaryKey = 'id_Gasto';
 
-    // Los campos que puedes asignar de forma masiva (fillable)
     protected $fillable = [
-        'fecha',
         'descripcion',
         'categoria',
         'monto',
+        'fecha',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    
+// (opcional) alias en inglés si lo necesitas
+public function getDescriptionAttribute()
+{
+    return $this->descripcion;
+}
 }

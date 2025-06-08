@@ -22,7 +22,7 @@
         <a button class="btn nav-link" id="presupuestos">Presupuestos</a>
         <a button class="btn nav-link" id="ahorros">Ahorro</a>
       </div>
-      <div class="user-icon"><i class="bi bi-person-circle"></i></div>
+       @include('partials.header-user')  {{-- ← nuevo partial --}}
     </div>
   </nav>
 

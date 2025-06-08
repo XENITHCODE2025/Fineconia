@@ -26,15 +26,10 @@
                 <a class="btn nav-link" id="presupuestos">Presupuestos</a>
                 <a class="btn nav-link" id="ahorros">Ahorro</a>
             </div>
-            @include('partials.header-user') {{-- ← nuevo partial --}}
+             @include('partials.header-user')  {{-- ← nuevo partial --}}
         </div>
     </nav>
 
-    <!-- Saldo total -->
-    <div class="section-body text-end mb-4">
-        <strong>Saldo total de ingresos:</strong>
-        ${{ number_format($totalIngresos, 2) }}
-    </div>
     <!-- Header -->
     <header class="header">
         <h2>GASTOS E INGRESOS</h2>
@@ -111,10 +106,11 @@
                 </p>
                 <div class="divider"></div>
                 <div class="buttons-container">
-
-                    <button onclick="window.location.href=`{{ route('graficas') }}`" class="btn btn-dark">
-                        <i class="bi bi-graph-up"></i>Ver Gráficas
-                    </button>
+                    
+                   <button onclick="window.location.href=`{{ route('graficas') }}`"
+        class="btn btn-dark">
+    <i class="bi bi-graph-up"></i>Ver Gráficas
+</button>
 
                 </div>
             </div>

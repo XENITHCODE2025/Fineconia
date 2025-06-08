@@ -9,15 +9,15 @@ class Ingreso extends Model
 {
     use HasFactory;
 
-    protected $table = 'ingresos';
+    protected $table = 'ingresos'; // En caso de que no hayas seguido la convención
     protected $primaryKey = 'id_Ingreso';
 
     protected $fillable = [
-        'user_id',
-        'fecha',
         'descripcion',
         'categoria',
         'monto',
+        'fecha',
+        'user_id'
     ];
 
     public function user()
@@ -25,17 +25,9 @@ class Ingreso extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Alias para compatibilidad en inglés
-    public function getDescriptionAttribute()
-    {
-        return $this->descripcion;
-    }
-
-    /**
-     * Devuelve la suma total de 'monto' para un usuario dado.
-     */
-    public static function totalPorUsuario(int $userId): float
-    {
-        return (float) self::where('user_id', $userId)->sum('monto');
-    }
+    // alias para compatibilidad con inglés
+public function getDescriptionAttribute()
+{
+    return $this->descripcion;   // permitirá usar $ingreso->description
+}
 }

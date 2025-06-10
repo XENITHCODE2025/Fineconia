@@ -109,15 +109,32 @@
                     
                    <button onclick="window.location.href=`{{ route('graficas') }}`"
         class="btn btn-dark">
-    <i class="bi bi-graph-up"></i>Ver Gráficas
-</button>
+    <i class="bi bi-graph-up"></i>Ver Gráficas</button>
 
                 </div>
             </div>
         </section>
     </div>
+    
     <!-- Últimas transacciones -->
     <section class="transactions-section">
+         </div>  {{-- ← cierra .section-container --}}
+
+    {{-- 🔸 SALDO / TOTAL DE INGRESOS 🔸 --}}
+    @if(isset($saldoDisponible))
+        <div style="
+            max-width: 900px;
+            margin: 0 auto 25px;
+            background: #1d4d4f;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: 600;">
+            Saldo actual: ${{ number_format($saldoDisponible, 2) }}
+        </div>
+    @endif
         <h3 class="transactions-title">Últimas Transacciones</h3>
         <div style="display: flex; justify-content: space-between; margin-bottom: 20px; gap: 10px; flex-wrap: wrap;">
             <input type="text" id="buscador" placeholder="Buscar por fecha, descripción o categoría"

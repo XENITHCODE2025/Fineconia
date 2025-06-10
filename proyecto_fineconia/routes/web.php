@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ObjetivoAhorroController;
 use App\Http\Controllers\TransaccionesController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\PresupuestoController;
 use App\Models\Gasto;
+use App\Models\Presupuesto;
 use App\Models\Ingreso;
 
 // Página principal
@@ -43,43 +45,58 @@ Route::middleware(['auth'])->group(function () {
     Route::get(
         '/graficas/ingresos-gastos',
         [GraficasController::class, 'ingresosYGastosPorMes']
-    )->name('graficas.ingresos-gastos');    
+    )->name('graficas.ingresos-gastos');
+
+    Route::get('Crear_Presupuesto', [PresupuestoController::class, 'create'])
+        ->name('presupuestos.create');
+
+    Route::post('/presupuestos', [PresupuestoController::class, 'store'])
+        ->name('presupuestos.store');
+
 
     // Mostrar todos los ingresos y gastos 
+    // Mostrar solo los ingresos
     Route::get('/gastos-ingresos', function () {
-        $gastos = Gasto::select('id_Gasto','fecha', 'descripcion', 'categoria', 'monto')
-            ->get()->map(function ($item) {
-                $item->tipo = 'Gasto';
-                return $item;
+
+        /* ───── Ingresos del usuario ───── */
+        $ingresos = Ingreso::with('categoriaIngreso')
+            ->where('user_id', auth()->id())
+            ->select('id_Ingreso', 'fecha', 'descripcion', 'categoria_id', 'monto')
+            ->get()
+            ->map(function ($ing) {
+                $ing->tipo      = 'Ingreso';
+                $ing->categoria = $ing->categoriaIngreso->nombre ?? 'Sin categoría';
+                return $ing;
             });
 
-        $ingresos = Ingreso::select('id_Ingreso','fecha', 'descripcion', 'categoria', 'monto')
-            ->get()->map(function ($item) {
-                $item->tipo = 'Ingreso';
-                return $item;
-            });
+        /* ───── Saldo disponible ───── */
+        $totalIngresos     = Ingreso::where('user_id', auth()->id())->sum('monto');
+        $totalPresupuestos = Presupuesto::where('user_id', auth()->id())->sum('monto');
+        $saldoDisponible   = $totalIngresos - $totalPresupuestos;
 
-        $transacciones = $gastos->concat($ingresos)->sortByDesc('fecha')->values();
+        /* ───── Lista para la tabla ──── */
+        $transacciones = $ingresos->sortByDesc('fecha')->values();
 
-        return view('welcome', compact('transacciones'));
+        return view('welcome', compact('transacciones', 'saldoDisponible'));
     })->name('gastos-ingresos');
 
-     // CRUD Gastos
-    Route::get('/gastos/crear', fn() => view('gastos'))->name('gastos.create');
+
+    // CRUD Gastos
+    Route::get('/gastos/crear', [GastoController::class, 'create'])->name('gastos.create');
     Route::post('/gastos', [GastoController::class, 'store'])->name('gastos.store');
     Route::delete('/gastos/{id_Gasto}', [GastoController::class, 'destroy'])->name('gastos.destroy');
     Route::put('/gastos/{id}', [GastoController::class, 'update']);
-    
+
     // CRUD Ingresos
-    Route::get('/ingresos/crear', fn() => view('ingresos'))->name('ingresos.create');
+    Route::get('/ingresos/crear', [IngresoController::class, 'create'])->name('ingresos.create');
     Route::post('/ingresos', [IngresoController::class, 'store'])->name('ingresos.store');
     Route::delete('/ingresos/{id_Ingreso}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
     Route::put('/ingresos/{id}', [IngresoController::class, 'update']);
 
-    
-        
+
+
     Route::get('/transacciones', [TransaccionesController::class, 'lista'])
-     ->name('transacciones.lista');     
+        ->name('transacciones.lista');
 });
 
 

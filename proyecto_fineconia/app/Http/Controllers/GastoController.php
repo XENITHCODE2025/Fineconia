@@ -2,69 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Gasto;
+use App\Models\Presupuesto;
+use Illuminate\Http\Request;
 
 class GastoController extends Controller
 {
-    // Método para mostrar el formulario de creación de gasto
+    /* FORMULARIO  ─────────────────────────────────────────── */
     public function create()
     {
-        return view('gastos.create');  // Asegúrate de que la vista exista en resources/views/gastos/create.blade.php
+        $presupuestos = Presupuesto::with('categoriaGasto')
+            ->where('user_id', auth()->id())
+            ->where('restante', '>', 0)          // solo los que aún tienen saldo
+            ->get();                             // tendrás nombre y restante
+
+        return view('gastos', compact('presupuestos'));
     }
 
-    // Método para guardar el gasto
+    /* GUARDAR GASTO  ──────────────────────────────────────── */
     public function store(Request $request)
     {
-        // Validar los datos del formulario
         $request->validate([
-            'fecha' => 'required|date',
-            'descripcion' => 'required|string|max:255',
-            'categoria' => 'required|string|max:100',
-            'monto' => 'required|numeric|min:0',
+            'fecha'        => 'required|date',
+            'descripcion'  => 'required|string|max:255',
+            'categoria_id' => 'required|exists:presupuestos,categoria_id',
+            'monto'        => 'required|numeric|min:0',
         ]);
 
+        $userId      = auth()->id();
+        $presupuesto = Presupuesto::where('user_id', $userId)
+            ->where('categoria_id', $request->categoria_id)
+            ->first();
 
+        if (!$presupuesto) {
+            return back()->withErrors([
+                'categoria_id' => 'No tienes presupuesto para esa categoría.',
+            ])->withInput();
+        }
 
-        $gasto = new Gasto();
-        $gasto->descripcion = $request->descripcion;
-        $gasto->categoria = $request->categoria;
-        $gasto->monto = $request->monto;
-        $gasto->fecha = $request->fecha;
-        $gasto->user_id = auth()->id(); // Asociar al usuario autenticado
-        $gasto->save();
+        if ($request->monto > $presupuesto->restante) {
+            return back()->withErrors([
+                'monto' => 'El gasto excede el presupuesto restante de $' .
+                    number_format($presupuesto->restante, 2),
+            ])->withInput();
+        }
 
-        return redirect()->back()->with('success', 'Gasto registrado exitosamente');
-    }
-    public function destroy($id_Gasto)
-    {
-        $gasto = Gasto::where('id_Gasto', $id_Gasto)->firstOrFail();
-        $gasto->delete();
-        return redirect('/gastos-ingresos')->with('success', 'Gasto eliminado correctamente.');
-    }
-
-    // GastoController.php
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'descripcion' => 'required|string|max:255',
-            'categoria' => 'required|string|max:255',
-            'monto' => 'required|numeric'
+        /* Insertar gasto */
+        Gasto::create([
+            'user_id'      => $userId,
+            'fecha'        => $request->fecha,
+            'descripcion'  => $request->descripcion,
+            'categoria_id' => $request->categoria_id,
+            'monto'        => $request->monto,
         ]);
 
-        $gasto = Gasto::findOrFail($id);
-        $gasto->update([
-            'descripcion' => $request->descripcion,
-            'categoria' => $request->categoria,
-            'monto' => $request->monto
-            
-        ]);
+        /* Restar del presupuesto */
+        $presupuesto->restante -= $request->monto;
+        $presupuesto->save();
 
-        return response()->json(['status' => 'ok']);
+        return back()->with('success', 'Gasto registrado y presupuesto actualizado.');
     }
 }
-
-
-
-
-

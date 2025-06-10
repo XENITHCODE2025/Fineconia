@@ -53,16 +53,15 @@
             </div>
 
             <div class="form-group">
-                <label for="categoria">Categoría:</label>
-                <select id="categoria" name="categoria" required>
+                <label for="categoria_id">Categoría:</label>
+                <select id="categoria_id" name="categoria_id" required>
                     <option value="">Seleccione una categoría</option>
-                    <option value="Alimentación">Alimentación</option>
-                    <option value="Transporte">Transporte</option>
-                    <option value="Vivienda">Vivienda</option>
-                    <option value="Entretenimiento">Entretenimiento</option>
-                    <option value="Salud">Salud</option>
-                    <option value="Educación">Educación</option>
-                    <option value="Otros">Otros</option>
+                    @foreach($presupuestos as $pre)
+                    <option value="{{ $pre->categoria_id }}">
+                        {{ $pre->categoriaGasto->nombre }} —
+                        Restante: ${{ number_format($pre->restante, 2) }}
+                    </option>
+                    @endforeach
                 </select>
             </div>
 

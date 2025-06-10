@@ -52,7 +52,7 @@
         </p>
         <div class="divider"></div>
         <div class="buttons-container">
-          <button class="btn btn-primary"><i class="bi bi-plus-circle"></i> Crear Presupuesto</button>
+          <a href="{{ route('presupuestos.create') }}" class="btn btn-primary"><i  class="bi bi-plus-circle"></i> Crear Presupuesto</a>
         </div>
       </div>
     </section>
@@ -189,7 +189,10 @@
   });
   document.getElementById('ahorros').addEventListener('click', function() {
     window.location.href = "{{ route('ahorro') }}";
+  
   });
+  
+  
 </script>
 </body>
 </html>

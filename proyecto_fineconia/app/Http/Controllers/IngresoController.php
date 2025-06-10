@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Ingreso;
+use App\Models\CategoriaIngreso;
 
 class IngresoController extends Controller
 {
     public function create()
     {
-        return view('ingresos.create');  // Asegúrate de que la vista exista en resources/views/gastos/create.blade.php
+        $categorias = CategoriaIngreso::all();
+        return view('ingresos', compact('categorias'));  // Asegúrate de que la vista exista en resources/views/gastos/create.blade.php
     }
 
     // Guardar el ingreso en la base de datos
@@ -18,13 +20,13 @@ class IngresoController extends Controller
         $request->validate([
             'fecha' => 'required|date',
             'descripcion' => 'required|string|max:255',
-            'categoria' => 'required|string|max:100',
+            'categoria_id' => 'required|exists:categorias_ingresos,id_categoriaIngreso',
             'monto' => 'required|numeric|min:0',
         ]);
 
         $ingreso = new Ingreso();
         $ingreso->descripcion = $request->descripcion;
-        $ingreso->categoria = $request->categoria;
+        $ingreso->categoria_id = $request->categoria_id; // Asegúrate de que este campo exista en tu modelo Ingreso
         $ingreso->monto = $request->monto;
         $ingreso->fecha = $request->fecha;
         $ingreso->user_id = auth()->id(); // Asociar al usuario autenticado
@@ -47,14 +49,14 @@ class IngresoController extends Controller
     {
         $request->validate([
             'descripcion' => 'required|string|max:255',
-            'categoria' => 'required|string|max:255',
+            'categoria_id' => 'required|exists:categorias_ingresos,id_categoriaIngreso',
             'monto' => 'required|numeric'
         ]);
 
         $ingreso = Ingreso::findOrFail($id);
         $ingreso->update([
             'descripcion' => $request->descripcion,
-            'categoria' => $request->categoria,
+            'categoria_id' => $request->categoria_id,
             'monto' => $request->monto
         ]);
 

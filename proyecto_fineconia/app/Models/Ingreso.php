@@ -9,25 +9,29 @@ class Ingreso extends Model
 {
     use HasFactory;
 
-    protected $table = 'ingresos'; // En caso de que no hayas seguido la convención
+    protected $table      = 'ingresos';
     protected $primaryKey = 'id_Ingreso';
 
     protected $fillable = [
         'descripcion',
-        'categoria',
+        'categoria_id',
         'monto',
         'fecha',
-        'user_id'
+        'user_id',
     ];
 
+    /* ─── Relaciones ─────────────────────────────────────────── */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // alias para compatibilidad con inglés
-public function getDescriptionAttribute()
-{
-    return $this->descripcion;   // permitirá usar $ingreso->description
-}
+    public function categoriaIngreso()
+    {
+        return $this->belongsTo(
+            CategoriaIngreso::class,
+            'categoria_id',
+            'id_categoriaIngreso'
+        );
+    }
 }

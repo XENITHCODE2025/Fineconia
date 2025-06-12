@@ -62,4 +62,29 @@ class GastoController extends Controller
 
         return back()->with('success', 'Gasto registrado y presupuesto actualizado.');
     }
+    public function destroy(Gasto $gasto)   // ← inyección implícita
+    {
+        $gasto->delete();
+
+        return redirect()
+            ->route('gastos-ingresos')
+            ->with('success', 'Gasto eliminado correctamente.');
+    }
+    public function update(Request $request, Gasto $gasto)
+{
+    $request->validate([
+        'descripcion'  => 'required|string|max:255',
+        'categoria'    => 'required|string|max:100',
+        'monto'        => 'required|numeric|min:0',
+    ]);
+
+    $gasto->update([
+        'descripcion' => $request->descripcion,
+        'categoria_id' => $request->categoria,  // viene del select
+        'monto'       => $request->monto,
+    ]);
+
+    return response()->json(['ok' => true]);
+}
+
 }

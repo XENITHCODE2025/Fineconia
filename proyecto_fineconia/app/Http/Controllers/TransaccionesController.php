@@ -1,97 +1,127 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Gasto;
 use App\Models\Ingreso;
+use App\Models\Presupuesto; // si luego lo necesitas
 
 class TransaccionesController extends Controller
 {
+    /* =========================================================
+       Muestra la vista principal (welcome) con las transacciones
+       ========================================================= */
     public function index()
     {
-        $gastos = Gasto::select('id_Gasto','fecha', 'descripcion', 'categoria', 'monto')
+        $userId = Auth::id();
+
+        /* ----------  GASTOS  --------------------------------- */
+        $gastos = Gasto::with('categoriaGasto')     // usa relación en el modelo
+            ->where('user_id', $userId)
             ->get()
-            ->map(function ($item) {
-                $item->tipo = 'Gasto';
-                return $item;
+            ->map(function ($g) {
+                return [
+                    'id'          => $g->id_Gasto,
+                    'fecha'       => $g->fecha,
+                    'descripcion' => $g->descripcion,
+                    'categoria'   => optional($g->categoriaGasto)->nombre,
+                    'monto'       => $g->monto,
+                    'tipo'        => 'Gasto',
+                ];
             });
 
-        $ingresos = Ingreso::select('Id_Ingreso','fecha', 'descripcion', 'categoria', 'monto')
+        /* ----------  INGRESOS  ------------------------------- */
+        $ingresos = Ingreso::with('categoriaIngreso')
+            ->where('user_id', $userId)
             ->get()
-            ->map(function ($item) {
-                $item->tipo = 'Ingreso';
-                return $item;
+            ->map(function ($i) {
+                return [
+                    'id'          => $i->id_Ingreso,
+                    'fecha'       => $i->fecha,
+                    'descripcion' => $i->descripcion,
+                    'categoria'   => optional($i->categoriaIngreso)->nombre,
+                    'monto'       => $i->monto,
+                    'tipo'        => 'Ingreso',
+                ];
             });
 
-        $transacciones = $gastos->concat($ingresos)->sortByDesc('fecha')->values();
+        /* ----------  Unificar y ordenar  --------------------- */
+        $transacciones = $gastos
+            ->merge($ingresos)
+            ->sortByDesc('fecha')
+            ->values();
 
         return view('welcome', compact('transacciones'));
     }
 
-     public function lista(Request $request)
+    /* =========================================================
+       Devuelve JSON filtrable para tu apartado de reportes
+       (tipo = gasto | ingreso | null)
+       ========================================================= */
+    public function lista(Request $request)
     {
-        // 1) Validaciones rápidas
         $request->validate([
             'tipo'   => 'nullable|in:gasto,ingreso',
             'buscar' => 'nullable|string|max:255',
         ]);
 
-        $userId = Auth::id();                 // solo ver transacciones del usuario logueado
+        $userId = Auth::id();
         $buscar = $request->buscar;
-        $tipo   = $request->tipo;             // 'gasto' | 'ingreso' | null
+        $tipo   = $request->tipo;
 
-        // 2) Base queries con filtros comunes ---------------------------------
-       // ----- GASTOS -----
-// ----- GASTOS -----
-$gastos = Gasto::query()
-    ->selectRaw("
-        id_gasto   AS id,
-        DATE_FORMAT(fecha, '%d %M %Y') AS fecha,
-        TIME_FORMAT(created_at, '%l:%i %p') AS hora,
-        created_at AS orden,                 
-        'Gasto'  AS tipo,
-        categoria,
-        monto,
-        descripcion
-    ")
-    ->where('user_id', $userId)
-    ->when($buscar, function ($q) use ($buscar) {
-        $q->where(function ($w) use ($buscar) {
-            $w->where('categoria', 'like', "%$buscar%")
-              ->orWhere('descripcion', 'like', "%$buscar%");
-        });
-    });
+        /* -------------------  GASTOS  ------------------------ */
+        $gastos = Gasto::query()
+            ->join('categorias_gastos  AS cg', 'cg.id_categoriaGasto', '=', 'gastos.categoria_id')
+            ->where('gastos.user_id', $userId)
+            ->when($buscar, function ($q) use ($buscar) {
+                $q->where(function ($w) use ($buscar) {
+                    $w->where('cg.nombre', 'like', "%$buscar%")
+                      ->orWhere('gastos.descripcion', 'like', "%$buscar%");
+                });
+            })
+            ->selectRaw("
+                gastos.id_Gasto AS id,
+                DATE_FORMAT(gastos.fecha,  '%d %M %Y') AS fecha,
+                TIME_FORMAT(gastos.created_at, '%l:%i %p') AS hora,
+                gastos.created_at            AS orden,
+                'Gasto'                      AS tipo,
+                cg.nombre                    AS categoria,
+                gastos.monto,
+                gastos.descripcion
+            ");
 
- // ----- INGRESOS -----
- $ingresos = Ingreso::query()
-    ->selectRaw("
-        id_ingreso AS id,
-        DATE_FORMAT(fecha, '%d %M %Y') AS fecha,
-        TIME_FORMAT(created_at, '%l:%i %p') AS hora,
-        created_at AS orden,                 
-        'Ingreso' AS tipo,
-        categoria,
-        monto,
-        descripcion
-    ")
-    ->where('user_id', $userId)
-    ->when($buscar, function ($q) use ($buscar) {
-        $q->where(function ($w) use ($buscar) {
-            $w->where('categoria', 'like', "%$buscar%")
-              ->orWhere('descripcion', 'like', "%$buscar%");
-        });
-    });
+        /* -------------------  INGRESOS  ---------------------- */
+        $ingresos = Ingreso::query()
+            ->join('categorias_ingresos AS ci', 'ci.id_categoriaIngreso', '=', 'ingresos.categoria_id')
+            ->where('ingresos.user_id', $userId)
+            ->when($buscar, function ($q) use ($buscar) {
+                $q->where(function ($w) use ($buscar) {
+                    $w->where('ci.nombre', 'like', "%$buscar%")
+                      ->orWhere('ingresos.descripcion', 'like', "%$buscar%");
+                });
+            })
+            ->selectRaw("
+                ingresos.id_Ingreso AS id,
+                DATE_FORMAT(ingresos.fecha,  '%d %M %Y') AS fecha,
+                TIME_FORMAT(ingresos.created_at, '%l:%i %p') AS hora,
+                ingresos.created_at           AS orden,
+                'Ingreso'                     AS tipo,
+                ci.nombre                     AS categoria,
+                ingresos.monto,
+                ingresos.descripcion
+            ");
 
-    $coleccion = match ($tipo) {
-     'gasto'   => $gastos->orderByDesc('orden')->get(),
-     'ingreso' => $ingresos->orderByDesc('orden')->get(),
-     default   => $gastos->unionAll($ingresos)->get()
-                  ->sortByDesc('orden')->values(),   // 👈 usa el timestamp
-    };
+        /* -------------------  Resultado  --------------------- */
+        $coleccion = match ($tipo) {
+            'gasto'   => $gastos  ->orderByDesc('orden')->get(),
+            'ingreso' => $ingresos->orderByDesc('orden')->get(),
+            default   => $gastos->unionAll($ingresos)->get()
+                               ->sortByDesc('orden')->values(),
+        };
 
- // ya no hace falta volver a ordenar; $coleccion llega con el más reciente arriba
-   return response()->json($coleccion->makeHidden('orden')); // ocultamos la clave extra
-
+        // ocultamos la clave 'orden', usada solo para ordenar
+        return response()->json($coleccion->map->except('orden'));
     }
-}           
+}

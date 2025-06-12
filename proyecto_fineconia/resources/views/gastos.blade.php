@@ -26,9 +26,10 @@
                 <a class="btn nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
                 <a class="btn nav-link" id="presupuestos">Presupuestos</a>
                 <a class="btn nav-link" id="ahorros">Ahorro</a>
-            </div>>
-            <div class="user-icon"><i class="bi bi-person-circle"></i></div>
+            </div>
+             @include('partials.header-user') {{-- ← nuevo partial --}}
         </div>
+       
     </nav>
 
     <!-- Header -->

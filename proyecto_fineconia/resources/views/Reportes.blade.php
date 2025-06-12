@@ -62,87 +62,99 @@
     </div>
 
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const lista = document.getElementById('listaReportes');
-        const inputBuscar = document.querySelector('.search-bar input');
-        const filtroLinks = document.querySelectorAll('.dropdown-content a');
-        const btnFiltro = document.getElementById('btnFiltro');
+   <script>
+document.addEventListener('DOMContentLoaded', () => {
+    /* ----------  Referencias DOM  ---------- */
+    const lista        = document.getElementById('listaReportes');
+    const inputBuscar  = document.querySelector('.search-bar input');
+    const filtroLinks  = document.querySelectorAll('.dropdown-content a');
+    const btnFiltro    = document.getElementById('btnFiltro');
 
-        let filtroTipo = ''; // '', 'gasto', 'ingreso'
+    /* '', 'gasto', 'ingreso' */
+    let filtroTipo = '';
 
-        const plantillaCard = (t) => {
-            // Formatear la hora:  "3:51 p.m."  /  "11:07 a.m."
-            const hora = t.hora
-                .toLowerCase() // am / pm
-                .replace('am', 'a.m.')
-                .replace('pm', 'p.m.');
+    /* ----------  Plantilla de tarjeta  ---------- */
+    const plantillaCard = (t) => {
+        const hora = (t.hora || '')
+            .toLowerCase()
+            .replace('am', 'a.m.')
+            .replace('pm', 'p.m.');
 
-            return `
-      <div class="card">
-        <div class="card-head">
-          <span class="titulo">${t.tipo}</span>
-          <span class="fecha">${t.fecha}</span>
-          <span class="flecha">▾</span>
-        </div>
-        <div class="card-sub">${t.descripcion}</div>
-        <div class="detalles">
-          <div><strong>Tipo</strong><br>${t.tipo}</div>
-          <div><strong>Categoría</strong><br>${t.categoria}</div>
-          <div><strong>Descripción</strong><br>${t.descripcion}</div>
-          <div><strong>Monto</strong><br>$${Number(t.monto).toFixed(2)}</div>
-          <div><strong>Hora</strong><br>${hora}</div>
-        </div>
-      </div>`;
-        };
+        return `
+          <div class="card ${t.tipo.toLowerCase()}">
+            <div class="card-head">
+              <span class="titulo">${t.tipo}</span>
+              <span class="fecha">${t.fecha}</span>
+              <span class="flecha">▾</span>
+            </div>
+            <div class="card-sub">${t.descripcion}</div>
 
+            <div class="detalles">
+              <div><strong>Tipo</strong><br>${t.tipo}</div>
+              <div><strong>Categoría</strong><br>${t.categoria}</div>
+              <div><strong>Descripción</strong><br>${t.descripcion}</div>
+              <div><strong>Monto</strong><br>$${Number(t.monto).toFixed(2)}</div>
+              <div><strong>Hora</strong><br>${hora}</div>
+            </div>
+          </div>`;
+    };
 
-        const renderCards = (datos) => {
-            lista.innerHTML = datos.length ?
-                datos.map(plantillaCard).join('') :
-                '<p class="sin-res">Sin resultados</p>';
+    /* ----------  Renderizar tarjetas  ---------- */
+    const renderCards = (datos = []) => {
+        lista.innerHTML = datos.length
+            ? datos.map(plantillaCard).join('')
+            : '<p class="sin-res">Sin resultados</p>';
 
-            // Añade interactividad a cada tarjeta
-            lista.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', () => {
-                    card.classList.toggle('abierta');
-                    card.querySelector('.flecha').textContent =
-                        card.classList.contains('abierta') ? '▴' : '▾';
-                });
-            });
-        };
-
-        const fetchDatos = () => {
-            const params = new URLSearchParams();
-            if (filtroTipo) params.append('tipo', filtroTipo);
-            if (inputBuscar.value.trim()) params.append('buscar', inputBuscar.value.trim());
-
-            fetch(`/transacciones?${params}`)
-                .then(r => r.json())
-                .then(renderCards)
-                .catch(() => alert('Error al cargar transacciones'));
-        };
-
-        // buscador en vivo
-        inputBuscar.addEventListener('input', fetchDatos);
-
-        // menú de filtro
-        filtroLinks.forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                filtroTipo = link.dataset.filtro;
-                btnFiltro.innerHTML = `Filtrar (${link.textContent}) ▾`;
-                fetchDatos();
+        // desplegar/contraer
+        lista.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('abierta');
+                card.querySelector('.flecha').textContent =
+                    card.classList.contains('abierta') ? '▴' : '▾';
             });
         });
+    };
 
-        fetchDatos(); // carga inicial
+    /* ----------  Obtener datos del backend  ---------- */
+    const fetchDatos = () => {
+        const params = new URLSearchParams();
+        if (filtroTipo)               params.append('tipo', filtroTipo);
+        if (inputBuscar.value.trim()) params.append('buscar', inputBuscar.value.trim());
+
+        fetch(`/transacciones?${params.toString()}`)
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(renderCards)
+            .catch(() => alertify.error('Error al cargar transacciones'));
+    };
+
+    /* ----------  Eventos  ---------- */
+
+    /* Buscador con debounce */
+    inputBuscar.addEventListener('input', () => {
+        clearTimeout(inputBuscar._t);
+        inputBuscar._t = setTimeout(fetchDatos, 300);
     });
 
-    document.getElementById('gastos_ingresos').addEventListener('click', function() {
-    window.location.href = "{{ route('gastos-ingresos') }}";
-  })
-    </script>
+    /* Dropdown de filtro */
+    filtroLinks.forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            filtroTipo = link.dataset.filtro;            // '', 'gasto', 'ingreso'
+            btnFiltro.innerHTML = `Filtrar (${link.textContent}) ▾`;
+            fetchDatos();
+        });
+    });
+
+    /* Primera carga */
+    fetchDatos();
+});
+
+/* Enlace a la pantalla principal */
+document.getElementById('gastos_ingresos')
+        .addEventListener('click', () => {
+            window.location.href = "{{ route('gastos-ingresos') }}";
+        });
+</script>
 
 
 </body>

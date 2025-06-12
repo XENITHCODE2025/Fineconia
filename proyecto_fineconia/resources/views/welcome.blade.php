@@ -26,7 +26,7 @@
                 <a class="btn nav-link" id="presupuestos">Presupuestos</a>
                 <a class="btn nav-link" id="ahorros">Ahorro</a>
             </div>
-             @include('partials.header-user')  {{-- ← nuevo partial --}}
+            @include('partials.header-user') {{-- ← nuevo partial --}}
         </div>
     </nav>
 
@@ -106,22 +106,21 @@
                 </p>
                 <div class="divider"></div>
                 <div class="buttons-container">
-                    
-                   <button onclick="window.location.href=`{{ route('graficas') }}`"
-        class="btn btn-dark">
-    <i class="bi bi-graph-up"></i>Ver Gráficas</button>
+
+                    <button onclick="window.location.href=`{{ route('graficas') }}`" class="btn btn-dark">
+                        <i class="bi bi-graph-up"></i>Ver Gráficas</button>
 
                 </div>
             </div>
         </section>
     </div>
-    
+
     <!-- Últimas transacciones -->
     <section class="transactions-section">
-         </div>  {{-- ← cierra .section-container --}}
+        </div> {{-- ← cierra .section-container --}}
 
-    {{-- 🔸 SALDO / TOTAL DE INGRESOS 🔸 --}}
-    @if(isset($saldoDisponible))
+        {{-- 🔸 SALDO / TOTAL DE INGRESOS 🔸 --}}
+        @if(isset($saldoDisponible))
         <div style="
             max-width: 900px;
             margin: 0 auto 25px;
@@ -134,7 +133,7 @@
             font-weight: 600;">
             Saldo actual: ${{ number_format($saldoDisponible, 2) }}
         </div>
-    @endif
+        @endif
         <h3 class="transactions-title">Últimas Transacciones</h3>
         <div style="display: flex; justify-content: space-between; margin-bottom: 20px; gap: 10px; flex-wrap: wrap;">
             <input type="text" id="buscador" placeholder="Buscar por fecha, descripción o categoría"
@@ -158,8 +157,10 @@
                 </tr>
             </thead>
             <tbody>
+                
                 @foreach($transacciones as $transaccion)
                 <tr>
+                    
                     <td>{{ \Carbon\Carbon::parse($transaccion->fecha)->format('d/m/Y') }}</td>
                     <td>{{ $transaccion->descripcion }}</td>
                     <td>{{ $transaccion->categoria }}</td>
@@ -173,26 +174,27 @@
                     </td>
                     <td style="display: flex; gap: 10px;">
 
-                        <!-- BOTON EDITAR -->
+                        {{-- BOTÓN EDITAR --}}
+                        <!-- BOTÓN EDITAR -->
                         <a href="#" class="edit-btn" data-tipo="{{ $transaccion->tipo }}"
-                            data-id="{{ $transaccion->tipo == 'Gasto' ? $transaccion->id_Gasto : $transaccion->id_Ingreso }}"
-                            data-descripcion="{{ $transaccion->descripcion }}"
+                            data-id="{{ $transaccion->id }}" data-descripcion="{{ $transaccion->descripcion }}"
                             data-categoria="{{ $transaccion->categoria }}" data-monto="{{ $transaccion->monto }}"
-                            style="color: #1d4d4f; text-decoration: none; font-size: 16px;">
+                            style="color:#1d4d4f;text-decoration:none;font-size:16px">
                             <i class="bi bi-pencil-square"></i>
                         </a>
 
-                        <!-- BOTONO ELIMINAR -->
+                        {{-- BOTÓN ELIMINAR --}}
                         <form class="delete-form"
-                            data-url="{{ route($transaccion->tipo == 'Gasto' ? 'gastos.destroy' : 'ingresos.destroy', $transaccion->tipo == 'Gasto' ? $transaccion->id_Gasto : $transaccion->id_Ingreso) }}"
-                            method="POST" style="margin: 0;">
+                            data-url="{{ route($transaccion->tipo == 'Gasto' ? 'gastos.destroy' : 'ingresos.destroy', $transaccion->id) }}"
+                            method="POST" style="margin:0">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
-                                style="background: none; border: none; color: red; cursor: pointer; padding: 0;">
+                                style="background:none;border:none;color:red;cursor:pointer;padding:0">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
+
                     </td>
 
                 </tr>
@@ -201,6 +203,7 @@
         </table>
     </section>
     <script>
+        
     document.addEventListener('DOMContentLoaded', function() {
         const forms = document.querySelectorAll('.delete-form');
 
@@ -297,6 +300,7 @@
 
     <!-- UPDATE  -->
     <script>
+        
     document.querySelectorAll('.edit-btn').forEach(boton => {
         boton.addEventListener('click', function(e) {
             e.preventDefault();

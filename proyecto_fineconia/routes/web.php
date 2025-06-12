@@ -56,50 +56,51 @@ Route::middleware(['auth'])->group(function () {
 
     // Mostrar todos los ingresos y gastos 
     // Mostrar solo los ingresos
-/* -----------------------  GASTOS  ----------------------- */
-Route::prefix('gastos')->middleware(['auth'])->group(function () {
-    Route::get   ('/crear',  [GastoController::class, 'create'])->name('gastos.create');
-    Route::post  ('/',       [GastoController::class, 'store'])->name('gastos.store');
-    Route::put   ('/{gasto}',[GastoController::class, 'update'])->name('gastos.update');
-    Route::delete('/{gasto}',[GastoController::class, 'destroy'])->name('gastos.destroy');
-});
+
 
 Route::get('/gastos-ingresos', function () {
 
     $userId = auth()->id();
 
-    /* ───────── INGRESOS ───────── */
+    /* ───── INGRESOS ───── */
     $ingresos = Ingreso::with('categoriaIngreso')
         ->where('user_id', $userId)
         ->get()
-        ->map(function ($i) {
-            $i->tipo      = 'Ingreso';
-            $i->categoria = $i->categoriaIngreso->nombre ?? 'Sin categoría';
-            $i->id        = $i->id_Ingreso;          // id genérico
-            return $i;
+        ->map(function ($ing) {
+            return (object) [
+                'id'         => $ing->id_Ingreso,                     // ID único normalizado
+                'fecha'      => $ing->fecha,
+                'descripcion'=> $ing->descripcion,
+                'categoria'  => optional($ing->categoriaIngreso)->nombre ?: 'Sin categoría',
+                'monto'      => $ing->monto,
+                'tipo'       => 'Ingreso',
+            ];
         });
 
-    /* ───────── GASTOS ───────── */
+    /* ───── GASTOS ───── */
     $gastos = Gasto::with('categoriaGasto')
         ->where('user_id', $userId)
         ->get()
         ->map(function ($g) {
-            $g->tipo      = 'Gasto';
-            $g->categoria = $g->categoriaGasto->nombre ?? 'Sin categoría';
-            $g->id        = $g->id_Gasto;            // id genérico
-            return $g;
+            return (object) [
+                'id'         => $g->id_Gasto,                         // ID único normalizado
+                'fecha'      => $g->fecha,
+                'descripcion'=> $g->descripcion,
+                'categoria'  => optional($g->categoriaGasto)->nombre ?: 'Sin categoría',
+                'monto'      => $g->monto,
+                'tipo'       => 'Gasto',
+            ];
         });
 
-    /* ───────── SALDO ───────── */
+    /* ───── SALDO ───── */
     $totalIngresos     = Ingreso::where('user_id', $userId)->sum('monto');
     $totalPresupuestos = Presupuesto::where('user_id', $userId)->sum('monto');
     $saldoDisponible   = $totalIngresos - $totalPresupuestos;
 
-    /* ───────── LISTA FINAL ───── */
-    $transacciones = $gastos
-        ->merge($ingresos)          // mismo tipo de objetos
-        ->sortByDesc('fecha')
-        ->values();
+    /* ───── LISTA FINAL ───── */
+    $transacciones = $gastos->merge($ingresos)
+                            ->sortByDesc('fecha')
+                            ->values();
 
     return view('welcome', compact('transacciones', 'saldoDisponible'));
 })->name('gastos-ingresos');
@@ -107,10 +108,15 @@ Route::get('/gastos-ingresos', function () {
 
 
 
-
     
 
-   
+    // CRUD Gastos
+    Route::prefix('gastos')->middleware(['auth'])->group(function () {
+    Route::get   ('/crear',  [GastoController::class, 'create'])->name('gastos.create');
+    Route::post  ('/gastos',      [GastoController::class, 'store'])->name('gastos.store');
+    Route::put   ('/{gasto}',[GastoController::class, 'update'])->name('gastos.update');
+    Route::delete('/{gasto}',[GastoController::class, 'destroy'])->name('gastos.destroy');
+});
 
     // CRUD Ingresos
     Route::get('/ingresos/crear', [IngresoController::class, 'create'])->name('ingresos.create');

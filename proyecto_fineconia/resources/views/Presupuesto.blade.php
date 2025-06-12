@@ -71,7 +71,7 @@
         </p>
         <div class="divider"></div>
         <div class="buttons-container">
-          <button class="btn btn-success"><i class="bi bi-pencil-square"></i> Ajustar Presupuesto</button>
+          <a href="{{ route('presupuestos.index') }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Ajustar Presupuesto</a>
         </div>
       </div>
     </section>
@@ -90,7 +90,9 @@
         </p>
         <div class="divider"></div>
         <div class="buttons-container">
-          <button class="btn btn-info"><i class="bi bi-bar-chart-line"></i> Ver Comparación</button>
+          <a href="{{ route('graficas.presupuesto') }}" class="btn btn-info">
+    <i class="bi bi-bar-chart-line"></i> Ver Comparación
+</a>
         </div>
       </div>
     </section>
@@ -109,52 +111,33 @@
           <th>Progreso</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Alimentación</td>
-          <td>$800.00</td>
-          <td>$650.00</td>
-          <td>$150.00</td>
-          <td>
-            <div class="progress-container">
-              <div class="progress-bar under-budget" style="width: 81.25%"></div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Transporte</td>
-          <td>$300.00</td>
-          <td>$180.00</td>
-          <td>$120.00</td>
-          <td>
-            <div class="progress-container">
-              <div class="progress-bar under-budget" style="width: 60%"></div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Entretenimiento</td>
-          <td>$200.00</td>
-          <td>$190.00</td>
-          <td>$10.00</td>
-          <td>
-            <div class="progress-container">
-              <div class="progress-bar near-budget" style="width: 95%"></div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Servicios</td>
-          <td>$350.00</td>
-          <td>$400.00</td>
-          <td>-$50.00</td>
-          <td>
-            <div class="progress-container">
-              <div class="progress-bar over-budget" style="width: 114.29%"></div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
+<tbody>
+@forelse ($presupuestos as $pre)
+  <tr>
+    <td>{{ $pre->categoria }}</td>
+
+    <td>${{ number_format($pre->monto, 2) }}</td>
+
+    <td>${{ number_format($pre->gastado, 2) }}</td>
+
+    <td class="{{ $pre->restante < 0 ? 'text-danger' : '' }}">
+        ${{ number_format($pre->restante, 2) }}
+    </td>
+
+    <td>
+      <div class="progress-container">
+        <div class="progress-bar {{ $pre->barClass }}"
+             style="width: {{ $pre->pct }}%"></div>
+      </div>
+    </td>
+  </tr>
+@empty
+  <tr>
+    <td colspan="5" class="text-center py-4">Aún no tienes presupuestos registrados.</td>
+  </tr>
+@endforelse
+</tbody>
+
     </table>
   </section>
 
@@ -193,6 +176,7 @@
   });
   
   
+
 </script>
 </body>
 </html>

@@ -45,21 +45,21 @@ class IngresoController extends Controller
     }
 
     // IngresoController.php
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'descripcion' => 'required|string|max:255',
-            'categoria_id' => 'required|exists:categorias_ingresos,id_categoriaIngreso',
-            'monto' => 'required|numeric'
-        ]);
+   // IngresoController.php
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'descripcion'  => 'required|string|max:255',
+        'categoria_id' => 'required|exists:categorias_ingresos,id_categoriaIngreso',
+        'monto'        => 'required|numeric|min:0',
+        'fecha'        => 'sometimes|date',   //  ← ya no es required
+    ]);
 
-        $ingreso = Ingreso::findOrFail($id);
-        $ingreso->update([
-            'descripcion' => $request->descripcion,
-            'categoria_id' => $request->categoria_id,
-            'monto' => $request->monto
-        ]);
+    $ingreso = Ingreso::where('id_Ingreso', $id)->firstOrFail();
+    $ingreso->update($request->only('fecha','descripcion','categoria_id','monto'));
 
-        return response()->json(['status' => 'ok']);
-    }
+    return response()->json(['status' => 'ok']);
+}
+
+
 }

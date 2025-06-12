@@ -157,10 +157,10 @@
                 </tr>
             </thead>
             <tbody>
-                
+
                 @foreach($transacciones as $transaccion)
                 <tr>
-                    
+
                     <td>{{ \Carbon\Carbon::parse($transaccion->fecha)->format('d/m/Y') }}</td>
                     <td>{{ $transaccion->descripcion }}</td>
                     <td>{{ $transaccion->categoria }}</td>
@@ -175,18 +175,34 @@
                     <td style="display: flex; gap: 10px;">
 
                         {{-- BOTÓN EDITAR --}}
-                        <!-- BOTÓN EDITAR -->
-                        <a href="#" class="edit-btn" data-tipo="{{ $transaccion->tipo }}"
-                            data-id="{{ $transaccion->id }}" data-descripcion="{{ $transaccion->descripcion }}"
+                        @php
+                        // Siempre habrá valor => id_Gasto | id_Ingreso
+                        $filaId = $transaccion->tipo === 'Gasto'
+                        ? $transaccion->id_Gasto
+                        : $transaccion->id_Ingreso;
+
+                        // Ruta para eliminar (usa el mismo $filaId)
+                        $rutaEliminar = $transaccion->tipo === 'Gasto'
+                        ? route('gastos.destroy', $filaId)
+                        : route('ingresos.destroy', $filaId);
+                        @endphp
+
+                        <a href="javascript:void(0)" class="edit-btn" data-tipo="{{ $transaccion->tipo }}"
+                            data-id="{{ $filaId }}" data-descripcion="{{ $transaccion->descripcion }}"
                             data-categoria="{{ $transaccion->categoria }}" data-monto="{{ $transaccion->monto }}"
                             style="color:#1d4d4f;text-decoration:none;font-size:16px">
                             <i class="bi bi-pencil-square"></i>
                         </a>
+                        {{-- BOTÓN BORRAR --}}
+                        @php
 
-                        {{-- BOTÓN ELIMINAR --}}
-                        <form class="delete-form"
-                            data-url="{{ route($transaccion->tipo == 'Gasto' ? 'gastos.destroy' : 'ingresos.destroy', $transaccion->id) }}"
-                            method="POST" style="margin:0">
+                        $rutaEliminar = $transaccion->tipo === 'Gasto'
+                        ? route('gastos.destroy', $transaccion->id) // id_Gasto
+                        : route('ingresos.destroy', $transaccion->id); // id_Ingreso
+                        @endphp
+
+                        <!-- BOTÓN ELIMINAR -->
+                        <form class="delete-form" data-url="{{ $rutaEliminar }}" method="POST" style="margin:0">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
@@ -194,6 +210,8 @@
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
+
+
 
                     </td>
 
@@ -203,7 +221,6 @@
         </table>
     </section>
     <script>
-        
     document.addEventListener('DOMContentLoaded', function() {
         const forms = document.querySelectorAll('.delete-form');
 
@@ -300,123 +317,85 @@
 
     <!-- UPDATE  -->
     <script>
-        
-    document.querySelectorAll('.edit-btn').forEach(boton => {
-        boton.addEventListener('click', function(e) {
-            e.preventDefault();
+   document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+        e.preventDefault();
 
-            const tipo = this.dataset.tipo;
-            const id = this.dataset.id;
-            const descripcionActual = this.dataset.descripcion;
-            const montoActual = this.dataset.monto;
-            const categoriaActual = this.dataset.categoria;
+        const tipo        = btn.dataset.tipo;          // “Gasto” | “Ingreso”
+        const id          = btn.dataset.id;
+        const descActual  = btn.dataset.descripcion;
+        const catActual   = btn.dataset.categoria;
+        const montoActual = btn.dataset.monto;
 
-            const categoriasGasto = ['Alimentación', 'Transporte', 'Vivienda', 'Entretenimiento',
-                'Salud', 'Educación', 'Otros'
-            ];
-            const categoriasIngreso = ['Salario', 'Freelance', 'Inversión', 'Regalo', 'Reembolso',
-                'Otros'
-            ];
-            const categorias = tipo === 'Gasto' ? categoriasGasto : categoriasIngreso;
-
-            let optionsHTML = '';
-            categorias.forEach(cat => {
-                const selected = cat === categoriaActual ? 'selected' : '';
-                optionsHTML += `<option value="${cat}" ${selected}>${cat}</option>`;
-            });
-
-            // Generar IDs únicos cada vez
-            const uniqueSuffix = Math.floor(Math.random() * 100000);
-            const inputIdDesc = `desc-${id}-${uniqueSuffix}`;
-            const inputIdMonto = `monto-${id}-${uniqueSuffix}`;
-            const selectIdCat = `cat-${id}-${uniqueSuffix}`;
-
-            // Generar contenido dinámico cada vez que se abre
-            const modalContent = `
-            <label>Descripción:</label><br>
-            <input id="${inputIdDesc}" type="text" value="${descripcionActual}" style="width: 100%; margin-bottom: 10px;"><br>
-            <label>Categoría:</label><br>
-            <select id="${selectIdCat}" style="width: 100%; margin-bottom: 10px;">${optionsHTML}</select><br>
-            <label>Monto:</label><br>
-            <input id="${inputIdMonto}" type="number" value="${montoActual}" style="width: 100%; margin-bottom: 10px;">
-        `;
-
-            alertify.confirm(
-                `Editar ${tipo}`,
-                modalContent,
-                function() {
-                    const descripcion = document.getElementById(inputIdDesc).value;
-                    const categoria = document.getElementById(selectIdCat).value;
-                    const monto = document.getElementById(inputIdMonto).value;
-
-                    const url = tipo === 'Gasto' ? `/gastos/${id}` : `/ingresos/${id}`;
-
-                    fetch(url, {
+        // ---------- Construir HTML del modal ----------
+        let contenido = '';
+        if (tipo === 'Gasto') {
+            const inpIdMonto = `monto-${id}-${Date.now()}`;
+            contenido = `
+                <label>Monto:</label><br>
+                <input id="${inpIdMonto}" type="number" value="${montoActual}"
+                       style="width:100%;margin-bottom:10px;">
+            `;
+            alertify.confirm(`Editar ${tipo}`, contenido,
+                () => {
+                    const nuevoMonto = document.getElementById(inpIdMonto).value;
+                    fetch(`/gastos/${id}`, {
                         method: 'PUT',
                         headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ monto:nuevoMonto })
+                    })
+                    .then(r => r.ok ? location.reload() :
+                          alertify.error('No se pudo actualizar'))
+                },
+                () => {}
+            ).set('labels',{ok:'Guardar',cancel:'Cancelar'});
+        } else { /* Ingreso */
+            const suf       = Date.now();
+            const inpDesc   = `desc-${id}-${suf}`;
+            const inpMonto  = `monto-${id}-${suf}`;
+            const selCat    = `cat-${id}-${suf}`;
+
+            const opciones  = @json(\App\Models\CategoriaIngreso::pluck('nombre','id_categoriaIngreso'));
+            let optsHtml    = '';
+            for (const [idCat,nombre] of Object.entries(opciones)) {
+                optsHtml += `<option value="${idCat}" ${nombre===catActual?'selected':''}>${nombre}</option>`;
+            }
+
+            contenido = `
+              <label>Descripción:</label><br>
+              <input id="${inpDesc}"  type="text"   value="${descActual}"  style="width:100%;margin-bottom:10px;"><br>
+              <label>Categoría:</label><br>
+              <select id="${selCat}" style="width:100%;margin-bottom:10px;">${optsHtml}</select><br>
+              <label>Monto:</label><br>
+              <input id="${inpMonto}" type="number" value="${montoActual}" style="width:100%;margin-bottom:10px;">
+            `;
+
+            alertify.confirm(`Editar ${tipo}`, contenido,
+                () => {
+                    fetch(`/ingresos/${id}`, {
+                        method:'PUT',
+                        headers:{
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':'{{ csrf_token() }}'
                         },
                         body: JSON.stringify({
-                            descripcion,
-                            categoria,
-                            monto
+                            descripcion : document.getElementById(inpDesc).value,
+                            categoria_id: document.getElementById(selCat).value,
+                            monto       : document.getElementById(inpMonto).value
                         })
-                    }).then(response => {
-                        if (response.ok) {
-                            alertify.success(`${tipo} actualizado`);
-                            setTimeout(() => window.location.reload(), 1000);
-                        } else {
-                            alertify.error(`Error al actualizar ${tipo}`);
-                        }
-                    });
+                    })
+                    .then(r => r.ok ? location.reload() :
+                          alertify.error('No se pudo actualizar'));
                 },
-                function() {
-                    alertify.error('Cancelado');
-                }
-            ).set('labels', {
-                ok: 'Guardar',
-                cancel: 'Cancelar'
-            });
-
-            // Esperar a que el modal se renderice
-            setTimeout(() => {
-                const guardarBtn = document.querySelector('.ajs-button.ajs-ok');
-                guardarBtn.disabled = true;
-
-                const descInput = document.getElementById(inputIdDesc);
-                const catSelect = document.getElementById(selectIdCat);
-                const montoInput = document.getElementById(inputIdMonto);
-
-                const activarBotonSiCambia = () => {
-                    const descModificado = descInput.value !== descripcionActual;
-                    const catModificado = catSelect.value !== categoriaActual;
-                    const montoModificado = montoInput.value !== montoActual;
-                    guardarBtn.disabled = !(descModificado || catModificado ||
-                        montoModificado);
-                };
-
-                montoInput.addEventListener('keypress', (e) => {
-                    if (!/[0-9.]/.test(e.key)) e.preventDefault();
-                    if (e.key === '.' && montoInput.value.includes('.')) e
-                        .preventDefault();
-                });
-
-                montoInput.addEventListener('input', () => {
-                    montoInput.value = montoInput.value.replace(/[^0-9.]/g, '');
-                    const parts = montoInput.value.split('.');
-                    if (parts.length > 2) {
-                        montoInput.value = parts[0] + '.' + parts.slice(1).join('');
-                    }
-                    activarBotonSiCambia();
-                });
-
-                descInput.addEventListener('input', activarBotonSiCambia);
-                catSelect.addEventListener('change', activarBotonSiCambia);
-            }, 100);
-        });
+                () => {}
+            ).set('labels',{ok:'Guardar',cancel:'Cancelar'});
+        }
     });
-    </script>
+});
+</script>
 
 
 

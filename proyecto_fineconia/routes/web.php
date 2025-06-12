@@ -12,6 +12,7 @@ use App\Http\Controllers\ObjetivoAhorroController;
 use App\Http\Controllers\TransaccionesController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PresupuestoController;
+use App\Http\Controllers\GraficasPresupuestoController;
 use App\Models\Gasto;
 use App\Models\Presupuesto;
 use App\Models\Ingreso;
@@ -36,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bienvenida', fn() => view('Bienvenida'))->name('bienvenida');
     Route::get('/finanzas-personales', fn() => view('Finanzas_personales'))->name('finanzas.personales');
     Route::get('/ahorro', fn() => view('Ahorro'))->name('ahorro');
-    Route::get('/presupuesto', fn() => view('Presupuesto'))->name('presupuesto');
+
     Route::get('/reportes', [ReporteController::class, 'index'])
         ->name('reportes');
     Route::get('/graficas',                 [GraficasController::class, 'index'])->name('graficas');
@@ -46,7 +47,11 @@ Route::middleware(['auth'])->group(function () {
         '/graficas/ingresos-gastos',
         [GraficasController::class, 'ingresosYGastosPorMes']
     )->name('graficas.ingresos-gastos');
-
+    Route::get(
+        '/presupuesto',
+        [PresupuestoController::class, 'indexnuevo']
+    )
+        ->name('presupuesto');
     Route::get('Crear_Presupuesto', [PresupuestoController::class, 'create'])
         ->name('presupuestos.create');
 
@@ -54,76 +59,105 @@ Route::middleware(['auth'])->group(function () {
         ->name('presupuestos.store');
 
 
+
+    /* Vista y datos de la gráfica de pastel de presupuestos */
+    Route::get(
+        '/graficas/presupuestos',
+        [GraficasPresupuestoController::class, 'index']
+    )->name('graficas.presupuesto');
+
+    Route::get(
+        '/graficas/presupuestos/data',
+        [GraficasPresupuestoController::class, 'data']
+    )->name('graficas.presupuesto.data');
+
+     //Boton Ajustar Presupuesto
+    Route::get('/presupuestos/registro', [PresupuestoController::class, 'index'])->name('presupuestos.index');
+    // Presupuestos – eliminar
+    Route::delete('/presupuestos/{id_Presupuesto}', [PresupuestoController::class, 'destroy'])->name('presupuestos.destroy');
+    // Editar Presupuesto
+    Route::put('/presupuestos/{id}', [PresupuestoController::class, 'update'])->name('presupuestos.update');
+
+
     // Mostrar todos los ingresos y gastos 
     // Mostrar solo los ingresos
 
 
-Route::get('/gastos-ingresos', function () {
+    Route::get('/gastos-ingresos', function () {
 
-    $userId = auth()->id();
+        $userId = auth()->id();
 
-    /* ───── INGRESOS ───── */
-    $ingresos = Ingreso::with('categoriaIngreso')
-        ->where('user_id', $userId)
-        ->get()
-        ->map(function ($ing) {
-            return (object) [
-                'id'         => $ing->id_Ingreso,                     // ID único normalizado
-                'fecha'      => $ing->fecha,
-                'descripcion'=> $ing->descripcion,
-                'categoria'  => optional($ing->categoriaIngreso)->nombre ?: 'Sin categoría',
-                'monto'      => $ing->monto,
-                'tipo'       => 'Ingreso',
-            ];
-        });
+        /* ───── INGRESOS ───── */
+        $ingresos = Ingreso::with('categoriaIngreso')
+            ->where('user_id', $userId)
+            ->select(                // ← OJO: incluimos la PK original y una columna
+                'id_Ingreso',        //     “neutra” llamada id
+                'id_Ingreso  as id',
+                'fecha',
+                'descripcion',
+                'categoria_id',
+                'monto'
+            )
+            ->get()
+            ->map(function ($i) {
+                $i->tipo      = 'Ingreso';
+                $i->categoria = optional($i->categoriaIngreso)->nombre ?? 'Sin categoría';
+                return $i;
+            });
 
-    /* ───── GASTOS ───── */
-    $gastos = Gasto::with('categoriaGasto')
-        ->where('user_id', $userId)
-        ->get()
-        ->map(function ($g) {
-            return (object) [
-                'id'         => $g->id_Gasto,                         // ID único normalizado
-                'fecha'      => $g->fecha,
-                'descripcion'=> $g->descripcion,
-                'categoria'  => optional($g->categoriaGasto)->nombre ?: 'Sin categoría',
-                'monto'      => $g->monto,
-                'tipo'       => 'Gasto',
-            ];
-        });
+        /* ───── GASTOS ───── */
+        $gastos = Gasto::with('categoriaGasto')
+            ->where('user_id', $userId)
+            ->select(
+                'id_Gasto',
+                'id_Gasto   as id',
+                'fecha',
+                'descripcion',
+                'categoria_id',
+                'monto'
+            )
+            ->get()
+            ->map(function ($g) {
+                $g->tipo      = 'Gasto';
+                $g->categoria = optional($g->categoriaGasto)->nombre ?? 'Sin categoría';
+                return $g;
+            });
 
-    /* ───── SALDO ───── */
-    $totalIngresos     = Ingreso::where('user_id', $userId)->sum('monto');
-    $totalPresupuestos = Presupuesto::where('user_id', $userId)->sum('monto');
-    $saldoDisponible   = $totalIngresos - $totalPresupuestos;
+        /* ───── SALDO ───── */
+        $totalIngresos     = Ingreso::where('user_id', $userId)->sum('monto');
+        $totalPresupuestos = Presupuesto::where('user_id', $userId)->sum('monto');
+        $saldoDisponible   = $totalIngresos - $totalPresupuestos;
 
-    /* ───── LISTA FINAL ───── */
-    $transacciones = $gastos->merge($ingresos)
-                            ->sortByDesc('fecha')
-                            ->values();
+        /* ───── LISTA FINAL ─────
+       concat() evita el error “getKey()” porque no necesita
+       las llaves internas del modelo → */
+        $transacciones = $gastos
+            ->concat($ingresos)
+            ->sortByDesc('fecha')
+            ->values();
 
-    return view('welcome', compact('transacciones', 'saldoDisponible'));
-})->name('gastos-ingresos');
+        return view('welcome', compact('transacciones', 'saldoDisponible'));
+    })->name('gastos-ingresos');
 
 
 
 
-    
+
+
 
     // CRUD Gastos
     Route::prefix('gastos')->middleware(['auth'])->group(function () {
-    Route::get   ('/crear',  [GastoController::class, 'create'])->name('gastos.create');
-    Route::post  ('/gastos',      [GastoController::class, 'store'])->name('gastos.store');
-    Route::put   ('/{gasto}',[GastoController::class, 'update'])->name('gastos.update');
-    Route::delete('/{gasto}',[GastoController::class, 'destroy'])->name('gastos.destroy');
-});
+        Route::get('/crear',  [GastoController::class, 'create'])->name('gastos.create');
+        Route::post('/gastos',      [GastoController::class, 'store'])->name('gastos.store');
+        Route::put('/{gasto}', [GastoController::class, 'update'])->name('gastos.update');
+        Route::delete('/{gasto}', [GastoController::class, 'destroy'])->name('gastos.destroy');
+    });
 
     // CRUD Ingresos
     Route::get('/ingresos/crear', [IngresoController::class, 'create'])->name('ingresos.create');
     Route::post('/ingresos', [IngresoController::class, 'store'])->name('ingresos.store');
-    Route::delete('/ingresos/{id_Ingreso}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
-    Route::put('/ingresos/{id}', [IngresoController::class, 'update']);
-
+    Route::delete('/ingresos/{id}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
+    Route::put   ('/ingresos/{id}', [IngresoController::class, 'update'])->name('ingresos.update');
 
 
     Route::get('/transacciones', [TransaccionesController::class, 'lista'])

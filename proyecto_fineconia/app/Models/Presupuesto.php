@@ -25,9 +25,18 @@ class Presupuesto extends Model
     {
         return $this->belongsTo(CategoriaGasto::class, 'categoria_id', 'id_categoriaGasto');
     }
+    
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function ajustarMonto(float $nuevoMonto): void
+    {
+        $diferencia = $nuevoMonto - $this->monto;   // + si sube el límite
+        $this->monto = $nuevoMonto;
+        $this->restante += $diferencia;
+        $this->restante = max($this->restante, 0);      // nunca negativo
+        $this->save();
     }
 }

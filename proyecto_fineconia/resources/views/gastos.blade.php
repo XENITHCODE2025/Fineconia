@@ -73,7 +73,7 @@
 
             <div class="buttons-container">
                 <button type="submit" class="btn btn-save">Guardar</button>
-                <a href="{{ url('/') }}" class="btn btn-cancel">Cancelar</a>
+                <a href="{{ url('gastos-ingresos') }}" class="btn btn-cancel">Cancelar</a>
             </div>
         </form>
     </div>

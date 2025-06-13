@@ -1,7 +1,7 @@
 
 {{-- Bloque: Icono + Nombre de usuario --}}
 @auth
-    <span style="font-weight:bold; font-size:0.75rem; margin-right:.1rem">
+    <span style="font-weight:bold; font-size:0.75rem; margin-right:.4rem">
         {{ Auth::user()->name }}
     </span>
 @endauth

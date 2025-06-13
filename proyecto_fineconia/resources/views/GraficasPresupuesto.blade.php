@@ -5,21 +5,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gráfica de Presupuestos – Fineconia</title>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
 
   @vite('resources/css/Graficas.css')
 </head>
 <body class="bg-light">
-
   <header class="d-flex justify-content-between align-items-center p-3 shadow-sm text-white"
-          style="background:#31565E">
-    <img src="{{ asset('img/LogoCompleto.jpg') }}" style="height:50px" alt="Logo">
+        style="background:#31565E">
+  <img src="{{ asset('img/LogoCompleto.jpg') }}" style="height:50px" alt="Logo">
+
+  <!-- Contenedor para alinear a la derecha -->
+  <div class="d-flex align-items-center ms-auto">
     <a href="{{ route('presupuesto') }}"
        class="text-white text-decoration-underline me-3">Presupuesto</a>
-    @include('partials.header-user')
-  </header>
+        @include('partials.header-user') 
+  </div>
+</header>
+
 
   <main class="container my-5">
       <h3 class="text-center mb-4">Distribución de Presupuestos</h3>
@@ -27,8 +33,10 @@
       <div class="card shadow-sm p-4 d-flex justify-content-center">
         
           <canvas id="piePresupuesto"
-                  width="700" height="700"
-                  style="width:700px;height:700px"></canvas>
+        width="600" height="600"
+        class="mx-auto d-block"
+        style="width:600px;height:600px"></canvas>
+
 
           <p id="sinDatos" class="text-center text-muted mt-3 d-none">
               Aún no has creado presupuestos.

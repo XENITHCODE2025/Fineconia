@@ -91,7 +91,7 @@
         <div class="divider"></div>
         <div class="buttons-container">
           <a href="{{ route('graficas.presupuesto') }}" class="btn btn-info">
-    <i class="bi bi-bar-chart-line"></i> Ver Comparación
+    <i class="bi bi-bar-chart-line"></i> Distribución de presupuesto
 </a>
         </div>
       </div>
@@ -125,11 +125,13 @@
     </td>
 
     <td>
-      <div class="progress-container">
-        <div class="progress-bar {{ $pre->barClass }}"
-             style="width: {{ $pre->pct }}%"></div>
-      </div>
-    </td>
+    <div class="progress-container">
+        <div class="progress-bar {{ $pre->bar_class }}"
+             style="width: {{ $pre->pct }}%">
+        </div>
+    </div>
+</td>
+
   </tr>
 @empty
   <tr>

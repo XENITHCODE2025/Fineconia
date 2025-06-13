@@ -39,4 +39,27 @@ class Presupuesto extends Model
         $this->restante = max($this->restante, 0);      // nunca negativo
         $this->save();
     }
+
+     /** % de presupuesto gastado (máx. 100 %) */
+    public function getPctAttribute(): float
+    {
+        if ($this->monto <= 0) {
+            return 0;
+        }
+
+        $gastado = $this->monto - $this->restante;          // lo usado
+        $pct     = ($gastado / $this->monto) * 100;
+
+        return round(min($pct, 100), 2);
+    }
+
+    /** Clase CSS según el rango de porcentaje */
+    public function getBarClassAttribute(): string
+    {
+        return match (true) {
+            $this->pct < 70  => 'prog-green',   // < 70 %
+            $this->pct < 90  => 'prog-orange',  // 70-89 %
+            default          => 'prog-red',     // ≥ 90 %
+        };
+    }
 }

@@ -128,5 +128,8 @@ public function index()
         $presupuesto->ajustarMonto($request->monto);
 
         return response()->json(['status' => 'ok']);
+
+        
     }
+
 }

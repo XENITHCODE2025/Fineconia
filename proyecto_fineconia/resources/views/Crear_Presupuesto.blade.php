@@ -18,7 +18,7 @@
         </div>
         <div class="right-side">
             <div class="nav-links">
-                <a href="{{ route('presupuesto') }}" class="nav-link">Gastos e Ingresos</a>
+                <a href="{{ route('presupuesto') }}" class="nav-link">Presupuesto</a>
             </div>
             <div style="color:white; font-weight:bold;">{{ auth()->user()->name }}</div>
             <div class="user-icon"><i class="bi bi-person-circle"></i></div>

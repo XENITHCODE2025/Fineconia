@@ -22,7 +22,7 @@
         </div>
 
         <div class="menu">
-            <a href="{{ route('gastos-ingresos') }}" class="nav-link">Gastos e Ingresos</a>
+            <a href="{{ route('presupuesto') }}" class="nav-link">Presupuesto</a>
             <span class="nombre">{{ auth()->user()->name }}</span>
             <div class="user-icon"><i class="bi bi-person-circle"></i></div>
         </div>
@@ -36,7 +36,7 @@
 
         <div class="busqueda">
             <input type="text" id="buscador" placeholder="Buscar por categoría">
-            <button><i class="fas fa-chevron-down"></i></button>
+            
         </div>
 
         <!-- … encabezado idéntico … -->

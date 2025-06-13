@@ -13,7 +13,7 @@
 
     /* Navbar */
     .navbar {
-        background-color: #1d4d4f;
+        background-color: #31565e;
         padding: 15px 30px;
         display: flex;
         justify-content: space-between;
@@ -65,7 +65,7 @@
 
     /* Header */
     .header {
-        background-color: #1d4d4f;
+        background-color: #31565e;
         padding: 30px 20px;
         text-align: center;
     }

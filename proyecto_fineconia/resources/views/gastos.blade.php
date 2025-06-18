@@ -5,29 +5,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registrar Gasto - Fineconia</title>
+
+  <!-- Iconos & AlertifyJS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <!-- AlertifyJS CSS y JS -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
   <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
-  @vite(['resources/css/formulario-gastos.css'])
+  <!-- Tu CSS -->
+  @vite('resources/css/formulario-gastos.css')
 </head>
 
 <body>
   <!-- Navbar -->
   <nav class="navbar">
     <div class="logo-container">
-      <img src="{{ asset('img/LogoCompleto.jpg') }}" alt="Logo" style="height: 50px;">
+      <img src="{{ asset('img/LogoCompleto.jpg') }}" alt="Logo" class="logo">
     </div>
+
+    <!-- Botón hamburguesa (móvil) -->
+    <button class="hamburger" type="button" aria-label="Menú">
+      <i class="bi bi-list"></i>
+    </button>
+
     <div class="right-side">
       <div class="nav-links">
+        {{-- Usuario primero en móvil --}}
+        @auth
+          <a href="#" class="nav-link user-name">{{ Auth::user()->name }}</a>
+        @endauth
+
         <a class="btn nav-link" id="finanzas_personales">Finanzas Personales</a>
         <a class="btn nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
         <a class="btn nav-link" id="presupuestos">Presupuestos</a>
         <a class="btn nav-link" id="ahorros">Ahorro</a>
       </div>
-      @include('partials.header-user')
+
+      {{-- Partial de usuario (desktop) --}}
+      <div class="header-user">
+        @include('partials.header-user')
+      </div>
     </div>
   </nav>
 
@@ -101,21 +118,49 @@
     });
   </script>
 
-  <!-- Enlaces de navegación -->
+  <!-- Toggle menú hamburguesa -->
   <script>
-    document.getElementById('finanzas_personales').addEventListener('click', () => {
-      window.location.href = "{{ route('finanzas.personales') }}";
-    });
-    document.getElementById('gastos_ingresos').addEventListener('click', () => {
-      window.location.href = "{{ route('gastos-ingresos') }}";
-    });
-    document.getElementById('presupuestos').addEventListener('click', () => {
-      window.location.href = "{{ route('presupuesto') }}";
-    });
-    document.getElementById('ahorros').addEventListener('click', () => {
-      window.location.href = "{{ route('ahorro') }}";
+    document.addEventListener('DOMContentLoaded', function() {
+      const btnMenu = document.querySelector('.hamburger');
+      const menu    = document.querySelector('.nav-links');
+      btnMenu.addEventListener('click', () => menu.classList.toggle('active'));
     });
   </script>
+
+  <!-- Navegación -->
+  <script>
+    document.getElementById('finanzas_personales').onclick = () =>
+      window.location.href = "{{ route('finanzas.personales') }}";
+    document.getElementById('gastos_ingresos').onclick = () =>
+      window.location.href = "{{ route('gastos-ingresos') }}";
+    document.getElementById('presupuestos').onclick = () =>
+      window.location.href = "{{ route('presupuesto') }}";
+    document.getElementById('ahorros').onclick = () =>
+      window.location.href = "{{ route('ahorro') }}";
+  </script>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Selecciona el contenedor del partial
+  const headerUser = document.querySelector('.header-user');
+
+  if (!headerUser) return;
+
+  // Función que muestra/oculta según ancho
+  function toggleHeaderUser() {
+    if (window.innerWidth <= 768) {
+      headerUser.style.display = 'none';
+    } else {
+      headerUser.style.display = '';
+    }
+  }
+
+  // Ejecuta al cargar…
+  toggleHeaderUser();
+
+  // …y cada vez que se redimensiona la ventana
+  window.addEventListener('resize', toggleHeaderUser);
+});
+</script>
 </body>
 
 </html>

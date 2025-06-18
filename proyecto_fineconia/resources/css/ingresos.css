@@ -1,150 +1,200 @@
-/* Mismo CSS que en gastos.html */
+/* Reset básico */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  body {
-    background-color: #f5f5f5;
-    color: #333;
-  }
-  
-  /* Navbar */
-  .navbar {
-    background-color: #31565e;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .logo {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .brand {
-    color: white;
-    font-weight: bold;
-    font-size: 20px;
-  }
-  
-  .right-side {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #31565e;
+  padding: 15px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.logo-container {
+  flex-shrink: 0;
+}
+.logo-container .logo {
+  height: 50px;
+  transition: height 0.3s ease;
+}
+
+/* Hamburguesa */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+/* Links */
+.right-side {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.nav-links .user-name {
+  display: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* Partial usuario */
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Estilos nav-link */
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: clamp(14px, 3vw, 16px);
+  transition: opacity 0.3s;
+}
+.nav-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Header */
+.header {
+  background-color: #31565e;
+  padding: clamp(25px, 5vw, 30px) 20px;
+  text-align: center;
+}
+.header h2 {
+  color: #fff;
+  font-size: clamp(22px, 5vw, 28px);
+  margin-bottom: clamp(10px, 3vw, 15px);
+  letter-spacing: 0.5px;
+}
+
+/* Formulario */
+.form-container {
+  width: 90%;
+  max-width: 500px;
+  margin: clamp(20px, 5vw, 30px) auto;
+  padding: clamp(15px, 4vw, 25px);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form-title {
+  color: #388e3c;
+  text-align: center;
+  margin-bottom: clamp(15px, 4vw, 20px);
+  font-size: clamp(18px, 4vw, 22px);
+}
+
+.form-group {
+  margin-bottom: clamp(15px, 4vw, 20px);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: clamp(5px, 2vw, 8px);
+  font-weight: 500;
+  font-size: clamp(13px, 3vw, 14px);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: clamp(8px, 3vw, 10px);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: clamp(13px, 3vw, 14px);
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: clamp(20px, 5vw, 30px);
+}
+
+.btn {
+  padding: clamp(8px, 3vw, 10px) clamp(15px, 4vw, 20px);
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: clamp(13px, 3vw, 14px);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.btn-save {
+  background-color: #1d4d4f;
+  color: #fff;
+}
+.btn-save:hover {
+  background-color: #2d6d6f;
+}
+
+.btn-cancel {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+}
+.btn-cancel:hover {
+  background-color: #e0e0e0;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .logo-container .logo { height: 40px; }
+  .hamburger { display: block; }
   .nav-links {
-    display: flex;
-    gap: 25px;
-  }
-  
-  .nav-link {
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-  }
-  
-  .nav-link:hover {
-    text-decoration: underline;
-  }
-  
-  .user-icon {
-    font-size: 28px;
-    color: white;
-  }
-  
-  /* Header */
-  .header {
-    background-color: #1d4d4f;
-    padding: 30px 20px;
-    text-align: center;
-  }
-  
-  .header h2 {
-    color: white;
-    font-size: 28px;
-    margin-bottom: 15px;
-    letter-spacing: 1px;
-  }
-  
-  /* Formulario */
-  .form-container {
-    max-width: 500px;
-    margin: 30px auto;
-    padding: 25px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  
-  .form-title {
-    color: #388e3c;
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 22px;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
-  }
-  
-  .form-group input,
-  .form-group select {
+    display: none;
+    flex-direction: column;
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
+    gap: 0.75rem;
+    margin-top: 10px;
+    background-color: #31565e;
+    padding: 10px 0;
   }
-  
-  .buttons-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-  }
-  
-  .btn {
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .btn-save {
-    background-color: #1d4d4f;
-    color: white;
-  }
-  
-  .btn-save:hover {
-    background-color: #2d6d6f;
-  }
-  
-  .btn-cancel {
-    background-color: #f5f5f5;
-    color: #333;
-    border: 1px solid #ddd;
-  }
-  
-  .btn-cancel:hover {
-    background-color: #e0e0e0;
-  }
+  .nav-links.active { display: flex; }
+  .nav-links .user-name { display: block; }
+
+  .header-user { display: none; }
+
+  .buttons-container { flex-direction: column; }
+  .btn { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .nav-links { gap: 0.5rem; }
+  .form-group input,
+  .form-group select { padding: 10px 8px; }
+}

@@ -5,11 +5,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gastos e Ingresos - Fineconia</title>
+
+    <!-- Iconos Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <!-- Alertify CSS y JS -->
+    <!-- Alertify -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
+    <!-- Tu CSS -->
     @vite('resources/css/welcome.css')
 </head>
 
@@ -17,16 +20,31 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo-container">
-            <img src="img/LogoCompleto.jpg" alt="Logo" style="height: 100px;">
+            <img src="img/LogoCompleto.jpg" alt="Logo" class="logo">
         </div>
+
+        <!-- Botón hamburguesa (móvil) -->
+        <button class="hamburger" type="button" aria-label="Menú">
+            <i class="bi bi-list"></i>
+        </button>
+
         <div class="right-side">
             <div class="nav-links">
+                {{-- Usuario primero en móvil --}}
+                @auth
+                  <a href="#" class="nav-link user-name">{{ Auth::user()->name }}</a>
+                @endauth
+
                 <a class="btn nav-link" id="finanzas_personales">Finanzas Personales</a>
                 <a class="btn nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
                 <a class="btn nav-link" id="presupuestos">Presupuestos</a>
                 <a class="btn nav-link" id="ahorros">Ahorro</a>
             </div>
-            @include('partials.header-user') {{-- ← nuevo partial --}}
+
+            {{-- Partial de usuario (desktop) --}}
+            <div class="header-user">
+                @include('partials.header-user')
+            </div>
         </div>
     </nav>
 
@@ -51,17 +69,17 @@
             <div class="section-body">
                 <p>
                     Aquí podrás ingresar todos tus ingresos y gastos del mes de forma detallada. Categoriza cada
-                    movimiento,
-                    agrega fechas y notas si lo deseas. Este registro será la base para generar reportes precisos y
-                    llevar
-                    un control total de tu flujo de efectivo.
+                    movimiento, agrega fechas y notas si lo deseas. Este registro será la base para generar reportes
+                    precisos y llevar un control total de tu flujo de efectivo.
                 </p>
                 <div class="divider"></div>
                 <div class="buttons-container">
-                    <a href="{{ route('gastos.create') }}" class="btn btn-expense"><i class="bi bi-dash-circle"></i>
-                        Añadir Gasto</a>
-                    <a href="{{ route('ingresos.create') }}" class="btn btn-income"><i class="bi bi-plus-circle"></i>
-                        Añadir Ingreso</a>
+                    <a href="{{ route('gastos.create') }}" class="btn btn-expense">
+                        <i class="bi bi-dash-circle"></i> Añadir Gasto
+                    </a>
+                    <a href="{{ route('ingresos.create') }}" class="btn btn-income">
+                        <i class="bi bi-plus-circle"></i> Añadir Ingreso
+                    </a>
                 </div>
             </div>
         </section>
@@ -75,14 +93,10 @@
             <div class="section-body">
                 <p>
                     Consulta informes organizados por períodos de tiempo para saber exactamente cuándo y cómo estás
-                    gastando
-                    o recibiendo dinero. Puedes elegir ver tus movimientos por día, semana o mes, lo que te da
-                    flexibilidad
-                    para analizar patrones o detectar excesos.
+                    gastando o recibiendo dinero. Puedes elegir ver tus movimientos por día, semana o mes.
                 </p>
                 <div class="divider"></div>
                 <div class="buttons-container">
-                    <!-- Botón Ver Reporte -->
                     <a href="{{ route('reportes') }}" class="btn btn-dark">
                         <i class="bi bi-eye"></i> Ver Reporte
                     </a>
@@ -99,17 +113,13 @@
             <div class="section-body">
                 <p>
                     Visualiza tu información financiera con gráficas comparativas claras e intuitivas. Compara ingresos
-                    vs.
-                    gastos o diferentes categorías entre sí, y descubre de forma visual cómo se comporta tu economía a
-                    lo
-                    largo del tiempo.
+                    vs. gastos y descubre patrones a lo largo del tiempo.
                 </p>
                 <div class="divider"></div>
                 <div class="buttons-container">
-
                     <button onclick="window.location.href=`{{ route('graficas') }}`" class="btn btn-dark">
-                        <i class="bi bi-graph-up"></i>Ver Gráficas</button>
-
+                        <i class="bi bi-graph-up"></i> Ver Gráficas
+                    </button>
                 </div>
             </div>
         </section>
@@ -117,29 +127,16 @@
 
     <!-- Últimas transacciones -->
     <section class="transactions-section">
-        </div> {{-- ← cierra .section-container --}}
-
-        {{-- 🔸 SALDO / TOTAL DE INGRESOS 🔸 --}}
         @if(isset($saldoDisponible))
-        <div style="
-            max-width: 900px;
-            margin: 0 auto 25px;
-            background: #1d4d4f;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1.05rem;
-            font-weight: 600;">
+        <div class="saldo-banner">
             Saldo actual: ${{ number_format($saldoDisponible, 2) }}
         </div>
         @endif
-        <h3 class="transactions-title">Últimas Transacciones</h3>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; gap: 10px; flex-wrap: wrap;">
-            <input type="text" id="buscador" placeholder="Buscar por fecha, descripción o categoría"
-                style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
 
-            <select id="filtro-tipo" style="padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+        <h3 class="transactions-title">Últimas Transacciones</h3>
+        <div class="filter-bar">
+            <input type="text" id="buscador" placeholder="Buscar por fecha, descripción o categoría">
+            <select id="filtro-tipo">
                 <option value="todos">Todos</option>
                 <option value="Gasto">Solo Gastos</option>
                 <option value="Ingreso">Solo Ingresos</option>
@@ -153,14 +150,12 @@
                     <th>Categoría</th>
                     <th>Monto</th>
                     <th>Tipo</th>
-                    <th>Acción</th> <!-- Nueva columna -->
+                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
-
                 @foreach($transacciones as $transaccion)
                 <tr>
-
                     <td>{{ \Carbon\Carbon::parse($transaccion->fecha)->format('d/m/Y') }}</td>
                     <td>{{ $transaccion->descripcion }}</td>
                     <td>{{ $transaccion->categoria }}</td>
@@ -172,55 +167,53 @@
                             {{ $transaccion->tipo }}
                         </span>
                     </td>
-                    <td style="display: flex; gap: 10px;">
-
-                        {{-- BOTÓN EDITAR --}}
+                    <td class="action-cell">
                         @php
-                        // Siempre habrá valor => id_Gasto | id_Ingreso
-                        $filaId = $transaccion->tipo === 'Gasto'
-                        ? $transaccion->id_Gasto
-                        : $transaccion->id_Ingreso;
-
-                        // Ruta para eliminar (usa el mismo $filaId)
-                        $rutaEliminar = $transaccion->tipo === 'Gasto'
-                        ? route('gastos.destroy', $filaId)
-                        : route('ingresos.destroy', $filaId);
+                            $filaId = $transaccion->tipo === 'Gasto'
+                                ? $transaccion->id_Gasto
+                                : $transaccion->id_Ingreso;
+                            $rutaEliminar = $transaccion->tipo === 'Gasto'
+                                ? route('gastos.destroy', $filaId)
+                                : route('ingresos.destroy', $filaId);
                         @endphp
 
-                        <a href="javascript:void(0)" class="edit-btn" data-tipo="{{ $transaccion->tipo }}"
-                            data-id="{{ $filaId }}" data-descripcion="{{ $transaccion->descripcion }}"
-                            data-categoria="{{ $transaccion->categoria }}" data-monto="{{ $transaccion->monto }}"
-                            style="color:#1d4d4f;text-decoration:none;font-size:16px">
+                        <a href="javascript:void(0)" class="edit-btn" 
+                           data-tipo="{{ $transaccion->tipo }}" 
+                           data-id="{{ $filaId }}" 
+                           data-descripcion="{{ $transaccion->descripcion }}" 
+                           data-categoria="{{ $transaccion->categoria }}" 
+                           data-monto="{{ $transaccion->monto }}">
                             <i class="bi bi-pencil-square"></i>
                         </a>
-                        {{-- BOTÓN BORRAR --}}
-                        @php
 
-                        $rutaEliminar = $transaccion->tipo === 'Gasto'
-                        ? route('gastos.destroy', $transaccion->id) // id_Gasto
-                        : route('ingresos.destroy', $transaccion->id); // id_Ingreso
-                        @endphp
-
-                        <!-- BOTÓN ELIMINAR -->
-                        <form class="delete-form" data-url="{{ $rutaEliminar }}" method="POST" style="margin:0">
+                        <form class="delete-form" data-url="{{ $rutaEliminar }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit"
-                                style="background:none;border:none;color:red;cursor:pointer;padding:0">
+                            <button type="submit">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
-
-
-
                     </td>
-
                 </tr>
                 @endforeach
             </tbody>
         </table>
     </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Toggle menú hamburguesa -->
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnMenu = document.querySelector('.hamburger');
+        const menu    = document.querySelector('.nav-links');
+        btnMenu.addEventListener('click', () => menu.classList.toggle('active'));
+    });
+    </script>
+
+    <!-- Confirmación y buscador (igual que antes) -->
+       <script>
     document.addEventListener('DOMContentLoaded', function() {
         const forms = document.querySelectorAll('.delete-form');
 
@@ -396,9 +389,28 @@
     });
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Selecciona el contenedor del partial
+  const headerUser = document.querySelector('.header-user');
 
+  if (!headerUser) return;
 
+  // Función que muestra/oculta según ancho
+  function toggleHeaderUser() {
+    if (window.innerWidth <= 768) {
+      headerUser.style.display = 'none';
+    } else {
+      headerUser.style.display = '';
+    }
+  }
 
-</body>
+  // Ejecuta al cargar…
+  toggleHeaderUser();
+
+  // …y cada vez que se redimensiona la ventana
+  window.addEventListener('resize', toggleHeaderUser);
+});
+</script>
 
 </html>

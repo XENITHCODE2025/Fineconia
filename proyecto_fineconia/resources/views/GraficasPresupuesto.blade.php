@@ -1,4 +1,3 @@
-{{-- resources/views/GraficasPresupuesto.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,23 +17,21 @@
   @vite('resources/css/GraficasPre.css')
 
   <style>
-    /* Ajusta el tamaño de tu gráfica aquí */
-    :root {
-      --chart-size: 600px;
-    }
     .chart-container {
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 400px;
     }
     .chart-box {
-      width: var(--chart-size);
-      height: var(--chart-size);
+      width: 100%;
+      height: 100%;
       position: relative;
     }
-    .chart-box canvas {
-      width: 100% !important;
-      height: 100% !important;
+    @media (max-width: 768px) {
+      .chart-container {
+        min-height: 300px;
+      }
     }
   </style>
 </head>
@@ -120,21 +117,42 @@
           const values = data.map(d => d.total);
           const colors = labels.map(() => randomColor());
 
+          // Determinar posición de la leyenda según el tamaño de pantalla
+          const legendPosition = window.innerWidth > 768 ? 'right' : 'bottom';
+          
           chart = new Chart(ctx, {
             type: 'pie',
             data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 1 }] },
             options: {
               responsive: true,
+              maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  top: 20,
+                  bottom: 20,
+                  left: 20,
+                  right: 20
+                }
+              },
               plugins: {
                 legend: {
-                  position: 'right',
+                  position: legendPosition,
+                  align: 'center',
                   labels: {
+                    padding: 15,
+                    boxWidth: 15,
+                    font: {
+                      size: window.innerWidth > 576 ? 12 : 10
+                    },
                     generateLabels(chart) {
                       const total = chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
                       return chart.data.labels.map((label,i)=> {
                         const val = chart.data.datasets[0].data[i];
+                        const percentage = ((val/total)*100).toFixed(1);
                         return {
-                          text: `${label}: $${val.toFixed(2)} (${((val/total)*100).toFixed(1)}%)`,
+                          text: window.innerWidth > 400 ? 
+                            `${label}: $${val.toFixed(2)} (${percentage}%)` :
+                            `${label}: ${percentage}%`,
                           fillStyle: chart.data.datasets[0].backgroundColor[i],
                           index: i
                         };
@@ -142,13 +160,40 @@
                     }
                   }
                 },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      const label = context.label || '';
+                      const value = context.raw || 0;
+                      const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                      const percentage = Math.round((value / total) * 100);
+                      return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+                    }
+                  }
+                },
                 title: {
                   display: true,
                   text: `Presupuestos ${document.getElementById('monthFilter').value || ''}`,
                   color: '#31565E',
-                  font: { size: 16, weight: 'bold' }
+                  font: { 
+                    size: window.innerWidth > 576 ? 16 : 14, 
+                    weight: 'bold',
+                    lineHeight: 1.4
+                  },
+                  padding: {
+                    top: 10,
+                    bottom: 20
+                  }
                 }
               }
+            }
+          });
+
+          // Redibujar al cambiar tamaño de pantalla
+          window.addEventListener('resize', function() {
+            if (chart) {
+              chart.options.plugins.legend.position = window.innerWidth > 768 ? 'right' : 'bottom';
+              chart.update();
             }
           });
         })

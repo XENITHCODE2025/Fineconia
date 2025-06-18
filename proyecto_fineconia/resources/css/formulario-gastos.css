@@ -1,93 +1,93 @@
+/* Reset básico */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 body {
   background-color: #f5f5f5;
   color: #333;
 }
 
-/* Navbar Responsivo - Versión Corregida */
+/* Navbar */
 .navbar {
   background-color: #31565e;
   padding: 15px 5%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .logo-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   flex-shrink: 0;
 }
-
-.logo {
-  width: 32px;
-  height: 32px;
+.logo-container .logo {
+  height: 50px;
+  transition: height 0.3s ease;
 }
 
-.brand {
-  color: white;
-  font-weight: bold;
-  font-size: clamp(18px, 4vw, 20px);
-  white-space: nowrap;
+/* Hamburguesa */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 1rem;
 }
 
-/* Contenedor principal del menú corregido */
-.nav-menu-container {
+/* Links */
+.right-side {
   display: flex;
-  flex-grow: 1;
-  justify-content: center;
-  margin: 0 20px;
-  overflow-x: auto;
+  align-items: center;
+  gap: 1rem;
 }
 
 .nav-links {
   display: flex;
-  gap: clamp(20px, 4vw, 40px);
-  padding: 0 15px;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.nav-links .user-name {
+  display: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  width: 100%;
+  white-space: nowrap;
 }
 
+/* Partial usuario */
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Estilos nav-link */
 .nav-link {
-  color: white;
+  color: #fff;
   text-decoration: none;
   font-size: clamp(14px, 3vw, 16px);
-  font-weight: 500;
-  white-space: nowrap;
-  padding: 5px 0;
   transition: opacity 0.3s;
 }
-
 .nav-link:hover {
   opacity: 0.8;
   text-decoration: underline;
 }
 
-.right-side {
-  display: flex;
-  align-items: center;
-  gap: clamp(15px, 4vw, 25px);
-  flex-shrink: 0;
-}
-
-.user-icon {
-  font-size: clamp(24px, 5vw, 28px);
-  color: white;
-}
-
-/* Header Responsivo */
+/* Header */
 .header {
   background-color: #31565e;
   padding: clamp(25px, 5vw, 30px) 20px;
   text-align: center;
 }
-
 .header h2 {
   color: white;
   font-size: clamp(22px, 5vw, 28px);
@@ -95,7 +95,7 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Formulario Responsivo */
+/* Formulario */
 .form-container {
   width: 90%;
   max-width: 500px;
@@ -121,7 +121,6 @@ body {
   display: block;
   margin-bottom: clamp(5px, 2vw, 8px);
   font-weight: 500;
-  color: #333;
   font-size: clamp(13px, 3vw, 14px);
 }
 
@@ -159,7 +158,6 @@ body {
   background-color: #1d4d4f;
   color: white;
 }
-
 .btn-save:hover {
   background-color: #2d6d6f;
 }
@@ -169,7 +167,6 @@ body {
   color: #333;
   border: 1px solid #ddd;
 }
-
 .btn-cancel:hover {
   background-color: #e0e0e0;
 }
@@ -182,58 +179,36 @@ body {
   font-weight: 500;
   font-size: clamp(13px, 3vw, 14px);
 }
-
 .back-link:hover {
   text-decoration: underline;
 }
 
-/* Media Queries para ajustes específicos */
+/* AlertifyJS temas por defecto ya importados */
+
+/* Media Queries */
 @media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-  }
-  
-  .nav-menu-container {
-    order: 3;
-    width: 100%;
-    margin: 10px 0 0 0;
-    justify-content: flex-start;
-  }
-  
+  .logo-container .logo { height: 40px; }
+  .hamburger { display: block; }
   .nav-links {
-    gap: 15px;
-    padding: 5px 0;
-  }
-  
-  .right-side {
-    width: 100%;
-    justify-content: space-between;
-    order: 2;
-    margin-top: 10px;
-  }
-  
-  .buttons-container {
+    display: none;
     flex-direction: column;
-  }
-  
-  .btn {
     width: 100%;
+    gap: 0.75rem;
+    margin-top: 10px;
+    background-color: #31565e;
+    padding: 10px 0;
   }
+  .nav-links.active { display: flex; }
+  .nav-links .user-name { display: block; }
+
+  .header-user { display: none; }
+
+  .buttons-container { flex-direction: column; }
+  .btn { width: 100%; justify-content: center; }
 }
 
 @media (max-width: 480px) {
-  .nav-links {
-    gap: 10px;
-  }
-  
-  .nav-link {
-    font-size: 13px;
-  }
-  
+  .nav-links { gap: 0.5rem; }
   .form-group input,
-  .form-group select {
-    padding: 10px 8px;
-  }
+  .form-group select { padding: 10px 8px; }
 }

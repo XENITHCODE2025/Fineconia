@@ -60,6 +60,7 @@ class PresupuestoController extends Controller
             'mes.required'                              => 'Debes seleccionar un mes.',
             'presupuestos.*.categoria_id.required_with' => 'Completa la categoría si pones un monto.',
             'presupuestos.*.categoria_id.distinct'      => 'No puedes repetir categoría en un mismo mes.',
+            'presupuestos.*.monto.min'                  => 'El monto debe ser al menos $0.01.',
         ]);
 
         $userId          = auth()->id();
@@ -71,7 +72,7 @@ class PresupuestoController extends Controller
 
         if ($datos->isEmpty()) {
             return back()
-                ->withErrors(['Debes ingresar al menos un presupuesto válido.'])
+                ->withErrors(['Asegurate de completar todos los campos.'])
                 ->withInput();
         }
 

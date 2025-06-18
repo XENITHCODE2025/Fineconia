@@ -82,3 +82,91 @@ body {
 .footer-links{ display:flex; flex-direction:column; gap:5px;}
 .footer-link{ color:#fff; text-decoration:none; font-size:14px;}
 .footer-link:hover{ text-decoration:underline;}
+
+
+/* ----------  NUEVO ESTILO PARA EL FORMULARIO  ---------- */
+/* --- Estilo Nuevo para el Formulario --- */
+.nuevo-estilo {
+  max-width: 480px;
+  margin: 60px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.nuevo-estilo h2 {
+  font-size: 1.6rem;
+  text-align: center;
+  color: #000;
+  margin-bottom: 1.5rem;
+}
+
+.saldo-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.saldo-box {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font-weight: bold;
+  color: #2e7d32;
+  font-size: 1.1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.fila select,
+.fila input {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: #fdfdfd;
+  outline: none;
+}
+
+.botones {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.botones .guardar,
+.botones .cancelar {
+  width: 48%;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.botones .guardar {
+  background-color: #2d6d6f;
+  color: white;
+}
+
+.botones .cancelar {
+  background-color: #f5f5f5;
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  line-height: 1.9rem;
+}
+

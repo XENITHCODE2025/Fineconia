@@ -15,6 +15,7 @@ class Presupuesto extends Model
 
     protected $fillable = [
         'user_id',
+        'mes',
         'categoria_id',
         'monto',
         'restante',

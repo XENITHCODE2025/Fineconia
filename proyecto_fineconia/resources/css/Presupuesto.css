@@ -1,3 +1,16 @@
+:root {
+  --color-primary: #31565e;
+  --color-secondary: #1d4d4f;
+  --color-success: #388e3c;
+  --color-info: #1976d2;
+  --color-warning: #f39c12;
+  --color-danger: #c0392b;
+  --color-text: #000000;
+  --color-white: #fff;
+  --shadow-sm: 0 2px 5px rgba(0,0,0,0.1);
+  --border-radius: 5px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,90 +20,111 @@
 
 /* Navbar */
 .navbar {
-  background-color: #31565e;
-  padding: 15px 30px;
+  background-color: var(--color-primary);
+  padding: 15px 5%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem; /* espaciado uniforme entre logo, hamburguesa y right-side */
 }
 
 .logo-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  margin-right: 1rem; /* separa el logo del resto */
+}
+.logo-container .logo {
+  height: 100px;
+  transition: height 0.3s ease;
 }
 
-.logo {
-  width: 32px;
-  height: 32px;
+/* Botón hamburguesa */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--color-white);
+  cursor: pointer;
+  margin-left: auto;   /* empuja la hamburguesa a la derecha */
+  margin-right: 1rem;  /* separa la hamburguesa del menú */
 }
 
-.brand {
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
-}
-
+/* Links */
 .right-side {
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 0.75rem; /* gap interno reducido */
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .nav-links {
   display: flex;
-  gap: 25px;
+  gap: 0.75rem; /* gap interno reducido */
+  flex-wrap: wrap;
+}
+
+/* Nombre de usuario dentro del menú */
+.nav-links .user-name {
+  display: none;               /* oculto en desktop */
+  font-weight: bold;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(252, 250, 250, 0.2);
+  width: 100%;
+  color: var(--color-white);
+}
+
+/* Partial de usuario */
+.header-user {
+  display: flex;
+  align-items: center;    /* centra verticalmente icono y nombre */
+  gap: 0.5rem;            /* espacio entre icono y texto */
+  margin-left: 3rem;      /* tu separación existente */
+  white-space: nowrap;    /* evita saltos de línea */
 }
 
 .nav-link {
-  color: white;
+  color: var(--color-white);
   text-decoration: none;
   font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.3s;
 }
-
 .nav-link:hover {
-  text-decoration: underline;
+  opacity: 0.9;
 }
 
-.user-icon {
-  font-size: 28px;
-  color: white;
-}
-
- /* Encabezado */
- .header {
-  background-color: #31565e;
-  color: white;
-  padding: 40px 20px;
+/* Header */
+.header {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: clamp(30px, 5vw, 40px) 20px;
   text-align: center;
 }
-
-.header h1 {
-  font-weight: 700;
+.header h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  margin-bottom: 15px;
 }
-
-
 .header p {
   color: #e0e0e0;
   max-width: 700px;
   margin: 0 auto;
   line-height: 1.5;
+  font-size: clamp(14px, 2vw, 16px);
 }
 
-/* Sections */
+/* Secciones */
 .section-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 30px auto;
-  padding: 0 20px;
+  padding: 0 5%;
 }
-
 .section {
   margin-bottom: 30px;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-sm);
 }
-
 .section-header {
   padding: 12px;
   text-align: center;
@@ -99,126 +133,92 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+  background-color: var(--color-secondary);
+  color: var(--color-white);
 }
-
 .section-body {
-  background-color: #fdfdfd;
-  color: #333;
-  padding: 25px;
+  background-color: var(--color-white);
+  color: var(--color-text);
+  padding: clamp(15px, 3vw, 25px);
 }
-
 .section-body p {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   line-height: 1.5;
-  font-size: 14px;
+  font-size: clamp(13px, 2vw, 14px);
 }
-
 .buttons-container {
   display: flex;
   justify-content: center;
   gap: 15px;
+  flex-wrap: wrap;
 }
-
 .btn {
-  padding: 10px 20px;
+  padding: 10px clamp(15px, 3vw, 20px);
   border-radius: 20px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: clamp(13px, 2vw, 14px);
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: transform 0.2s;
 }
-
-.btn-primary {
-  background-color: #1d4d4f;
-  color: white;
+.btn:hover {
+  transform: translateY(-2px);
 }
+.btn-primary { background-color: var(--color-secondary); color: var(--color-white); }
+.btn-warning { background-color: var(--color-warning); color: var(--color-white); }
+.btn-info    { background-color: var(--color-info);    color: var(--color-white); }
 
-.btn-primary:hover {
-  background-color: #2a6b6d;
-}
-
-.btn-success {
-  background-color: #388e3c;
-  color: white;
-}
-
-.btn-success:hover {
-  background-color: #4caf50;
-}
-
-.btn-info {
-  background-color: #1976d2;
-  color: white;
-}
-
-.btn-info:hover {
-  background-color: #2196f3;
-}
-
-/* Budgets table */
+/* Tabla de presupuestos */
 .budgets-section {
-  background-color: white;
-  padding: 25px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  max-width: 900px;
+  background-color: var(--color-white);
+  padding: clamp(15px, 3vw, 25px);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  max-width: 1200px;
   margin: 30px auto;
+  overflow-x: auto;
 }
-
 .budgets-title {
-  font-size: 20px;
+  font-size: clamp(18px, 2vw, 20px);
   font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 15px;
+  color: var(--color-text);
 }
-
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: clamp(13px, 2vw, 14px);
+  min-width: 600px;
 }
-
 th {
   background-color: #f0f0f0;
-  padding: 10px;
+  padding: 12px 10px;
   text-align: left;
   font-weight: 600;
 }
-
 td {
   padding: 12px 10px;
   border-bottom: 1px solid #eee;
 }
-
 .progress-container {
   width: 100%;
   background-color: #e0e0e0;
-  border-radius: 10px;
-  height: 10px;
+  border-radius: 4px;
+  height: 8px;
   margin-top: 5px;
+  overflow: hidden;
 }
-
 .progress-bar {
   height: 100%;
-  border-radius: 10px;
-  background-color: #4caf50;
+  border-radius: 4px;
+  transition: width 0.5s ease;
 }
-
-.under-budget {
-  background-color: #4caf50;
-}
-
-.over-budget {
-  background-color: #f44336;
-}
-
-.near-budget {
-  background-color: #ff9800;
-}
+.prog-green  { background-color: var(--color-success); }
+.prog-orange { background-color: var(--color-warning); }
+.prog-red    { background-color: var(--color-danger); }
 
 /* Divider */
 .divider {
@@ -227,29 +227,35 @@ td {
   margin: 20px 0;
 }
 
-/* Colores de contenedores */
-.create-header {
-  background-color: #1d4d4f;
-  color: white;
+/* Media queries */
+
+/* Móvil: menú hamburguesa y logo reducido */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .nav-links.active {
+    display: flex;
+  }
+  /* Mostrar el nombre primero */
+  .nav-links .user-name {
+    display: block;
+  }
+  .logo-container .logo {
+    height: 60px;
+  }
 }
 
-.adjust-header {
-  background-color: #1d4d4f;
-  color: white;
+/* Móvil pequeñísimo: logo aún más pequeño */
+@media (max-width: 576px) {
+  .logo-container .logo {
+    height: 50px;
+  }
 }
-
-.compare-header {
-  background-color: #1d4d4f;
-  color: white;
-}
-/* resources/css/Presupuesto.css */
-.progress-container{
-  height:8px;                 /* alto fino */
-  background:#e0e0e0;         /* gris fondo */
-  border-radius:4px;
-  overflow:hidden;
-}
-.progress-bar{height:100%;}
-.progress-bar.prog-green {background:#2ecc71;}  /* < 70 % */
-.progress-bar.prog-orange{background:#f39c12;} /* 70-89 % */
-.progress-bar.prog-red   {background:#c0392b;} /* ≥ 90 % */

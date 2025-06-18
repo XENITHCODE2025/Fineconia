@@ -5,17 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Gasto;
 use App\Models\Presupuesto;
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 
 class GastoController extends Controller
 {
     /* FORMULARIO  ─────────────────────────────────────────── */
     public function create()
     {
+        $userId    = auth()->id();
+        $mesActual = Carbon::now()->month;
+
+        // Trae solo los presupuestos del mes actual
         $presupuestos = Presupuesto::with('categoriaGasto')
-            ->where('user_id', auth()->id())
-            ->where('restante', '>', 0)          // solo los que aún tienen saldo
-            ->get();                             // tendrás nombre y restante
+            ->where('user_id', $userId)
+            ->where('mes', $mesActual)
+            ->get();
 
         return view('gastos', compact('presupuestos'));
     }
@@ -30,26 +34,23 @@ class GastoController extends Controller
             'monto'        => 'required|numeric|min:0',
         ]);
 
-        $userId      = auth()->id();
+        $userId    = auth()->id();
+        $mesActual = Carbon::now()->month;
+
+        // 1) Verifica que exista presupuesto para esa categoría y mes
         $presupuesto = Presupuesto::where('user_id', $userId)
             ->where('categoria_id', $request->categoria_id)
+            ->where('mes', $mesActual)
             ->first();
 
-        if (!$presupuesto) {
-            return back()->withErrors([
-                'categoria_id' => 'No tienes presupuesto para esa categoría.',
-            ])->withInput();
+        if (! $presupuesto) {
+            return back()
+                ->withErrors(['categoria_id' => 'No tienes presupuesto para esa categoría en el mes actual.'])
+                ->withInput();
         }
 
-        if ($request->monto > $presupuesto->restante) {
-            return back()->withErrors([
-                'monto' => 'El gasto excede el presupuesto restante de $' .
-                    number_format($presupuesto->restante, 2),
-            ])->withInput();
-        }
-
-        /* Insertar gasto */
-        Gasto::create([
+        // 2) Inserta el gasto
+        $gasto = Gasto::create([
             'user_id'      => $userId,
             'fecha'        => $request->fecha,
             'descripcion'  => $request->descripcion,
@@ -57,80 +58,84 @@ class GastoController extends Controller
             'monto'        => $request->monto,
         ]);
 
-        /* Restar del presupuesto */
+        // 3) Descontar el monto del presupuesto restante
         $presupuesto->restante -= $request->monto;
+        if ($presupuesto->restante < 0) {
+            $presupuesto->restante = 0;
+        }
         $presupuesto->save();
 
         return back()->with('success', 'Gasto registrado y presupuesto actualizado.');
     }
-   public function destroy($id_Gasto)
-{
-    // 1) Localizar el gasto del usuario
-    $gasto = Gasto::where('id_Gasto', $id_Gasto)
-                  ->where('user_id', auth()->id())
-                  ->firstOrFail();
 
-    // 2) Buscar el presupuesto de la misma categoría
-    $presupuesto = Presupuesto::where('user_id', auth()->id())
-        ->where('categoria_id', $gasto->categoria_id)
-        ->first();
+    /* ELIMINAR GASTO  ─────────────────────────────────────── */
+    public function destroy($id_Gasto)
+    {
+        // 1) Localiza el gasto del usuario
+        $gasto = Gasto::where('id_Gasto', $id_Gasto)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
 
-    // 3) Devolver el monto eliminado al presupuesto
-    if ($presupuesto) {
-        $presupuesto->restante += $gasto->monto;
+        // 2) Buscar el presupuesto de la misma categoría y mes
+        $mesActual = Carbon::now()->month;
+        $presupuesto = Presupuesto::where('user_id', auth()->id())
+            ->where('categoria_id', $gasto->categoria_id)
+            ->where('mes', $mesActual)
+            ->first();
 
-        // opcional: que nunca supere el límite original
-        if ($presupuesto->restante > $presupuesto->monto) {
-            $presupuesto->restante = $presupuesto->monto;
+        // 3) Devolver el monto eliminado al presupuesto
+        if ($presupuesto) {
+            $presupuesto->restante += $gasto->monto;
+            // No exceder el monto original
+            if ($presupuesto->restante > $presupuesto->monto) {
+                $presupuesto->restante = $presupuesto->monto;
+            }
+            $presupuesto->save();
         }
 
-        $presupuesto->save();
+        // 4) Eliminar el gasto
+        $gasto->delete();
+
+        return back()->with('success', 'Gasto eliminado y presupuesto actualizado.');
     }
 
-    // 4) Eliminar el gasto
-    $gasto->delete();
+    /* ACTUALIZAR GASTO  ───────────────────────────────────── */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'monto' => 'required|numeric|min:0',
+        ]);
 
-    return back()->with('success', 'Gasto eliminado y presupuesto actualizado.');
-}
+        // 1) Localiza el gasto
+        $gasto = Gasto::where('id_Gasto', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
 
-// app/Http/Controllers/GastoController.php
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'monto' => 'required|numeric|min:0',
-    ]);
+        // 2) Calcula diferencia
+        $diferencia = $request->monto - $gasto->monto; // + si aumenta, - si disminuye
 
-    $gasto = Gasto::where('id_Gasto', $id)->firstOrFail();
+        // 3) Buscar presupuesto correspondiente
+        $mesActual = Carbon::now()->month;
+        $presupuesto = Presupuesto::where('user_id', $gasto->user_id)
+            ->where('categoria_id', $gasto->categoria_id)
+            ->where('mes', $mesActual)
+            ->first();
 
-    // ------------------------------------------------------------------
-    // 1) Calcular cuánto aumentó / disminuyó el gasto
-    // ------------------------------------------------------------------
-    $diferencia = $request->monto - $gasto->monto;   // (+) si aumenta
-
-    // 2) Buscar el presupuesto que corresponde a la categoría del gasto
-    $presupuesto = Presupuesto::where('user_id', $gasto->user_id)
-        ->where('categoria_id', $gasto->categoria_id)
-        ->first();
-
-    if ($presupuesto) {
-        // Si el nuevo monto supera lo disponible → rechazar
-        if ($diferencia > 0 && $diferencia > $presupuesto->restante) {
-            return response()->json([
-                'error' => 'El nuevo monto excede el presupuesto restante ($' .
-                           number_format($presupuesto->restante, 2) . ').'
-            ], 422);
+        if ($presupuesto) {
+            // Ajustar restante: restar diferencia (si es negativo, suma automática)
+            $presupuesto->restante -= $diferencia;
+            // Limitar entre 0 y monto original
+            if ($presupuesto->restante < 0) {
+                $presupuesto->restante = 0;
+            } elseif ($presupuesto->restante > $presupuesto->monto) {
+                $presupuesto->restante = $presupuesto->monto;
+            }
+            $presupuesto->save();
         }
 
-        // 3) Actualizar restante (positivo resta, negativo suma)
-        $presupuesto->restante -= $diferencia;
-        $presupuesto->save();
+        // 4) Guardar el nuevo monto del gasto
+        $gasto->update(['monto' => $request->monto]);
+
+        return response()->json(['status' => 'ok']);
     }
-
-    // 4) Guardar el nuevo monto del gasto
-    $gasto->update(['monto' => $request->monto]);
-
-    return response()->json(['status' => 'ok']);
-}
-
-
 }

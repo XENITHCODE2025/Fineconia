@@ -49,7 +49,9 @@
             </div>
 
             <div class="form-group">
-                <label for="descripcion">Descripción:</label>
+               <label for="descripcion">
+          Descripción (máx. 255 caracteres):
+          <span id="desc-counter">0/255</span>
                 <input type="text" name="descripcion" id="descripcion" required>
             </div>
 
@@ -71,7 +73,7 @@
 
             <div class="buttons-container">
                 <button type="submit" class="btn btn-save">Guardar</button>
-                <a href="{{ url('/') }}" class="btn btn-cancel">Cancelar</a>
+                <a href="{{ url('gastos-ingresos') }}" class="btn btn-cancel">Cancelar</a>
             </div>
         </form>
     </div>
@@ -88,6 +90,14 @@
     alertify.error("{{ $error }}");
     @endforeach
     @endif
+
+     // Contador de caracteres para Descripción
+    const descInput = document.getElementById('descripcion');
+    const descCounter = document.getElementById('desc-counter');
+    descInput.addEventListener('input', () => {
+      const len = descInput.value.length;
+      descCounter.textContent = `${len}/255`;
+    });
     </script>
     <!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro -->
     <script>

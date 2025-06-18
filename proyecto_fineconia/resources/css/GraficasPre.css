@@ -1,0 +1,78 @@
+@media (max-width: 575.98px) {
+
+    /* Header: ajustar layout para que los elementos no se amontonen */
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        text-align: left;
+    }
+
+    .header .menu {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        width: 100%;
+    }
+
+    /* Botones de navegación: columnas */
+    .nav-buttons {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 5px;
+    }
+
+    .nav-buttons button {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    /* Contenedor de gráfica: adaptarlo */
+    .contenedor-grafica {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    .contenedor-grafica h2 {
+        font-size: 18px;
+    }
+
+    /* Filtros de fecha: vertical en móviles */
+    .filtros-fecha {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filtros-fecha input[type="date"],
+    .filtros-fecha button {
+        width: 100%;
+    }
+
+    /* Canvas: mantenerlo centrado y dentro del viewport */
+    .card-body canvas {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100%;
+    }
+
+    /* Título de reporte adaptado */
+    .report-title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 20px 10px;
+    }
+
+    .footer-links {
+        padding-left: 0;
+        align-items: center;
+    }
+
+    .footer-links a {
+        font-size: 13px;
+    }
+}

@@ -1,3 +1,13 @@
+/* resources/css/RegistrosPresupuesto.css */
+/* Asegura que la tabla ocupe todo el ancho y permita scroll */
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+    .table-wrapper table {
+      width: 100%;
+      table-layout: auto; /* para que las columnas se repartan */
+    }
 * {
   margin: 0;
   padding: 0;
@@ -12,103 +22,142 @@ body {
   min-height: 100vh;
 }
 
+/* ---------- HEADER RESPONSIVO ---------- */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #2f4d4f;
-  padding: 15px 30px;
+  padding: 15px 5%;
   color: white;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .logo img {
   height: 35px;
+  width: auto;
 }
 
 .menu {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: clamp(10px, 3vw, 20px);
+  flex-wrap: wrap;
 }
 
 .menu .nav-link {
   color: white;
   text-decoration: underline;
+  font-size: clamp(14px, 2vw, 16px);
+  white-space: nowrap;
 }
 
 .nombre {
   font-weight: bold;
+  font-size: clamp(14px, 2vw, 16px);
 }
 
 .user-icon {
-  font-size: 28px;
+  font-size: clamp(24px, 4vw, 28px);
   color: white;
 }
 
+/* ---------- CONTENIDO PRINCIPAL ---------- */
 .contenido {
   flex: 1;
-  padding: 30px;
+  padding: clamp(20px, 3vw, 30px);
 }
 
 .contenido h1 {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: clamp(20px, 3vw, 24px);
+  margin-bottom: clamp(15px, 3vw, 20px);
 }
 
+/* ---------- BÚSQUEDA ---------- */
 .busqueda {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: clamp(15px, 3vw, 20px);
+  flex-wrap: wrap;
 }
 
 .busqueda input {
-  padding: 10px;
-  width: 1550px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.busqueda button {
-  padding: 10px;
-  border: none;
-  background-color: #fff;
-  cursor: pointer;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  width: 150px;
-}
-
-table {
+  padding: clamp(8px, 2vw, 10px);
   width: 100%;
-  border-collapse: collapse;
+  max-width: 1550px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: clamp(14px, 2vw, 16px);
 }
 
-th {
+/* Month picker más pequeño */
+.busqueda input[type="month"] {
+  max-width: 200px;
+}
+
+/* ---------- TABLA RESPONSIVA ---------- */
+.table-wrapper {
+  width: 100%;
+  max-height: 80vh;       /* Ajusta la altura al 80% del viewport */
+  overflow-x: auto;       /* Scroll horizontal si la tabla es más ancha */
+  overflow-y: auto;       /* Scroll vertical si hay muchas filas */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.table-wrapper table {
+  width: min(100%, max-content);
+  /* Ocupar al menos 100%, y crecer según contenido (scroll si es necesario) */
+  border-collapse: collapse;
+  display: table;
+  table-layout: auto;
+}
+
+.table-wrapper thead th {
   background-color: #e8f4fd;
   text-align: left;
-  padding: 12px;
+  padding: clamp(8px, 2vw, 12px);
+  font-size: clamp(14px, 2vw, 16px);
   border: none;
 }
 
-.encabezado {
-  border: 2px solid #4aa0e6;
-}
-
-td {
-  padding: 12px;
+.table-wrapper tbody td {
+  padding: clamp(8px, 2vw, 12px);
   border-bottom: 1px solid #ccc;
+  font-size: clamp(14px, 2vw, 16px);
+  white-space: nowrap;
 }
 
-td i {
-  margin-right: 10px;
+.table-wrapper td i {
+  margin-right: 8px;
   cursor: pointer;
+  font-size: clamp(16px, 2vw, 18px);
 }
 
+/* ---------- TÍTULO CONTENEDOR ---------- */
+.titulo-contenedor {
+  background-color: #e8f4fd;
+  border: 2px solid #b3cfe6;
+  padding: clamp(10px, 2vw, 15px);
+  margin-bottom: clamp(15px, 3vw, 20px);
+  text-align: center;
+  border-radius: 6px;
+}
+
+.titulo-contenedor h1 {
+  margin: 0;
+  font-size: clamp(20px, 3vw, 24px);
+  color: #333;
+}
+
+/* ---------- FOOTER ---------- */
 .footer {
   background-color: #2f4d4f;
-  padding: 15px 30px;
+  padding: clamp(10px, 2vw, 15px) 5%;
   color: white;
   display: flex;
   justify-content: flex-start;
@@ -117,25 +166,39 @@ td i {
 .footer-links {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: clamp(5px, 1vw, 8px);
 }
 
 .footer-links a {
   color: white;
   text-decoration: underline;
+  font-size: clamp(14px, 2vw, 16px);
 }
 
-.titulo-contenedor {
-  background-color: #e8f4fd;
-  border: 2px solid #b3cfe6;
-  padding: 15px;
-  margin-bottom: 20px;
-  text-align: center;
-  border-radius: 6px;
-}
-
-.titulo-contenedor h1 {
-  margin: 0;
-  font-size: 24px;
-  color: #333;
+/* ---------- MEDIA QUERIES ---------- */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+  }
+  .menu {
+    justify-content: center;
+    width: 100%;
+  }
+  .busqueda {
+    flex-direction: column;
+    align-items: center;
+  }
+  .busqueda input {
+    width: 100%;
+  }
+  .footer {
+    flex-direction: column;
+    align-items: center;
+  }
+  .footer-links {
+    align-items: center;
+  }
 }

@@ -106,6 +106,7 @@
         alertify.error("{{ $error }}");
       @endforeach
     @endif
+    
 
     // Contador de caracteres
     const descInput = document.getElementById('descripcion');

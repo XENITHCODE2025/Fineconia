@@ -83,7 +83,7 @@
     Ayuda Opiniones y Sugerencias
   </div>
 
-  <!-- Enlace a la vista de Finanzas Personales Goku existe -->
+  <!-- Enlace a la vista de Finanzas Personales -->
   <script>
        document.getElementById('btn-finanzas-personales').addEventListener('click', function() {
        window.location.href = "{{ route('finanzas.personales') }}";

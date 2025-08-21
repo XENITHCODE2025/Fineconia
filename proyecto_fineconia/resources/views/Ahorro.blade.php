@@ -14,7 +14,8 @@
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Navbar 
+   aaaa-->
   <nav class="navbar">
     <div class="logo-container">
      <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
@@ -181,7 +182,8 @@ document.getElementById('formObjetivo').addEventListener('submit', async functio
 
 </script>
 
-  <!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro -->
+  <!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro
+   probando github -->
 <script>
   document.getElementById('finanzas_personales').addEventListener('click', function() {
     window.location.href = "{{ route('finanzas.personales') }}";

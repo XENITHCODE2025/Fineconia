@@ -1,0 +1,227 @@
+/* Importar Poppins desde Google Fonts (poner en el <head> de tu HTML)
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #31565e;
+  padding: 15px 30px;
+  color: white;
+  flex-wrap: wrap;
+}
+
+.logo img {
+  height: 35px;
+  max-width: 100%;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.menu .nav-link {
+  color: white;
+  text-decoration: underline;
+}
+
+.nombre {
+  font-weight: normal; /* Para diferenciar del resto */
+  font-family: 'Open Sans', sans-serif; /* Requiere importar Open Sans si quieres, ejemplo abajo */
+  color: white;
+}
+
+.user-icon {
+  font-size: 28px;
+  color: white;
+}
+
+/* Botón hamburguesa (oculto en escritorio) */
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+}
+
+/* Menú móvil */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background-color: #31565e;
+  padding: 10px;
+}
+
+.mobile-menu a {
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.mobile-menu a:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.mobile-menu.active {
+  display: flex;
+}
+
+/* CONTENIDO */
+.contenido {
+  flex: 1;
+  padding: 30px;
+  min-height: 400px;
+}
+
+/* FORMULARIO */
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  border: 1px solid black; /* trazo delgado negro */
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  color: #000000;
+}
+
+.form-container label {
+  display: block;
+  margin: 10px 0 5px;
+  text-align: left;
+  font-family: 'Odor Mean Chey', cursive; /* recuerda importar la fuente si quieres usarla */
+  color: #000000;
+  font-size: 16px;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 6px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+}
+
+.fechas {
+  display: flex;
+  flex-direction: column; /* vertical */
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.fechas div {
+  display: flex;
+  align-items: center;
+  gap: 10px;        /* espacio entre etiqueta e input */
+  width: fit-content; /* se ajusta al contenido */
+}
+
+.fechas div label {
+  font-family: 'Odor Mean Chey', cursive;
+  color: #000000;
+  font-size: 16px;
+  min-width: 60px; /* ancho fijo para que las etiquetas estén alineadas */
+}
+
+.fechas div input[type="date"] {
+  width: 150px; /* tamaño fijo */
+  padding: 6px 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid black;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Botón guardar */
+.btn-guardar {
+  margin-top: 20px;
+  background-color: #427F2B;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+}
+
+.btn-guardar:hover {
+  background-color: #356B22;
+}
+
+/* FOOTER */
+.footer {
+  background-color: #31565e;
+  padding: 15px 30px;
+  color: white;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: underline;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .menu .nav-link {
+    display: none; /* Oculta enlaces en móvil */
+  }
+  .menu-toggle {
+    display: block; /* Muestra botón hamburguesa en móvil */
+  }
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  max-width: 300px;
+  min-width: 150px;
+  padding: 10px;
+}
+
+.responsive-logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}

@@ -13,6 +13,7 @@ use App\Http\Controllers\TransaccionesController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\GraficasPresupuestoController;
+use App\Http\Controllers\ObjetivoController;
 use App\Models\Gasto;
 use App\Models\Presupuesto;
 use App\Models\Ingreso;
@@ -57,6 +58,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/presupuestos', [PresupuestoController::class, 'store'])
         ->name('presupuestos.store');
+
+
+    Route::get('/objetivos/nuevo', [ObjetivoController::class, 'create'])->name('objetivos.nuevo');
 
 
 

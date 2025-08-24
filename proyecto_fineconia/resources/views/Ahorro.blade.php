@@ -60,7 +60,7 @@
     <p>
       Establece metas de ahorro personalizadas según tus necesidades. Define objetivos específicos, asigna montos y fechas límite, y calcula cuánto deberías ahorrar periódicamente para alcanzarlos.
     </p>
-    <button class="custom-btn" data-bs-toggle="modal" data-bs-target="#modalCrearObjetivo">Crear Objetivo</button>
+    <a href="{{ route('objetivos.nuevo') }}" class="custom-btn">Crear Objetivo</a>
   </div>
 </div>
 

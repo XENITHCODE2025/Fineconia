@@ -16,6 +16,8 @@ export default defineConfig({
                 'resources/css/ingresos.css',
                 'resources/css/formulario-gastos.css',
                 'resources/css/Gastos.css',
+                'resources/css/GraficasdeObjetivos.css',
+                'resources/css/ReseñaSySugerencias.css',
                  'resources/js/app.js'],
             refresh: true,
         }),

@@ -225,3 +225,9 @@ body {
   height: auto;
   display: block;
 }
+
+/* Estilo para el enlace activo */
+.nav-link.active {
+  color: #AEACAC;
+  font-weight: bold;
+}

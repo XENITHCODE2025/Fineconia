@@ -8,6 +8,9 @@
   <!-- Iconos de Bootstrap y FontAwesome -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Fuente Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
   <!-- Archivo de estilos externo -->
   @vite('resources/css/GraficasDeObjetivos.css')
@@ -20,18 +23,18 @@
   <header class="header">
     <!-- Logo -->
     <div class="logo-container">
-  <img src="img/LogoCompleto.jpg" alt="Logo" class="responsive-logo">
-</div>
-
+      <img src="img/LogoCompleto.jpg" alt="Logo" class="responsive-logo">
+    </div>
 
     <!-- Menú de navegación -->
     <div class="menu">
-      <a href="#" class="nav-link">Ahorro</a>
-      <a href="#" class="nav-link">Consejos</a>
-      <a href="#" class="nav-link">Objetivos</a>
-      <a href="#" class="nav-link">Graficas</a>
-      <span class="nombre">Rolando</span>
-      <div class="user-icon"><i class="bi bi-person-circle"></i></div>
+      <!-- Solo los 4 enlaces solicitados -->
+      <a href="{{ route('ahorro') }}" class="nav-link {{ request()->routeIs('ahorro') ? 'active' : '' }}">Ahorro</a>
+      <a href="{{ route('consejos.ahorro') }}" class="nav-link {{ request()->is('consejos') ? 'active' : '' }}">Consejos</a>
+      <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
+      <a href="{{ route('graficas.ahorro') }}" class="nav-link active">Gráficas</a>
+
+      @include('partials.header-user')
 
       <!-- Botón hamburguesa (visible solo en móvil) -->
       <div class="menu-toggle" id="menu-toggle">
@@ -42,10 +45,11 @@
 
   <!-- Menú desplegable para móvil -->
   <nav class="mobile-menu" id="mobile-menu">
-    <a href="#">Ejemplo</a>
-    <a href="#">Ejemplo</a>
-    <a href="#">Ejemplo</a>
-    <a href="#">Ejemplo</a>
+    <!-- Solo los 4 enlaces solicitados en menú móvil -->
+    <a href="{{ route('ahorro') }}" class="mobile-nav-link">Ahorro</a>
+    <a href="{{ route('consejos.ahorro') }}" class="mobile-nav-link">Consejos</a>
+    <a href="{{ route('objetivos.nuevo') }}" class="mobile-nav-link">Objetivos</a>
+    <a href="{{ route('graficas.ahorro') }}" class="mobile-nav-link active">Gráficas</a>
   </nav>
 
   <!-- CONTENIDO PRINCIPAL -->
@@ -95,21 +99,26 @@
 
   <!-- SCRIPT -->
   <script>
-    // Mostrar/Ocultar menú móvil
+    // ✅ Menú móvil
     document.getElementById("menu-toggle").addEventListener("click", function () {
       document.getElementById("mobile-menu").classList.toggle("active");
     });
 
-    // Verificar tamaño de pantalla y cerrar menú en escritorio
     function checkScreenSize() {
       const mobileMenu = document.getElementById("mobile-menu");
       if (window.innerWidth > 768 && mobileMenu.classList.contains("active")) {
         mobileMenu.classList.remove("active");
       }
     }
-
     window.addEventListener("load", checkScreenSize);
     window.addEventListener("resize", checkScreenSize);
+
+    // Cerrar menú móvil al hacer clic en un enlace
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', function() {
+        document.getElementById('mobile-menu').classList.remove('active');
+      });
+    });
 
     // Función para crear gráficas con Chart.js
     function crearGrafica(id, porcentaje, color) {

@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -35,13 +35,22 @@ body {
   gap: 20px;
 }
 
+/* Enlaces menú principal */
 .menu .nav-link {
   color: white;
-  text-decoration: underline;
+  text-decoration: none; /* 🔹 Quita subrayado */
+}
+
+/* Estilo para el enlace activo */
+.nav-link.active {
+  color: #F9B924;
+  font-weight: bold;
 }
 
 .nombre {
-  font-weight: bold;
+  font-weight: normal;
+  font-family: 'Open Sans', sans-serif;
+  color: white;
 }
 
 .user-icon {
@@ -61,15 +70,15 @@ body {
 .mobile-menu {
   display: none;
   flex-direction: column;
-  background-color: #2f4d4f;
+  background-color: #31565e;
   padding: 10px;
 }
 
 .mobile-menu a {
   color: white;
   padding: 10px;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  text-decoration: none; /* 🔹 Quita subrayado */
+  border-bottom: none;   /* 🔹 Elimina la línea */
 }
 
 .mobile-menu a:hover {
@@ -78,6 +87,12 @@ body {
 
 .mobile-menu.active {
   display: flex;
+}
+
+/* Estilo para el enlace activo en menú móvil */
+.mobile-nav-link.active {
+  color: #F9B924;
+  font-weight: bold;
 }
 
 /* --- CONTENIDO PRINCIPAL --- */
@@ -105,7 +120,7 @@ body {
 /* --- GRID DE GRÁFICAS --- */
 .graficas-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+  grid-template-columns: repeat(3, 1fr);
   gap: 25px;
   justify-items: center;
   max-width: 1000px;
@@ -161,7 +176,7 @@ body {
 
 /* --- FOOTER --- */
 .footer {
-  background-color: #2f4d4f;
+  background-color: #31565e;
   padding: 15px 30px;
   color: white;
   display: flex;
@@ -172,45 +187,55 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .footer-links a {
   color: white;
-  text-decoration: underline;
+  text-decoration: none; /* 🔹 Quitamos subrayado también en el footer */
+  font-family: 'Poppins', sans-serif;
 }
 
 /* --- RESPONSIVE --- */
 @media (max-width: 900px) {
   .graficas-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .menu .nav-link {
-    display: none; /* Oculta enlaces en móvil */
+    display: none;
   }
   .menu-toggle {
-    display: block; /* Muestra botón hamburguesa */
+    display: block;
   }
   .graficas-grid {
-    grid-template-columns: 1fr; /* 1 columna en móvil */
+    grid-template-columns: 1fr;
   }
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  justify-content: center;  /* Cambia a 'flex-start' o 'flex-end' si quieres alinear a izquierda o derecha */
-  width: 50%;               /* Ajusta según qué tan grande quieres el contenedor */
-  max-width: 300px;         /* Límite máximo de crecimiento */
-  min-width: 150px;         /* Límite mínimo */
+  justify-content: center;
+  width: 50%;
+  max-width: 300px;
+  min-width: 150px;
   padding: 10px;
 }
 
 .responsive-logo {
-  width: 100%;              /* Imagen ocupa todo el contenedor */
-  height: auto;             /* Mantiene proporción */
-  display: block;           /* Evita espacio en línea por defecto */
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
+/* Estilos adicionales */
+.nav-link {
+  cursor: pointer;
+}
+
+.mobile-menu a {
+  cursor: pointer;
+}

@@ -152,3 +152,24 @@
       display: none;
     }
   }
+
+  .logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* Cambia a 'flex-start' o 'flex-end' si quieres alinear a izquierda o derecha */
+  width: 50%;               /* Ajusta según qué tan grande quieres el contenedor */
+  max-width: 300px;         /* Límite máximo de crecimiento */
+  min-width: 150px;         /* Límite mínimo */
+  padding: 10px;
+}
+
+.responsive-logo {
+  width: 100%;              /* Imagen ocupa todo el contenedor */
+  height: auto;             /* Mantiene proporción */
+  display: block;           /* Evita espacio en línea por defecto */
+}
+
+.custom-btn {
+  text-decoration: none; /* Quita la línea */
+}
+

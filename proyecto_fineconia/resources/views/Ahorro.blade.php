@@ -14,7 +14,8 @@
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Navbar 
+   aaaa-->
   <nav class="navbar">
     <div class="logo-container">
      <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
@@ -50,16 +51,19 @@
       </div>
     </div>
 
-    <!-- Objetivos -->
-    <div class="custom-card">
-      <div class="custom-card-header">
-        <i class="bi bi-bullseye"></i> Objetivos de Ahorro
-      </div>
-      <div class="custom-card-body">
-        <p>Establece metas de ahorro personalizadas según tus necesidades. Define objetivos específicos, asigna montos y fechas límite, y calcula cuánto deberías ahorrar periódicamente para alcanzarlos.</p>
-        <button class="custom-btn">Crear Objetivo</button>
-      </div>
-    </div>
+   <!-- Objetivos -->
+<div class="custom-card">
+  <div class="custom-card-header">
+    <i class="bi bi-bullseye"></i> Objetivos de Ahorro
+  </div>
+  <div class="custom-card-body">
+    <p>
+      Establece metas de ahorro personalizadas según tus necesidades. Define objetivos específicos, asigna montos y fechas límite, y calcula cuánto deberías ahorrar periódicamente para alcanzarlos.
+    </p>
+    <a href="{{ route('objetivos.nuevo') }}" class="custom-btn">Crear Objetivo</a>
+  </div>
+</div>
+
 
     <!-- Gráficos -->
     <div class="custom-card">
@@ -88,39 +92,41 @@
 
   </div>
 
-  <!-- Botón para mostrar el modal -->
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearObjetivo">
-    Crear Objetivo
-</button>
-
+  
 <!-- Modal -->
-<div class="modal fade" id="modalCrearObjetivo" tabindex="-1">
+<div class="modal fade" id="modalCrearObjetivo" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius: 15px;">
-      <div class="modal-header">
-        <h5 class="modal-title">Nuevo Objetivo</h5>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearObjetivo">
-  Crear Objetivo
-</button>
-
+    <div class="modal-content" style="border-radius: 15px; padding: 20px;">
+      <div class="modal-header border-0">
+        <h5 class="modal-title w-100 text-center">Nuevo objetivo de ahorro</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
-        <form id="formObjetivo">
-          @csrf
-          <div class="mb-3">
-            <label>Nombre</label>
-            <input type="text" name="nombre" class="form-control" maxlength="100" required>
-          </div>
-          <div class="mb-3">
-            <label>Monto meta</label>
-            <input type="number" name="monto" class="form-control" step="0.01" min="1" required>
-          </div>
-          <div class="mb-3">
-            <label>Fecha límite</label>
-            <input type="date" name="fecha" class="form-control" required>
-          </div>
-          <button type="submit" class="btn btn-primary w-100">Guardar</button>
-        </form>
+        <div class="form-container">
+          <form id="formObjetivo">
+            @csrf
+
+            <label for="nombre">Nombre de objetivo:</label>
+            <input type="text" id="nombre" name="nombre" required maxlength="100">
+
+            <label for="monto">Monto:</label>
+            <input type="number" id="monto" name="monto" step="0.01" min="1" required>
+
+            <label>Fecha del objetivo</label>
+            <div class="fechas">
+              <div>
+                <label for="desde">Desde:</label>
+                <input type="date" id="desde" name="desde" required>
+              </div>
+              <div>
+                <label for="hasta">Hasta:</label>
+                <input type="date" id="hasta" name="hasta" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-guardar">Guardar</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -181,7 +187,8 @@ document.getElementById('formObjetivo').addEventListener('submit', async functio
 
 </script>
 
-  <!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro -->
+  <!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro
+   probando github -->
 <script>
   document.getElementById('finanzas_personales').addEventListener('click', function() {
     window.location.href = "{{ route('finanzas.personales') }}";

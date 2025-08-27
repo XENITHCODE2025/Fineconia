@@ -122,7 +122,7 @@ class GastoController extends Controller
             ->first();
 
         if ($presupuesto) {
-            // Ajustar restante: restar diferencia (si es negativo, suma automática)
+            // Ajustar restante: restar diferencia (si es negativo, suma automática) probando
             $presupuesto->restante -= $diferencia;
             // Limitar entre 0 y monto original
             if ($presupuesto->restante < 0) {

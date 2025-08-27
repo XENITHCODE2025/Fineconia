@@ -115,6 +115,7 @@ body {
   font-family: 'Odor Mean Chey', cursive;
   color: #000000;
   font-size: 16px;
+  font-weight: bold; /* ✅ Subtítulos en negrita */
 }
 
 .input-container {
@@ -173,6 +174,7 @@ body {
   color: #000000;
   font-size: 16px;
   min-width: 60px;
+  font-weight: bold; /* ✅ Subtítulos de fechas en negrita */
 }
 
 .fecha-input-container {

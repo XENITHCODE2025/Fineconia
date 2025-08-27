@@ -36,7 +36,7 @@ body {
 
 .menu .nav-link {
   color: white;
-  text-decoration: underline;
+  text-decoration: none; /* 🔹 quitar subrayado */
 }
 
 .nombre {
@@ -69,8 +69,8 @@ body {
 .mobile-menu a {
   color: white;
   padding: 10px;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  text-decoration: none; /* 🔹 quitar subrayado */
+  border-bottom: none;   /* 🔹 quitar línea */
 }
 
 .mobile-menu a:hover {
@@ -230,7 +230,7 @@ body {
 
 .footer-links a {
   color: white;
-  text-decoration: underline;
+  text-decoration: none; /* 🔹 quitar subrayado */
   font-family: 'Poppins', sans-serif;
 }
 
@@ -284,12 +284,11 @@ input.success {
   border: 2px solid #2ecc71;
 }
 
-/* Estilos adicionales para corregir los problemas */
+/* Estilos adicionales */
 .nav-link {
   cursor: pointer;
 }
     
-/* Asegurar que todos los enlaces tengan el mismo estilo de cursor */
 .mobile-menu a {
   cursor: pointer;
 }

@@ -89,49 +89,7 @@
         <button class="btn-goal">Añadir Ahorro</button>
       </div>
     </div>
-
   </div>
-
-  
-<!-- Modal -->
-<div class="modal fade" id="modalCrearObjetivo" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius: 15px; padding: 20px;">
-      <div class="modal-header border-0">
-        <h5 class="modal-title w-100 text-center">Nuevo objetivo de ahorro</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-container">
-          <form id="formObjetivo">
-            @csrf
-
-            <label for="nombre">Nombre de objetivo:</label>
-            <input type="text" id="nombre" name="nombre" required maxlength="100">
-
-            <label for="monto">Monto:</label>
-            <input type="number" id="monto" name="monto" step="0.01" min="1" required>
-
-            <label>Fecha del objetivo</label>
-            <div class="fechas">
-              <div>
-                <label for="desde">Desde:</label>
-                <input type="date" id="desde" name="desde" required>
-              </div>
-              <div>
-                <label for="hasta">Hasta:</label>
-                <input type="date" id="hasta" name="hasta" required>
-              </div>
-            </div>
-
-            <button type="submit" class="btn-guardar">Guardar</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

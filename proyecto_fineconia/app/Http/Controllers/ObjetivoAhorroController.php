@@ -19,16 +19,7 @@ class ObjetivoAhorroController extends Controller
 
     $objetivos = ObjetivoAhorro::where('user_id', auth()->id())->get();
 
-    return view('Ahorro', compact('objetivos'));
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-     public function create()
-    {
-        return view('ObjetivosDeAhorro');
+    return view('Ahorro', compact('objetivos'));  
 
     }
     

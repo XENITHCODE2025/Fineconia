@@ -128,12 +128,7 @@ document.addEventListener("DOMContentLoaded", cargarObjetivos);
 
 
 
-        <p class="mt-2">FECHA LÍMITE: 15/07/2025</p>
-        <button class="btn-goal">Añadir Ahorro</button>
-      </div>
-    </div>
-  </div>
-
+     
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

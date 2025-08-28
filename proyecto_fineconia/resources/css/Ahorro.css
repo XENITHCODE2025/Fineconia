@@ -173,3 +173,125 @@
   text-decoration: none; /* Quita la línea */
 }
 
+/* (0) Reset por si quedó centrado antes el contenido interno */
+.custom-card-body,
+.goal-card {
+  text-align: initial;
+}
+
+/* (1) Centrar SOLO el texto de la parte superior (títulos) de cada contenedor */
+.custom-card-header {          /* Recomendaciones / Gráficos de ahorro, etc. */
+  justify-content: center;     /* es flex, así centramos el contenido */
+  text-align: center;
+}
+.goal-section h2,              /* Objetivos de ahorro */
+.goal-card h2,
+.goal-card h3 {
+  text-align: center;
+}
+
+/* (2) Justificar y reducir el ancho del texto que va debajo de "Ahorro" (en el encabezado) */
+.header p {
+  text-align: justify;
+  max-width: 720px;            /* reduce el contenedor del texto */
+  margin: 10px auto 0;         /* centra el bloque sin afectar el h1 */
+  line-height: 1.6;
+}
+
+/* (3) Centrar los botones "Ver consejos", "Gráficas" y "Crear objetivo"
+      sin centrar el resto del texto */
+.custom-card-body .custom-btn { /* Ver consejos / Ver gráficas dentro de tarjetas */
+  display: block;
+  margin: 12px auto 0;
+}
+.goal-card .btn-goal {          /* Crear objetivo */
+  display: block;
+  margin: 12px auto 0;
+}
+
+/* Unificar estilo de TODOS los botones */
+.custom-btn,
+.btn-goal {
+  display: inline-block;
+  text-align: center;
+  background-color: #ffffff;
+  color: #070707;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;      /* Tamaño uniforme */
+  min-width: 160px;        /* Todos del mismo ancho mínimo */
+  max-width: 180px;        /* Opcional: evita que uno se estire demasiado */
+  margin: 12px auto 0;
+  cursor: pointer;
+}
+
+/* Hover igual para todos */
+.custom-btn:hover,
+.btn-goal:hover {
+  background-color: #ffffff;
+  color: #070707;
+}
+
+/* Contenedor general estilo tarjeta */
+.goal-wrapper {
+  background-color: #31565E;
+  padding: 40px 20px;
+  border-radius: 15px;
+  margin: 30px auto;
+  max-width: 900px;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+.goal-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Contenedor scrollable */
+.goals-scroll-container {
+  max-height: 500px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-right: 10px;
+}
+
+.goal-card {
+  background-color: white;
+  color: #31565E; /* ← aquí aplicamos el color de fuente correcto */
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+/* Barra de progreso */
+.goal-card .progress {
+  height: 10px;
+  border-radius: 20px;
+  background-color: #e0e0e0;
+  margin: 10px 0;
+}
+
+.goal-card .progress-bar {
+  background-color: #4caf50;
+  border-radius: 20px;
+}
+
+/* Botón */
+.goal-card .btn-goal {
+  background-color: #a3d4dd;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 20px;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  margin-top: 10px;
+  cursor: pointer;
+}

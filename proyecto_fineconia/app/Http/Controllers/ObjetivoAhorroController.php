@@ -12,6 +12,7 @@ class ObjetivoAhorroController extends Controller
     {
         return view('ObjetivosDeAhorro');
     }
+
     public function indexMostrar()
     {
        
@@ -19,6 +20,15 @@ class ObjetivoAhorroController extends Controller
     $objetivos = ObjetivoAhorro::where('user_id', auth()->id())->get();
 
     return view('Ahorro', compact('objetivos'));
+
+
+
+    /**
+     * Show the form for creating a new resource.
+     */
+     public function create()
+    {
+        return view('ObjetivosDeAhorro');
 
     }
     

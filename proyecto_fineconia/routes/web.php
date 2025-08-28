@@ -14,7 +14,12 @@ use App\Http\Controllers\TransaccionesController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\GraficasPresupuestoController;
+
 use App\Models\ObjetivoAhorro;
+=======
+use App\Http\Controllers\ObjetivoController;
+use App\Http\Controllers\AhorroController;
+
 use App\Models\Gasto;
 use App\Models\Presupuesto;
 use App\Models\Ingreso;
@@ -60,7 +65,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/presupuestos', [PresupuestoController::class, 'store'])
         ->name('presupuestos.store');
 
-    
+
+
+    Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
+
+
+
 
     /* Vista y datos de la gráfica de pastel de presupuestos */
     Route::get(
@@ -149,6 +159,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/objetivos', [ObjetivoAhorroController::class, 'store'])->name('objetivos.store');
     Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
 
+
+
+    // Rutas para consejos de ahorro y gráficas de ahorro
+    Route::get('/ahorro.con', [AhorroController::class, 'indexConsejos'])->name('consejos.ahorro');
+
+    Route::get('/ahorro.gra', [AhorroController::class, 'indexGraficasAhorro'])->name('graficas.ahorro');
 
     // CRUD Gastos
     Route::prefix('gastos')->middleware(['auth'])->group(function () {

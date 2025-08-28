@@ -27,9 +27,9 @@
     <div class="menu">
       <!-- Solo los 4 enlaces solicitados -->
       <a href="{{ route('ahorro') }}" class="nav-link">Ahorro</a>
-      <a href="#" class="nav-link">Consejos</a>
+      <a href="{{ route('consejos.ahorro') }}" class="nav-link">Consejos</a>
       <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
-      <a href="#" class="nav-link">Gráficas</a>
+      <a href="{{ route('graficas.ahorro') }}" class="nav-link">Gráficas</a>
       
       @include('partials.header-user')
       <div class="menu-toggle" id="menu-toggle">
@@ -41,9 +41,9 @@
   <nav class="mobile-menu" id="mobile-menu">
     <!-- Solo los 4 enlaces solicitados en menú móvil -->
     <a href="{{ route('ahorro') }}" class="mobile-nav-link">Ahorro</a>
-    <a href="#" class="mobile-nav-link">Consejos</a>
+    <a href="{{ route('consejos.ahorro') }}" class="mobile-nav-link">Consejos</a>
     <a href="{{ route('objetivos.nuevo') }}" class="mobile-nav-link">Objetivos</a>
-    <a href="#" class="mobile-nav-link">Gráficas</a>
+    <a href="{{ route('graficas.ahorro') }}" class="mobile-nav-link">Gráficas</a>
   </nav>
 
   <main class="contenido">

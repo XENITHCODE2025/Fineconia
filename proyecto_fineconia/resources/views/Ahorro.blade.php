@@ -110,6 +110,7 @@ async function cargarObjetivos() {
         <div class="progress">
           <div class="progress-bar" role="progressbar" style="width: ${progreso}%"></div>
         </div>
+
         <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta).toLocaleDateString()}</p>
         <button class="btn-goal" disabled>Añadir Ahorro</button>
       `;
@@ -124,6 +125,14 @@ async function cargarObjetivos() {
 document.addEventListener("DOMContentLoaded", cargarObjetivos);
 
   </script>
+
+
+
+        <p class="mt-2">FECHA LÍMITE: 15/07/2025</p>
+        <button class="btn-goal">Añadir Ahorro</button>
+      </div>
+    </div>
+  </div>
 
 
   <!-- Bootstrap JS -->

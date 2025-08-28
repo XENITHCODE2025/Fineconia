@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -36,11 +36,19 @@ body {
 
 .menu .nav-link {
   color: white;
-  text-decoration: underline;
+  text-decoration: none; /* 🔹 quitar subrayado */
+}
+
+/* Estilo para el enlace activo */
+.nav-link.active {
+  color: #F9B924;
+  font-weight: bold;
 }
 
 .nombre {
-  font-weight: bold;
+  font-weight: normal;
+  font-family: 'Open Sans', sans-serif;
+  color: white;
 }
 
 .user-icon {
@@ -67,8 +75,8 @@ body {
 .mobile-menu a {
   color: white;
   padding: 10px;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  text-decoration: none; /* 🔹 quitar subrayado */
+  border-bottom: none;   /* 🔹 quitar línea inferior */
 }
 
 .mobile-menu a:hover {
@@ -77,6 +85,12 @@ body {
 
 .mobile-menu.active {
   display: flex;
+}
+
+/* Estilo para el enlace activo en menú móvil */
+.mobile-nav-link.active {
+  color: #F9B924;
+  font-weight: bold;
 }
 
 /* CONTENIDO */
@@ -88,7 +102,7 @@ body {
 
 /* FOOTER */
 .footer {
-  background-color: #2f4d4f;
+  background-color: #31565e;
   padding: 15px 30px;
   color: white;
   display: flex;
@@ -99,51 +113,70 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .footer-links a {
   color: white;
-  text-decoration: underline;
+  text-decoration: none; /* 🔹 quitar subrayado */
+  font-family: 'Poppins', sans-serif;
 }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .menu .nav-link {
-    display: none; /* Oculta enlaces en móvil */
+    display: none;
   }
   .menu-toggle {
-    display: block; /* Muestra botón hamburguesa en móvil */
+    display: block;
   }
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  justify-content: center;  /* Cambia a 'flex-start' o 'flex-end' si quieres alinear a izquierda o derecha */
-  width: 50%;               /* Ajusta según qué tan grande quieres el contenedor */
-  max-width: 300px;         /* Límite máximo de crecimiento */
-  min-width: 150px;         /* Límite mínimo */
+  justify-content: center;
+  width: 50%;
+  max-width: 300px;
+  min-width: 150px;
   padding: 10px;
 }
 
 .responsive-logo {
-  width: 100%;              /* Imagen ocupa todo el contenedor */
-  height: auto;             /* Mantiene proporción */
-  display: block;           /* Evita espacio en línea por defecto */
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Estilos adicionales */
+.nav-link {
+  cursor: pointer;
+}
+
+.mobile-menu a {
+  cursor: pointer;
 }
 
 /* Títulos */
 .titulo-consejos {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
+  background: linear-gradient(to right, #8fc9d5, #e6f9ed);
+  border-radius: 12px;
+  padding: 20px;
 }
+
 .titulo-consejos h2 {
   font-size: 22px;
   font-weight: bold;
+  margin: 0;
 }
-.titulo-consejos p {
+
+.subtexto-consejos {
+  text-align: center;
   color: #555;
-  margin-top: 8px;
+  margin-bottom: 25px;
+  font-size: 15px;
 }
 
 /* Grid principal */
@@ -204,25 +237,4 @@ body {
   .consejos-grid {
     grid-template-columns: 1fr; /* Se apila */
   }
-}
-
-.titulo-consejos {
-  text-align: center;
-  margin-bottom: 10px; /* menos espacio porque viene el subtexto */
-  background: linear-gradient(to right, #8fc9d5, #e6f9ed); /* degradado verde */
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.titulo-consejos h2 {
-  font-size: 22px;
-  font-weight: bold;
-  margin: 0;
-}
-
-.subtexto-consejos {
-  text-align: center;
-  color: #555;
-  margin-bottom: 25px; /* separa del grid de categorías */
-  font-size: 15px;
 }

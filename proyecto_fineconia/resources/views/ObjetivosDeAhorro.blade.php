@@ -14,6 +14,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
   <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 </head>
+@if(session('success'))
+<script>
+    alertify.success("{{ session('success') }}");
+</script>
+@endif
 <body>
   <header class="header">
     <div class="logo-container">
@@ -44,39 +49,42 @@
   <main class="contenido">
     <div class="form-container">
       <h2>Nuevo objetivo de ahorro</h2>
-      <form id="objetivo-form">
-        <label for="nombre">Nombre del objetivo:</label>
-        <div class="input-container">
-          <input type="text" id="nombre" name="nombre" required>
-          <span class="input-icon" id="icon-nombre"></span>
-        </div>
+  <form id="objetivo-form" action="{{ route('objetivos.store') }}" method="POST">
+  @csrf
+  <label for="nombre">Nombre del objetivo:</label>
+  <div class="input-container">
+    <input type="text" id="nombre" name="nombre" required>
+    <span class="input-icon" id="icon-nombre"></span>
+  </div>
 
-        <label for="monto">Monto:</label>
-        <div class="input-container">
-          <input type="number" id="monto" name="monto" min="1" required>
-          <span class="input-icon" id="icon-monto"></span>
-        </div>
+  <label for="monto">Monto:</label>
+  <div class="input-container">
+    <input type="number" id="monto" name="monto" min="1" required>
+    <span class="input-icon" id="icon-monto"></span>
+  </div>
 
-        <label>Fecha del objetivo</label>
-        <div class="fechas">
-          <div class="fecha-item">
-            <label for="desde">Desde:</label>
-            <div class="fecha-input-wrapper">
-              <input type="date" id="desde" name="desde" required>
-              <span class="fecha-icon" id="icon-desde"></span>
-            </div>
-          </div>
-          <div class="fecha-item">
-            <label for="hasta">Hasta:</label>
-            <div class="fecha-input-wrapper">
-              <input type="date" id="hasta" name="hasta" required>
-              <span class="fecha-icon" id="icon-hasta"></span>
-            </div>
-          </div>
-        </div>
+  <label>Fecha del objetivo</label>
+  <div class="fechas">
+    <div class="fecha-item">
+      <label for="desde">Desde:</label>
+      <div class="fecha-input-wrapper">
+        <input type="date" id="desde" name="fecha_desde" required>
+        <span class="fecha-icon" id="icon-desde"></span>
+      </div>
+    </div>
+    <div class="fecha-item">
+      <label for="hasta">Hasta:</label>
+      <div class="fecha-input-wrapper">
+        <input type="date" id="hasta" name="fecha_hasta" required>
+        <span class="fecha-icon" id="icon-hasta"></span>
+      </div>
+    </div>
+  </div>
 
-        <button type="submit" class="btn-guardar" disabled>Guardar</button>
-      </form>
+  <button type="submit" class="btn-guardar" disabled>Guardar</button>
+</form>
+
+
     </div>
   </main>
 
@@ -198,38 +206,24 @@ function validarFormulario() {
 });
 
 form.addEventListener("submit", (e) => {
-  e.preventDefault();
   let errores = [];
 
-  // Marcar todos los campos como interactuados al enviar el formulario
-  Object.keys(campoInteractuado).forEach(key => {
-    campoInteractuado[key] = true;
-  });
+  Object.keys(campoInteractuado).forEach(key => campoInteractuado[key] = true);
   validarFormulario();
 
-  if (nombre.value.trim() === "") {
-    errores.push("El campo 'Nombre del objetivo' es obligatorio.");
-  }
-
-  if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) {
-    errores.push("El campo 'Monto' debe ser mayor a 0.");
-  }
-
+  if (nombre.value.trim() === "") errores.push("El campo 'Nombre del objetivo' es obligatorio.");
+  if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) errores.push("El campo 'Monto' debe ser mayor a 0.");
   if (desde.value === "" || hasta.value === "") {
     errores.push("Debes seleccionar las fechas.");
   } else {
     const fechaDesde = new Date(desde.value);
     const fechaHasta = new Date(hasta.value);
-    if (fechaHasta < fechaDesde) {
-      errores.push("La fecha 'Hasta' no puede ser menor que la fecha 'Desde'.");
-    }
+    if (fechaHasta < fechaDesde) errores.push("La fecha 'Hasta' no puede ser menor que la fecha 'Desde'.");
   }
 
   if (errores.length > 0) {
+    e.preventDefault(); // 🚨 detiene envío si hay errores
     alertify.error(errores.join("<br>"));
-  } else {
-    alertify.success("¡Objetivo guardado correctamente!");
-    form.submit();
   }
 });
 

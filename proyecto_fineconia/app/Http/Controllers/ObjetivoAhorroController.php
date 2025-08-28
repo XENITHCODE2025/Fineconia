@@ -22,14 +22,6 @@ class ObjetivoAhorroController extends Controller
     return view('Ahorro', compact('objetivos'));
 
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-     public function create()
-    {
-        return view('ObjetivosDeAhorro');
-
     }
     
     // ✅ Registrar un nuevo objetivo

@@ -137,6 +137,13 @@
     }
   }
 
+}
+
+document.addEventListener("DOMContentLoaded", cargarObjetivos);
+ </script>
+
+
+
   document.addEventListener("DOMContentLoaded", cargarObjetivos);
 </script>
 

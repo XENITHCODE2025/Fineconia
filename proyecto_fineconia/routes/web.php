@@ -7,14 +7,19 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\IngresoController;
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ObjetivoAhorroController;
 use App\Http\Controllers\TransaccionesController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\GraficasPresupuestoController;
+
+use App\Models\ObjetivoAhorro;
+=======
 use App\Http\Controllers\ObjetivoController;
 use App\Http\Controllers\AhorroController;
+
 use App\Models\Gasto;
 use App\Models\Presupuesto;
 use App\Models\Ingreso;
@@ -38,7 +43,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/bienvenida', fn() => view('Bienvenida'))->name('bienvenida');
     Route::get('/finanzas-personales', fn() => view('Finanzas_personales'))->name('finanzas.personales');
-    Route::get('/ahorro', fn() => view('Ahorro'))->name('ahorro');
+    
 
     Route::get('/reportes', [ReporteController::class, 'index'])
         ->name('reportes');
@@ -61,7 +66,9 @@ Route::middleware(['auth'])->group(function () {
         ->name('presupuestos.store');
 
 
+
     Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
+
 
 
 
@@ -144,10 +151,13 @@ Route::middleware(['auth'])->group(function () {
         return view('welcome', compact('transacciones', 'saldoDisponible'));
     })->name('gastos-ingresos');
 
+    // CRUD Objetivos
+    Route::get('/ahorro', [ObjetivoAhorroController::class, 'indexMostrar'])->name('ahorro');
 
 
-
-
+    Route::get('/objetivos', [ObjetivoAhorroController::class, 'index'])->name('objetivos.index');
+    Route::post('/objetivos', [ObjetivoAhorroController::class, 'store'])->name('objetivos.store');
+    Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
 
 
 

@@ -8,72 +8,87 @@ use Illuminate\Support\Facades\Auth;
 
 class ObjetivoAhorroController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-     public function create()
+    public function create()
     {
         return view('ObjetivosDeAhorro');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function indexMostrar()
+    {
+       
+
+    $objetivos = ObjetivoAhorro::where('user_id', auth()->id())->get();
+
+    return view('Ahorro', compact('objetivos'));
+
+
+    }
+    
+    // ✅ Registrar un nuevo objetivo
+     public function index()
+    {
+        $objetivos = ObjetivoAhorro::where('user_id', Auth::id())->get();
+
+        return response()->json($objetivos);
+    }
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-        'nombre' => 'required|string|max:100',
-        'monto' => 'required|numeric|min:0.01',
-        'fecha' => 'required|date|after:today'
+{
+    $request->validate([
+        'nombre'      => 'required|string|max:255',
+        'monto'       => 'required|numeric|min:1',
+        'fecha_desde' => 'required|date',
+        'fecha_hasta' => 'required|date|after_or_equal:fecha_desde',
     ]);
 
-    ObjetivoAhorro::create([
-        'usuario_id' => Auth::id(),
-        'nombre_objetivo' => $validated['nombre'],
-        'monto_meta' => $validated['monto'],
-        'fecha_limite' => $validated['fecha']
+    $objetivo = ObjetivoAhorro::create([
+        'user_id'     => Auth::id(),
+        'nombre'      => $request->nombre,
+        'monto'       => $request->monto,
+        'fecha_desde' => $request->fecha_desde,
+        'fecha_hasta' => $request->fecha_hasta,
     ]);
 
-    return response()->json(['status' => 'ok']);
+     // ✅ Si la petición viene de fetch/ajax, responder JSON
+    if ($request->ajax()) {
+        return response()->json([
+            'status' => 'ok',
+            'objetivo' => $objetivo
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ObjetivoAhorro $objetivoAhorro)
-    {
-        //
-    }
+    return redirect()->route('objetivos.nuevo')->with('success', 'Objetivo creado con éxito');
+}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ObjetivoAhorro $objetivoAhorro)
-    {
-        //
-    }
+public function update(Request $request, $id)
+{
+    $objetivo = ObjetivoAhorro::where('user_id', Auth::id())->findOrFail($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ObjetivoAhorro $objetivoAhorro)
-    {
-        //
-    }
+    $request->validate([
+        'nombre'      => 'required|string|max:255',
+        'monto'       => 'required|numeric|min:1',
+        'fecha_desde' => 'required|date',
+        'fecha_hasta' => 'required|date|after_or_equal:fecha_desde',
+    ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ObjetivoAhorro $objetivoAhorro)
+    $objetivo->update($request->only(['nombre', 'monto', 'fecha_desde', 'fecha_hasta']));
+
+    return response()->json([
+        'message'  => 'Objetivo actualizado con éxito',
+        'objetivo' => $objetivo,
+    ]);
+}
+
+
+    // ✅ Eliminar un objetivo
+    public function destroy($id)
     {
-        //
+        $objetivo = ObjetivoAhorro::where('user_id', Auth::id())->findOrFail($id);
+        $objetivo->delete();
+
+        return response()->json([
+            'message' => 'Objetivo eliminado con éxito'
+        ]);
     }
 }
+
+/* Crear objetivo de ahorro - backend - correctamente funcional */

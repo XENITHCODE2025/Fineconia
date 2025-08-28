@@ -77,19 +77,59 @@
     </div>
 
     <!-- Objetivos actuales -->
-    <div class="goal-section">
-      <h3 class="fw-bold mb-3">Tus Objetivos de Ahorro</h3>
-      <div class="goal-card">
-        <h5>Vacaciones</h5>
-        <p>$1,200 / $2,000</p>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" style="width: 60%"></div>
-        </div>
-        <p class="mt-2">FECHA LÍMITE: 15/07/2025</p>
-        <button class="btn-goal">Añadir Ahorro</button>
-      </div>
-    </div>
+<div class="goal-section">
+  <h3 class="fw-bold mb-3">Tus Objetivos de Ahorro</h3>
+  <div id="goals-container">
+    <!-- Aquí se cargarán las tarjetas desde la API -->
   </div>
+</div>
+<script>
+async function cargarObjetivos() {
+  try {
+    const res = await fetch("{{ route('objetivos.index') }}"); // Ajusta a tu ruta
+    const objetivos = await res.json();
+
+    const container = document.querySelector(".goal-section");
+    container.innerHTML = "<h3 class='fw-bold mb-3'>Tus Objetivos de Ahorro</h3>";
+
+    if (objetivos.length === 0) {
+      container.innerHTML += `
+        <div class="alert alert-info">No tienes objetivos de ahorro registrados.</div>
+      `;
+      return;
+    }
+
+    objetivos.forEach(goal => {
+      const progreso = (0 / parseFloat(goal.monto)) * 100; // de momento siempre 0%
+      const card = document.createElement("div");
+      card.classList.add("goal-card");
+
+      card.innerHTML = `
+        <h5>${goal.nombre}</h5>
+        <p>$0 / $${parseFloat(goal.monto).toLocaleString()}</p>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: ${progreso}%"></div>
+        </div>
+
+        <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta).toLocaleDateString()}</p>
+        <button class="btn-goal" disabled>Añadir Ahorro</button>
+      `;
+
+      container.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Error cargando objetivos:", error);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", cargarObjetivos);
+
+  </script>
+
+
+
+       
+
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

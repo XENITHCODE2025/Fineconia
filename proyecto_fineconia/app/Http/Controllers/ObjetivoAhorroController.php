@@ -19,7 +19,9 @@ class ObjetivoAhorroController extends Controller
 
     $objetivos = ObjetivoAhorro::where('user_id', auth()->id())->get();
 
+
     return view('Ahorro', compact('objetivos'));
+
 
 
     }

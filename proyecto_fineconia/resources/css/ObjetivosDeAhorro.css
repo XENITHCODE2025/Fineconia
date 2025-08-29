@@ -1,5 +1,6 @@
 
 /* Tarea de crear objetivo de ahorro - frontend (completada) */
+
 * {
 
   margin: 0;
@@ -295,8 +296,7 @@ input.success {
 .mobile-menu a {
   cursor: pointer;
 }
-<<<<<<< HEAD
-=======
+
 
 .footer-links {
   display: flex;
@@ -312,4 +312,4 @@ input.success {
   line-height: 1.4;
 }
 
->>>>>>> 8b2aa3f01e6ebff6355b7340a3619f28aef5858f
+

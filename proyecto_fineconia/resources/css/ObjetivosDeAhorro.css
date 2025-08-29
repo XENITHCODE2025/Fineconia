@@ -298,5 +298,18 @@ input.success {
 <<<<<<< HEAD
 =======
 
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: underline;   /* 🔹 Subrayado como en la imagen */
+  font-size: 18px;              /* Ajusta según necesites */
+  line-height: 1.4;
+}
 
 >>>>>>> 8b2aa3f01e6ebff6355b7340a3619f28aef5858f

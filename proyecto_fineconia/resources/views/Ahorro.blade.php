@@ -132,18 +132,13 @@
 
         container.appendChild(card);
       });
+
     } catch (error) {
       console.error("Error cargando objetivos:", error);
     }
   }
 
-}
-
-document.addEventListener("DOMContentLoaded", cargarObjetivos);
- </script>
-
-
-
+  // Llamar la función al cargar la página, si lo deseas
   document.addEventListener("DOMContentLoaded", cargarObjetivos);
 </script>
 

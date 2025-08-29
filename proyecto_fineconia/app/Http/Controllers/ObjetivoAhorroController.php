@@ -19,6 +19,7 @@ class ObjetivoAhorroController extends Controller
 
     $objetivos = ObjetivoAhorro::where('user_id', auth()->id())->get();
 
+
     return view('Ahorro', compact('objetivos'));
 
 
@@ -91,3 +92,5 @@ public function update(Request $request, $id)
         ]);
     }
 }
+
+/* Crear objetivo de ahorro - backend - correctamente funcional */

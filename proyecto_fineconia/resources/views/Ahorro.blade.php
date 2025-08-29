@@ -76,59 +76,76 @@
       </div>
     </div>
 
-    <!-- Objetivos actuales -->
-<div class="goal-section">
-  <h3 class="fw-bold mb-3">Tus Objetivos de Ahorro</h3>
-  <div id="goals-container">
-    <!-- Aquí se cargarán las tarjetas desde la API -->
+  <!-- Objetivos actuales -->
+<div class="goal-wrapper">
+  <h3 class="goal-title">Tus Objetivos de Ahorro</h3>
+  <div id="goals-container" class="goals-scroll-container">
+    <!-- Las tarjetas se cargarán dinámicamente -->
   </div>
 </div>
+
 <script>
-async function cargarObjetivos() {
-  try {
-    const res = await fetch("{{ route('objetivos.index') }}"); // Ajusta a tu ruta
-    const objetivos = await res.json();
+  const objetivosEndpoint = "{{ route('objetivos.index') }}"; // Se define desde Blade
+</script>
 
-    const container = document.querySelector(".goal-section");
-    container.innerHTML = "<h3 class='fw-bold mb-3'>Tus Objetivos de Ahorro</h3>";
+<script>
+  async function cargarObjetivos() {
+    try {
+      const res = await fetch(objetivosEndpoint);
+      const objetivos = await res.json();
+      console.log("Objetivos cargados:", objetivos);
 
-    if (objetivos.length === 0) {
-      container.innerHTML += `
-        <div class="alert alert-info">No tienes objetivos de ahorro registrados.</div>
-      `;
-      return;
+      const container = document.getElementById("goals-container");
+      if (!container) {
+        console.error("No se encontró el contenedor de objetivos.");
+        return;
+      }
+
+      container.innerHTML = ""; // Limpia el contenedor
+
+      if (objetivos.length === 0) {
+        container.innerHTML = `
+          <div class="alert alert-info text-center w-100">No tienes objetivos de ahorro registrados.</div>
+        `;
+        return;
+      }
+
+      objetivos.forEach(goal => {
+        const montoActual = parseFloat(goal.actual ?? 0);
+        const montoMeta = parseFloat(goal.monto ?? 0);
+        if (isNaN(montoMeta) || montoMeta === 0) return;
+
+        const progreso = (montoActual / montoMeta) * 100;
+
+        const card = document.createElement("div");
+        card.classList.add("goal-card");
+
+        card.innerHTML = `
+          <h5>${goal.nombre}</h5>
+          <p>$${montoActual.toLocaleString()} / $${montoMeta.toLocaleString()}</p>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: ${progreso}%"></div>
+          </div>
+          <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta).toLocaleDateString()}</p>
+          <button class="btn-goal">Abonar</button>
+        `;
+
+        container.appendChild(card);
+      });
+
+    } catch (error) {
+      console.error("Error cargando objetivos:", error);
     }
-
-    objetivos.forEach(goal => {
-      const progreso = (0 / parseFloat(goal.monto)) * 100; // de momento siempre 0%
-      const card = document.createElement("div");
-      card.classList.add("goal-card");
-
-      card.innerHTML = `
-        <h5>${goal.nombre}</h5>
-        <p>$0 / $${parseFloat(goal.monto).toLocaleString()}</p>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" style="width: ${progreso}%"></div>
-        </div>
-
-        <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta).toLocaleDateString()}</p>
-        <button class="btn-goal" disabled>Añadir Ahorro</button>
-      `;
-
-      container.appendChild(card);
-    });
-  } catch (error) {
-    console.error("Error cargando objetivos:", error);
   }
-}
-
-document.addEventListener("DOMContentLoaded", cargarObjetivos);
-
-  </script>
 
 
+  // Llamar la función al cargar la página, si lo deseas
+  document.addEventListener("DOMContentLoaded", cargarObjetivos);
+</script>
 
-     
+
+
+
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

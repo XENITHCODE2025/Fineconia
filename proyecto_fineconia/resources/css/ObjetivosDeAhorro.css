@@ -1,4 +1,8 @@
- * {
+
+/* Tarea de crear objetivo de ahorro - frontend (completada) */
+
+* {
+
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -83,7 +87,7 @@ body {
 
 /* CONTENIDO */
 .contenido {
-  flex: 1;
+  flex: 1 0 auto;
   padding: 30px;
   min-height: 400px;
 }
@@ -292,3 +296,20 @@ input.success {
 .mobile-menu a {
   cursor: pointer;
 }
+
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: underline;   /* 🔹 Subrayado como en la imagen */
+  font-size: 18px;              /* Ajusta según necesites */
+  line-height: 1.4;
+}
+
+

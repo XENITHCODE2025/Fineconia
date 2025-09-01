@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Ingreso;
+ use App\Models\Presupuesto;
 use App\Models\CategoriaIngreso;
 
 class IngresoController extends Controller
@@ -37,14 +38,36 @@ class IngresoController extends Controller
         return redirect()->back()->with('success', 'Ingreso registrado exitosamente');
     }
 
-    public function destroy($id_Ingreso)
-    {
-        $ingreso = Ingreso::where('id_Ingreso', $id_Ingreso)->firstOrFail();
-        $ingreso->delete();
-        return redirect('/gastos-ingresos')->with('success', 'Ingreso eliminado correctamente.');
+  
+
+public function destroy($id_Ingreso)
+{
+    $userId = auth()->id();
+
+    $ingreso = Ingreso::where('id_Ingreso', $id_Ingreso)
+        ->where('user_id', $userId)
+        ->firstOrFail();
+
+    $totalIngresos     = Ingreso::where('user_id', $userId)->sum('monto');
+    $totalPresupuestos = Presupuesto::where('user_id', $userId)->sum('monto');
+    $saldoActual       = $totalIngresos - $totalPresupuestos;
+
+    $saldoProyectado = $saldoActual - $ingreso->monto;
+
+    if ($saldoProyectado < 0) {
+        return redirect()->back()->with('error',
+            'No puedes eliminar este ingreso porque dejaría tu saldo en negativo (ya tienes presupuestos creados).'
+        );
     }
 
-    // IngresoController.php
+    $ingreso->delete();
+
+    return redirect('/gastos-ingresos')->with('success', 'Ingreso eliminado correctamente.');
+}
+
+
+
+    
    // IngresoController.php
 public function update(Request $request, $id)
 {
@@ -52,13 +75,33 @@ public function update(Request $request, $id)
         'descripcion'  => 'required|string|max:255',
         'categoria_id' => 'required|exists:categorias_ingresos,id_categoriaIngreso',
         'monto'        => 'required|numeric|min:0',
-        'fecha'        => 'sometimes|date',   //  ← ya no es required
+        'fecha'        => 'sometimes|date',
     ]);
 
-    $ingreso = Ingreso::where('id_Ingreso', $id)->firstOrFail();
+    $userId = auth()->id();
+    $ingreso = Ingreso::where('id_Ingreso', $id)
+        ->where('user_id', $userId)
+        ->firstOrFail();
+
+    $totalIngresos     = Ingreso::where('user_id', $userId)->sum('monto');
+    $totalPresupuestos = Presupuesto::where('user_id', $userId)->sum('monto');
+    $saldoActual       = $totalIngresos - $totalPresupuestos;
+
+    // Diferencia entre monto actual y nuevo
+    $diferencia = $request->monto - $ingreso->monto;
+    $saldoProyectado = $saldoActual + $diferencia;
+
+    if ($saldoProyectado < 0) {
+        return response()->json([
+            'error' => 'No puedes reducir este ingreso porque dejaría tu saldo en negativo (ya tienes presupuestos creados).'
+        ], 422);
+    }
+
+    // Si pasa la validación → actualizar
     $ingreso->update($request->only('fecha','descripcion','categoria_id','monto'));
 
     return response()->json(['status' => 'ok']);
 }
+
 
 }

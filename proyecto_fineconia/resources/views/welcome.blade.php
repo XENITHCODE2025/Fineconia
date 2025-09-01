@@ -385,7 +385,7 @@
                                 })
                             })
                             .then(r => r.ok ? location.reload() :
-                                alertify.error('No se pudo actualizar'));
+                                alertify.error('No se pudo actualizar, por que ya tienes un presupuesto creado.'));
                     },
                     () => {}
                 ).set('labels', {
@@ -418,6 +418,22 @@
         // …y cada vez que se redimensiona la ventana
         window.addEventListener('resize', toggleHeaderUser);
     });
-    </script>
+
+
+
+
+</script>
+<script>
+@if(session('success'))
+    alertify.success("{{ session('success') }}");
+@endif
+
+@if(session('error'))
+    alertify.error("{{ session('error') }}");
+@endif
+</script>
+
+
+    
 
 </html>

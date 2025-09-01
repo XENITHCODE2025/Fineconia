@@ -138,9 +138,14 @@
     }
   }
 
+
   // Llamar la función al cargar la página, si lo deseas
   document.addEventListener("DOMContentLoaded", cargarObjetivos);
 </script>
+
+
+
+
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

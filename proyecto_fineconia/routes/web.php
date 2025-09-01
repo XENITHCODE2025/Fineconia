@@ -93,8 +93,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Mostrar todos los ingresos y gastos 
     // Mostrar solo los ingresos
-
-
     Route::get('/gastos-ingresos', function () {
 
         $userId = auth()->id();

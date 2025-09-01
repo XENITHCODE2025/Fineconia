@@ -14,7 +14,8 @@
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Navbar 
+   aaaa-->
   <nav class="navbar">
     <div class="logo-container">
      <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
@@ -50,16 +51,19 @@
       </div>
     </div>
 
-    <!-- Objetivos -->
-    <div class="custom-card">
-      <div class="custom-card-header">
-        <i class="bi bi-bullseye"></i> Objetivos de Ahorro
-      </div>
-      <div class="custom-card-body">
-        <p>Establece metas de ahorro personalizadas según tus necesidades. Define objetivos específicos, asigna montos y fechas límite, y calcula cuánto deberías ahorrar periódicamente para alcanzarlos.</p>
-        <button class="custom-btn">Crear Objetivo</button>
-      </div>
-    </div>
+   <!-- Objetivos -->
+<div class="custom-card">
+  <div class="custom-card-header">
+    <i class="bi bi-bullseye"></i> Objetivos de Ahorro
+  </div>
+  <div class="custom-card-body">
+    <p>
+      Establece metas de ahorro personalizadas según tus necesidades. Define objetivos específicos, asigna montos y fechas límite, y calcula cuánto deberías ahorrar periódicamente para alcanzarlos.
+    </p>
+    <a href="{{ route('objetivos.nuevo') }}" class="custom-btn">Crear Objetivo</a>
+  </div>
+</div>
+
 
     <!-- Gráficos -->
     <div class="custom-card">
@@ -72,59 +76,75 @@
       </div>
     </div>
 
-    <!-- Objetivos actuales -->
-    <div class="goal-section">
-      <h3 class="fw-bold mb-3">Tus Objetivos de Ahorro</h3>
-      <div class="goal-card">
-        <h5>Vacaciones</h5>
-        <p>$1,200 / $2,000</p>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" style="width: 60%"></div>
-        </div>
-        <p class="mt-2">FECHA LÍMITE: 15/07/2025</p>
-        <button class="btn-goal">Añadir Ahorro</button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Botón para mostrar el modal -->
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearObjetivo">
-    Crear Objetivo
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="modalCrearObjetivo" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius: 15px;">
-      <div class="modal-header">
-        <h5 class="modal-title">Nuevo Objetivo</h5>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearObjetivo">
-  Crear Objetivo
-</button>
-
-      </div>
-      <div class="modal-body">
-        <form id="formObjetivo">
-          @csrf
-          <div class="mb-3">
-            <label>Nombre</label>
-            <input type="text" name="nombre" class="form-control" maxlength="100" required>
-          </div>
-          <div class="mb-3">
-            <label>Monto meta</label>
-            <input type="number" name="monto" class="form-control" step="0.01" min="1" required>
-          </div>
-          <div class="mb-3">
-            <label>Fecha límite</label>
-            <input type="date" name="fecha" class="form-control" required>
-          </div>
-          <button type="submit" class="btn btn-primary w-100">Guardar</button>
-        </form>
-      </div>
-    </div>
+  <!-- Objetivos actuales -->
+<div class="goal-wrapper">
+  <h3 class="goal-title">Tus Objetivos de Ahorro</h3>
+  <div id="goals-container" class="goals-scroll-container">
+    <!-- Las tarjetas se cargarán dinámicamente -->
   </div>
 </div>
+
+<script>
+  const objetivosEndpoint = "{{ route('objetivos.index') }}"; // Se define desde Blade
+</script>
+
+<script>
+  async function cargarObjetivos() {
+    try {
+      const res = await fetch(objetivosEndpoint);
+      const objetivos = await res.json();
+      console.log("Objetivos cargados:", objetivos);
+
+      const container = document.getElementById("goals-container");
+      if (!container) {
+        console.error("No se encontró el contenedor de objetivos.");
+        return;
+      }
+
+      container.innerHTML = ""; // Limpia el contenedor
+
+      if (objetivos.length === 0) {
+        container.innerHTML = `
+          <div class="alert alert-info text-center w-100">No tienes objetivos de ahorro registrados.</div>
+        `;
+        return;
+      }
+
+      objetivos.forEach(goal => {
+        const montoActual = parseFloat(goal.actual ?? 0);
+        const montoMeta = parseFloat(goal.monto ?? 0);
+        if (isNaN(montoMeta) || montoMeta === 0) return;
+
+        const progreso = (montoActual / montoMeta) * 100;
+
+        const card = document.createElement("div");
+        card.classList.add("goal-card");
+
+        card.innerHTML = `
+          <h5>${goal.nombre}</h5>
+          <p>$${montoActual.toLocaleString()} / $${montoMeta.toLocaleString()}</p>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: ${progreso}%"></div>
+          </div>
+          <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta).toLocaleDateString()}</p>
+          <button class="btn-goal">Abonar</button>
+        `;
+
+        container.appendChild(card);
+      });
+
+    } catch (error) {
+      console.error("Error cargando objetivos:", error);
+    }
+  }
+
+
+  // Llamar la función al cargar la página, si lo deseas
+  document.addEventListener("DOMContentLoaded", cargarObjetivos);
+</script>
+
+
+
 
 
   <!-- Bootstrap JS -->
@@ -181,7 +201,8 @@ document.getElementById('formObjetivo').addEventListener('submit', async functio
 
 </script>
 
-  <!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro -->
+  <!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro
+   probando github -->
 <script>
   document.getElementById('finanzas_personales').addEventListener('click', function() {
     window.location.href = "{{ route('finanzas.personales') }}";

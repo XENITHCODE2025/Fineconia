@@ -295,3 +295,30 @@
   margin-top: 10px;
   cursor: pointer;
 }
+
+/* ---- Modal Abonar personalizado ---- */
+#modalAbonar .modal-content {
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#modalAbonar .modal-header {
+  background: #2a4145;
+  color: #fff;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+#modalAbonar .modal-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+#modalAbonar .btn-dark {
+  background-color: #2a4145;
+  border: none;
+}
+
+#modalAbonar .btn-dark:hover {
+  background-color: #1d2d2f;
+}

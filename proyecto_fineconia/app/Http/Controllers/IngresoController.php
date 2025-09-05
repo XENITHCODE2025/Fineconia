@@ -56,7 +56,7 @@ public function destroy($id_Ingreso)
 
     if ($saldoProyectado < 0) {
         return redirect()->back()->with('error',
-            'No puedes eliminar este ingreso porque dejaría tu saldo en negativo (ya tienes presupuestos creados).'
+            'No puedes eliminar este ingreso porque ya forma parte de tu saldo  y afectaria tus presupuestos.'
         );
     }
 

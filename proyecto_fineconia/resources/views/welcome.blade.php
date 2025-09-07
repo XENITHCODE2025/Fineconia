@@ -340,7 +340,7 @@
                                 })
                             })
                             .then(r => r.ok ? location.reload() :
-                                alertify.error('No se pudo actualizar'))
+                                alertify.error('No puedes editar en una catidad menor este ingreso porque ya forma parte de tu saldo  y afectaria tus presupuestos'))
                     },
                     () => {}
                 ).set('labels', {

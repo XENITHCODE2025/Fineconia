@@ -253,3 +253,18 @@ body {
   font-size: 18px;              /* Ajusta según necesites */
   line-height: 1.4;
 }
+
+:root {
+  --color-verde-avance: #31565e;
+  --color-gris-faltante: #d3d3d3;
+}
+
+.porcentaje-texto {
+  color: var(--color-verde-avance);
+}
+
+.graficas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}

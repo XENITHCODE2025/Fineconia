@@ -7,27 +7,25 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
-<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
-
-  @vite('resources/css/Ahorro.css')
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
+  <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+ @vite('resources/css/Ahorro.css')
 </head>
 <body>
 
-  <!-- Navbar 
-   aaaa-->
+  <!-- Navbar -->
   <nav class="navbar">
     <div class="logo-container">
-     <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
+      <img src="img/LogoCompleto.jpg" alt="Logo" class="responsive-logo">
     </div>
     <div class="right-side">
       <div class="nav-links">
-        <a class="btn nav-link" id ="finanzas_personales">Finanzas Personales</a>
+        <a class="btn nav-link" id="finanzas_personales">Finanzas Personales</a>
         <a class="btn nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
         <a class="btn nav-link" id="presupuestos">Presupuestos</a>
         <a class="btn nav-link" id="ahorros">Ahorro</a>
       </div>
-       @include('partials.header-user')  {{-- ← nuevo partial --}}
+      @include('partials.header-user')
     </div>
   </nav>
 
@@ -51,19 +49,16 @@
       </div>
     </div>
 
-   <!-- Objetivos -->
-<div class="custom-card">
-  <div class="custom-card-header">
-    <i class="bi bi-bullseye"></i> Objetivos de Ahorro
-  </div>
-  <div class="custom-card-body">
-    <p>
-      Establece metas de ahorro personalizadas según tus necesidades. Define objetivos específicos, asigna montos y fechas límite, y calcula cuánto deberías ahorrar periódicamente para alcanzarlos.
-    </p>
-    <a href="{{ route('objetivos.nuevo') }}" class="custom-btn">Crear Objetivo</a>
-  </div>
-</div>
-
+    <!-- Objetivos -->
+    <div class="custom-card">
+      <div class="custom-card-header">
+        <i class="bi bi-bullseye"></i> Objetivos de Ahorro
+      </div>
+      <div class="custom-card-body">
+        <p>Establece metas de ahorro personalizadas según tus necesidades. Define objetivos específicos, asigna montos y fechas límite, y calcula cuánto deberías ahorrar periódicamente para alcanzarlos.</p>
+        <a href="{{ route('objetivos.nuevo') }}" class="custom-btn">Crear Objetivo</a>
+      </div>
+    </div>
 
     <!-- Gráficos -->
     <div class="custom-card">
@@ -76,37 +71,58 @@
       </div>
     </div>
 
-  <!-- Objetivos actuales -->
-<div class="goal-wrapper">
-  <h3 class="goal-title">Tus Objetivos de Ahorro</h3>
-  <div id="goals-container" class="goals-scroll-container">
-    <!-- Las tarjetas se cargarán dinámicamente -->
+    <!-- Objetivos actuales -->
+    <div class="goal-wrapper">
+      <h3 class="goal-title">Tus Objetivos de Ahorro</h3>
+      <div id="goals-container" class="goals-scroll-container">
+        <!-- Las tarjetas se cargarán dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+<!-- Modal ABONAR -->
+<div class="modal fade" id="modalAbonar" tabindex="-1" aria-labelledby="modalAbonarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAbonarLabel">Gestión de Ahorro</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <label for="cantidad">Cantidad a ingresar:</label>
+        <input type="number" id="cantidad" class="form-control" placeholder="0.00">
+        <div id="cantidad-error" style="display:none; color:red; font-size: 0.9em;">Cantidad inválida</div>
+
+        <!-- Mostrar saldo actual del usuario -->
+        <label id="saldoActualUsuario" class="fw-bold mt-3 d-block">
+          Saldo actual: ${{ number_format($saldoDisponible, 2) }}
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-dark" id="btnGuardarAbono" disabled>Guardar</button>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  const objetivosEndpoint = "{{ route('objetivos.index') }}"; // Se define desde Blade
-</script>
+  const objetivosEndpoint = "{{ route('objetivos.index') }}"; 
+  let selectedGoal = null;
+  // Variable para almacenar el saldo actual del usuario
+  let saldoUsuario = parseFloat({{ $saldoDisponible }});
 
-<script>
   async function cargarObjetivos() {
     try {
       const res = await fetch(objetivosEndpoint);
       const objetivos = await res.json();
-      console.log("Objetivos cargados:", objetivos);
-
       const container = document.getElementById("goals-container");
-      if (!container) {
-        console.error("No se encontró el contenedor de objetivos.");
-        return;
-      }
-
-      container.innerHTML = ""; // Limpia el contenedor
+      container.innerHTML = "";
 
       if (objetivos.length === 0) {
-        container.innerHTML = `
-          <div class="alert alert-info text-center w-100">No tienes objetivos de ahorro registrados.</div>
-        `;
+        container.innerHTML = `<div class="alert alert-info text-center w-100">No tienes objetivos de ahorro registrados.</div>`;
         return;
       }
 
@@ -116,106 +132,143 @@
         if (isNaN(montoMeta) || montoMeta === 0) return;
 
         const progreso = (montoActual / montoMeta) * 100;
-
         const card = document.createElement("div");
         card.classList.add("goal-card");
-
+        card.dataset.meta = montoMeta;
+        card.dataset.actual = montoActual;
+        card.dataset.id = goal.id;
         card.innerHTML = `
           <h5>${goal.nombre}</h5>
           <p>$${montoActual.toLocaleString()} / $${montoMeta.toLocaleString()}</p>
           <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: ${progreso}%"></div>
+            <div class="progress-bar" style="width: ${progreso}%"></div>
           </div>
-          <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta).toLocaleDateString()}</p>
-          <button class="btn-goal">Abonar</button>
+          <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta + 'T12:00:00').toLocaleDateString()}</p>
+          <button class="btn-goal btn btn-primary mt-2">Abonar</button>
         `;
-
         container.appendChild(card);
       });
-
     } catch (error) {
       console.error("Error cargando objetivos:", error);
     }
   }
 
+  document.addEventListener("DOMContentLoaded", () => {
+    cargarObjetivos();
 
-  // Llamar la función al cargar la página, si lo deseas
-  document.addEventListener("DOMContentLoaded", cargarObjetivos);
-</script>
+    // Navegación
+    document.getElementById('finanzas_personales').addEventListener('click', () => window.location.href = "{{ route('finanzas.personales') }}");
+    document.getElementById('gastos_ingresos').addEventListener('click', () => window.location.href = "{{ route('gastos-ingresos') }}");
+    document.getElementById('presupuestos').addEventListener('click', () => window.location.href = "{{ route('presupuesto') }}");
+    document.getElementById('ahorros').addEventListener('click', () => window.location.href = "{{ route('ahorro') }}");
 
-
-
-
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Aquí puedes añadir funcionalidad JavaScript para los presupuestos
-      console.log('Página de ahorro cargada');
-      
-      // Ejemplo: Podrías añadir eventos para los botones
-      const buttons = document.querySelectorAll('.custom-btn, .btn-goal');
-      buttons.forEach(button => {
-        button.addEventListener('click', function() {
-          const action = this.textContent.trim();
-          console.log(`Acción: ${action}`);
-          // Aquí podrías redirigir a diferentes secciones o mostrar modales
-        });
-      });
-    });
-  </script>
- 
-  <script>
-document.getElementById('formObjetivo').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const form = e.target;
-  const formData = new FormData(form);
-
-  try {
-    const res = await fetch("{{ route('objetivos.store') }}", {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-      },
-      body: formData
+    // Abrir modal al dar clic en Abonar
+    document.addEventListener("click", function(e) {
+      if (e.target && e.target.classList.contains("btn-goal")) {
+        selectedGoal = e.target.closest(".goal-card");
+        const modal = new bootstrap.Modal(document.getElementById("modalAbonar"));
+        
+        document.getElementById("cantidad").value = "";
+        document.getElementById("btnGuardarAbono").disabled = true;
+        document.getElementById("cantidad-error").style.display = "none";
+        document.getElementById("cantidad").classList.remove("error");
+        modal.show();
+      }
     });
 
-    const data = await res.json();
+    const cantidadInput = document.getElementById("cantidad");
+    const btnGuardar = document.getElementById("btnGuardarAbono");
+    const errorDiv = document.getElementById("cantidad-error");
+    const saldoUsuarioLabel = document.getElementById("saldoActualUsuario");
 
-    if (data.status === 'ok') {
-      alertify.success('¡Objetivo guardado con éxito!');
-      form.reset();
-      const modalElement = document.getElementById('modalCrearObjetivo');
-      const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-      modal.hide();
-    } else {
-      alertify.error('Algo salió mal al guardar.');
+    function formatCurrency(value) {
+      return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
-  } catch (error) {
-    alertify.error('Error en la conexión con el servidor.');
-    console.error(error);
-  }
-});
 
-</script>
+    function actualizarSaldoUsuario() {
+      saldoUsuarioLabel.innerText = `Saldo actual: ${formatCurrency(saldoUsuario)}`;
+    }
 
-  <!-- Enlaces a las vistas de Finanzas Personales, Gastos e Ingresos, Presupuesto y Ahorro
-   probando github -->
-<script>
-  document.getElementById('finanzas_personales').addEventListener('click', function() {
-    window.location.href = "{{ route('finanzas.personales') }}";
-  });
-  document.getElementById('gastos_ingresos').addEventListener('click', function() {
-    window.location.href = "{{ route('gastos-ingresos') }}";
-  })
-  document.getElementById('presupuestos').addEventListener('click', function() {
-    window.location.href = "{{ route('presupuesto') }}";
-  });
-  document.getElementById('ahorros').addEventListener('click', function() {
-    window.location.href = "{{ route('ahorro') }}";
+    cantidadInput.addEventListener("input", () => {
+      let valor = parseFloat(cantidadInput.value);
+      btnGuardar.disabled = true;
+      errorDiv.style.display = "none";
+      cantidadInput.classList.remove("error");
+
+      let actual = parseFloat(selectedGoal.dataset.actual);
+      let meta = parseFloat(selectedGoal.dataset.meta);
+      let restante = meta - actual;
+
+      if (isNaN(valor) || valor <= 0) {
+        cantidadInput.classList.add("error");
+        errorDiv.innerText = "Ingresa un monto válido mayor a 0";
+        errorDiv.style.display = "block";
+        return;
+      }
+
+      cantidadInput.value = Math.floor(valor*100)/100;
+
+      // Validar que el usuario tenga saldo suficiente
+      if (valor > saldoUsuario) {
+        errorDiv.innerText = `No tienes suficiente saldo. Tu saldo actual es: ${formatCurrency(saldoUsuario)}`;
+        errorDiv.style.display = "block";
+        cantidadInput.classList.add("error");
+        return;
+      }
+
+      if (valor > restante) {
+        errorDiv.innerText = `El valor excede el restante necesario (${formatCurrency(restante)})`;
+        errorDiv.style.display = "block";
+        cantidadInput.classList.add("error");
+      }
+
+      btnGuardar.disabled = false;
+    });
+
+    btnGuardar.addEventListener("click", () => {
+      let valor = parseFloat(cantidadInput.value);
+      if (isNaN(valor) || valor <= 0) return;
+
+      let actual = parseFloat(selectedGoal.dataset.actual);
+      let meta = parseFloat(selectedGoal.dataset.meta);
+      let restante = meta - actual;
+
+      if (valor > restante) {
+        if (!confirm("El monto excede lo restante. ¿Deseas continuar?")) return;
+      }
+
+      // Validar que el usuario tenga saldo suficiente
+      if (valor > saldoUsuario) {
+        alertify.error("No tienes suficiente saldo ⚠️");
+        return;
+      }
+
+      // Actualizar el saldo del usuario
+      saldoUsuario -= valor;
+      actualizarSaldoUsuario();
+
+      // Actualizar el objetivo
+      actual += valor;
+      selectedGoal.dataset.actual = actual;
+      selectedGoal.querySelector("p").innerText = `${formatCurrency(actual)} / ${formatCurrency(meta)}`;
+
+      alertify.success("Abono registrado correctamente ✅");
+
+      cantidadInput.value = "";
+      btnGuardar.disabled = true;
+      errorDiv.style.display = "none";
+      cantidadInput.classList.remove("error");
+
+      // Actualiza barra en tarjeta objetivo
+      const progressBarCard = selectedGoal.querySelector(".progress-bar");
+      progressBarCard.style.width = `${Math.min((actual/meta)*100,100)}%`;
+
+      setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById("modalAbonar"));
+        modal.hide();
+      }, 1500);
+    });
   });
 </script>
 </body>
-</html> 
+</html>

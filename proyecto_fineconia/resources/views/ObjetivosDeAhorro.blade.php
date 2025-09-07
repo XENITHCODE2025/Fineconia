@@ -7,7 +7,7 @@
     @vite('resources/css/ObjetivosDeAhorro.css')
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 
   <!-- ✅ AlertifyJS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
@@ -81,8 +81,10 @@
     </div>
   </div>
 
-  <button type="submit" class="btn-guardar" disabled>Guardar</button>
-</form>
+  <div class="botones-container">
+   <button type="button" class="btn-cancelar" id="btn-cancelar" disabled>Cancelar</button>
+   <button type="submit" class="btn-guardar" disabled>Guardar</button>
+  </div>
 
 
     </div>
@@ -225,6 +227,79 @@ form.addEventListener("submit", (e) => {
     e.preventDefault(); // 🚨 detiene envío si hay errores
     alertify.error(errores.join("<br>"));
   }
+});
+
+// Agregar esto después de definir las variables de los campos
+const btnCancelar = document.getElementById('btn-cancelar');
+
+// Función para verificar si hay campos con datos
+function hayCamposConDatos() {
+  return nombre.value.trim() !== '' || 
+         monto.value.trim() !== '' || 
+         desde.value !== '' || 
+         hasta.value !== '';
+}
+
+// Función para actualizar el estado del botón Cancelar
+function actualizarBotonCancelar() {
+  btnCancelar.disabled = !hayCamposConDatos();
+}
+
+// ✅ Función para limpiar campos (cancelar)
+btnCancelar.addEventListener('click', function() {
+  if (hayCamposConDatos()) {
+    // Limpiar campos
+    nombre.value = '';
+    monto.value = '';
+    desde.value = '';
+    hasta.value = '';
+    
+    // Restablecer estado de interacción
+    Object.keys(campoInteractuado).forEach(key => {
+      campoInteractuado[key] = false;
+    });
+    
+    // Restablecer estilos
+    document.querySelectorAll('.input-icon').forEach(icon => {
+      icon.classList.remove('show');
+    });
+    
+    document.querySelectorAll('input').forEach(input => {
+      input.classList.remove('error');
+      input.classList.remove('success');
+    });
+    
+    // Deshabilitar botones
+    guardarBtn.disabled = true;
+    btnCancelar.disabled = true;
+    
+    alertify.message('Formulario cancelado');
+  }
+});
+
+// Event listeners para actualizar el estado del botón Cancelar
+[nombre, monto, desde, hasta].forEach(input => {
+  input.addEventListener("input", function() {
+    campoInteractuado[this.id] = true;
+    validarFormulario();
+    actualizarBotonCancelar();
+  });
+  input.addEventListener("change", function() {
+    campoInteractuado[this.id] = true;
+    validarFormulario();
+    actualizarBotonCancelar();
+  });
+  input.addEventListener("blur", function() {
+    campoInteractuado[this.id] = true;
+    validarFormulario();
+    actualizarBotonCancelar();
+  });
+});
+
+// Inicializar estado del botón Cancelar
+window.addEventListener("load", function() {
+  validarFormulario();
+  actualizarBotonCancelar();
 });
 
 // Cerrar menú móvil al hacer clic en un enlace

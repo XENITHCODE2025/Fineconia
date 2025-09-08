@@ -28,12 +28,10 @@
       <a href="{{ route('consejos.ahorro') }}" class="nav-link active">Consejos</a>
       <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
       <a href="{{ route('graficas.ahorro') }}" class="nav-link {{ request()->is('graficas') ? 'active' : '' }}">Gráficas</a>
-
-      @include('partials.header-user')
-      <div class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </div>
     </div>
+
+    <div class="menu-toggle" id="menu-toggle">
+    <i class="fas fa-bars"></i>
   </header>
 
   <!-- Menú desplegable (móvil) -->

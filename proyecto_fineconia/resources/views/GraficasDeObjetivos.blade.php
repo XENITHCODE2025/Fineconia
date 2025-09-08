@@ -153,7 +153,7 @@ if (menuToggle) {
     ejemplos.forEach(meta => crearTarjeta(meta));
 
     const mensajeEjemplo = document.createElement('p');
-    mensajeEjemplo.textContent = '';
+    mensajeEjemplo.textContent = '“Aún no tienes metas de ahorro registradas” - Mostrando ejemplos de graficas';
     mensajeEjemplo.style.textAlign = 'center';
     mensajeEjemplo.style.fontStyle = 'italic';
     mensajeEjemplo.style.color = '#888';

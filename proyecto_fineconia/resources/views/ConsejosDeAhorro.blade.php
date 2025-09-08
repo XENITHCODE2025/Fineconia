@@ -155,7 +155,7 @@
 
       <!-- Cuadro derecho -->
       <div id="tarjeta-contenido" class="tarjeta">
-       <h3 id="consejo-titulo">Selecciona un consejo para visualizarlo aquí.</h3>
+       <h3 id="consejo-titulo">Selecciona una categoria para visualizar sus consejos aqui.</h3>
       </div>
     </section>
   </main>

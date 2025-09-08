@@ -309,6 +309,12 @@ body {
 .nav-link.active {
   color: #F9B924;
   font-weight: bold;
+} 
+
+/* Estilo para el enlace activo en el menú móvil */
+.mobile-nav-link.active {
+  color: #F9B924;
+  font-weight: bold;
 }
 
 input.error {

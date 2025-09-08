@@ -32,12 +32,10 @@
       <a href="{{ route('consejos.ahorro') }}" class="nav-link {{ request()->is('consejos') ? 'active' : '' }}">Consejos</a>
       <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
       <a href="{{ route('graficas.ahorro') }}" class="nav-link active">Gráficas</a>
-      
-      @include('partials.header-user')
-      <div class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </div>
     </div>
+
+    <div class="menu-toggle" id="menu-toggle">
+    <i class="fas fa-bars"></i>
   </header>
 
   <!-- Menú móvil -->
@@ -72,9 +70,15 @@
 
   <script>
   // Menú móvil
-  document.getElementById("menu-toggle").addEventListener("click", function () {
-    document.getElementById("mobile-menu").classList.toggle("active");
+  const menuToggle = document.getElementById("menu-toggle");
+if (menuToggle) {
+  menuToggle.addEventListener("click", function () {
+    const mobileMenu = document.getElementById("mobile-menu");
+    if (mobileMenu) {
+      mobileMenu.classList.toggle("active");
+    }
   });
+}
 
   function checkScreenSize() {
     const mobileMenu = document.getElementById("mobile-menu");

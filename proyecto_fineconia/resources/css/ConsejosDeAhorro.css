@@ -160,21 +160,22 @@ body {
   cursor: pointer;
 }
 
-/* Títulos */
 .titulo-consejos {
   text-align: center;
   margin-bottom: 10px;
-  background: linear-gradient(to right, #8fc9d5, #e6f9ed);
+  background: linear-gradient(to right, #94BFC7, #b8d8dd);
   border-radius: 12px;
   padding: 20px;
 }
 
+
 .titulo-consejos h2 {
   font-size: 22px;
-  font-weight: bold;
+  font-weight: 2700; /* Más grueso que 700 */
   margin: 0;
   font-family: 'Poppins', sans-serif;
 }
+
 
 .subtexto-consejos {
   text-align: center;

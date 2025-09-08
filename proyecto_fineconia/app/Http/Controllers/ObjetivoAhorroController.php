@@ -58,7 +58,7 @@ class ObjetivoAhorroController extends Controller
         ]);
     }
 
-    return redirect()->route('objetivos.nuevo')->with('success', 'Objetivo creado con éxito');
+    return redirect()->route('objetivos.nuevo')->with('success', 'Objetivo guardado con éxito');
 }
 
 public function update(Request $request, $id)

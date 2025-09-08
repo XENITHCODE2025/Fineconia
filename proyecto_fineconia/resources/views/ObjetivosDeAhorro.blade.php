@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
 
   <!-- ✅ AlertifyJS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
@@ -242,6 +243,10 @@ function actualizarBotonCancelar() {
   btnCancelar.disabled = !hayCamposConDatos();
 }
 
+// Detectar error inmediato al cambiar las fechas
+desde.addEventListener("change", validarFechasInmediato);
+hasta.addEventListener("change", validarFechasInmediato);
+
 // ✅ Función para limpiar campos (cancelar)
 btnCancelar.addEventListener('click', function() {
   if (hayCamposConDatos()) {
@@ -306,6 +311,17 @@ document.querySelectorAll('.mobile-nav-link').forEach(link => {
 });
 
 window.addEventListener("load", validarFormulario);
+
+// ✅ Detectar cambio en las fechas y mostrar mensaje inmediato si son inválidas
+function validarFechasInmediato() {
+  const fechaDesde = new Date(desde.value);
+  const fechaHasta = new Date(hasta.value);
+
+  if (desde.value && hasta.value && fechaHasta < fechaDesde) {
+    alertify.error("La fecha final no puede ser menor que la inicial.");
+  }
+}
+
   </script>
 </body>
 </html>

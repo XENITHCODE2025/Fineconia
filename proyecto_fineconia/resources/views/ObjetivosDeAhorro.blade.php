@@ -273,7 +273,6 @@ btnCancelar.addEventListener('click', function() {
     guardarBtn.disabled = true;
     btnCancelar.disabled = true;
     
-    alertify.message('Formulario cancelado');
   }
 });
 

@@ -213,22 +213,24 @@ body {
   font-size: 16px;
 }
 
+/* CANCELAR */
 .btn-cancelar {
-  background-color: #9e9e9e;
+  background-color: #DE3B3B;
   color: white;
   cursor: pointer;
 }
 
 .btn-cancelar:hover {
-  background-color: #7e7e7e;
+  background-color: #b83030; /* Un tono más oscuro para hover */
 }
 
 .btn-cancelar:disabled {
-  background-color: rgba(158, 158, 158, 0.5);
+  background-color: rgba(222, 59, 59, 0.5); /* Rojo con opacidad */
   color: white;
   cursor: not-allowed;
 }
 
+/* GUARDAR */
 .btn-guardar {
   background-color: #427F2B;
   color: white;
@@ -236,11 +238,11 @@ body {
 }
 
 .btn-guardar:hover {
-  background-color: #356B22;
+  background-color: #356B22; /* Un tono más oscuro para hover */
 }
 
 .btn-guardar:disabled {
-  background-color: rgba(66, 127, 43, 0.5);
+  background-color: rgba(66, 127, 43, 0.5); /* Verde con opacidad */
   color: white;
   cursor: not-allowed;
 }

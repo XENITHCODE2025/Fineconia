@@ -45,7 +45,7 @@
       </div>
       <div class="custom-card-body">
         <p>Accede a consejos prácticos y estrategias adaptadas para mejorar tus hábitos de ahorro. Aprenderás a identificar gastos innecesarios, aprovechar mejor tus ingresos y aplicar métodos sencillos como el 50/30/20.</p>
-        <button class="custom-btn">Ver Consejo</button>
+        <button id="btn-ver-consejo" class="custom-btn">Ver Consejo</button>
       </div>
     </div>
 
@@ -60,16 +60,16 @@
       </div>
     </div>
 
-    <!-- Gráficos -->
     <div class="custom-card">
-      <div class="custom-card-header">
-        <i class="bi bi-graph-up"></i> Gráficos de Ahorro
-      </div>
-      <div class="custom-card-body">
-        <p>Visualiza tu progreso con gráficos dinámicos. Consulta estadísticas por periodos de tiempo, observa cuánto has ahorrado en relación con lo planificado y detecta patrones en tu comportamiento.</p>
-        <button class="custom-btn">Ver Gráfica</button>
-      </div>
-    </div>
+  <div class="custom-card-header">
+    <i class="bi bi-graph-up"></i> Gráficos de Ahorro
+  </div>
+  <div class="custom-card-body">
+    <p>Visualiza tu progreso con gráficos dinámicos. Consulta estadísticas por periodos de tiempo, observa cuánto has ahorrado en relación con lo planificado y detecta patrones en tu comportamiento.</p>
+    <a href="{{ route('graficas.ahorro') }}" class="custom-btn">Ver Gráfica</a>
+  </div>
+</div>
+
 
     <!-- Objetivos actuales -->
     <div class="goal-wrapper">
@@ -270,5 +270,22 @@
     });
   });
 </script>
+
+<script>
+  document.getElementById("btn-ver-grafica").addEventListener("click", function () {
+    window.location.href = "{{ route('graficas.ahorro') }}";
+  });
+</script>
+
+<script>
+  document.getElementById("btn-ver-consejo").addEventListener("click", function () {
+    // Cambia los valores según el consejo que quieras mostrar
+    const categoria = "metas";
+    const consejo = 5;
+
+    window.location.href = "{{ route('consejos.ahorro') }}" + `?categoria=${categoria}&consejo=${consejo}`;
+  });
+</script>
+
 </body>
 </html>

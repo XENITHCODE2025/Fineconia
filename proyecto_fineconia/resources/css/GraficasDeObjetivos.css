@@ -47,11 +47,11 @@ body {
   font-weight: bold;
 }
 
-.nombre {
-  font-weight: normal;
-  font-family: 'Open Sans', sans-serif;
-  color: white;
+.user-name-text {
+  font-family: 'Open Sans', sans-serif !important;
+  font-weight: 400 !important;
 }
+
 
 .user-icon {
   font-size: 28px;
@@ -115,12 +115,13 @@ body {
   font-size: 16px;
   margin-bottom: 30px;
   color: #666;
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* --- GRID DE GRÁFICAS --- */
 .graficas-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr; /* 1 columna por defecto (móvil) */
   gap: 25px;
   justify-items: center;
   max-width: 1000px;
@@ -197,9 +198,9 @@ body {
 }
 
 /* --- RESPONSIVE --- */
-@media (max-width: 900px) {
+@media (min-width: 768px) {
   .graficas-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en desktop/tablet */
   }
 }
 
@@ -209,9 +210,6 @@ body {
   }
   .menu-toggle {
     display: block;
-  }
-  .graficas-grid {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -252,4 +250,13 @@ body {
   text-decoration: underline;   /* 🔹 Subrayado como en la imagen */
   font-size: 18px;              /* Ajusta según necesites */
   line-height: 1.4;
+}
+
+:root {
+  --color-verde-avance: #31565e;
+  --color-gris-faltante: #d3d3d3;
+}
+
+.porcentaje-texto {
+  color: var(--color-verde-avance);
 }

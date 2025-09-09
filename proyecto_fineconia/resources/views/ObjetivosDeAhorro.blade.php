@@ -7,7 +7,8 @@
     @vite('resources/css/ObjetivosDeAhorro.css')
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
 
   <!-- ✅ AlertifyJS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
@@ -30,21 +31,18 @@
       <a href="{{ route('consejos.ahorro') }}" class="nav-link">Consejos</a>
       <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
       <a href="{{ route('graficas.ahorro') }}" class="nav-link">Gráficas</a>
-      
-      @include('partials.header-user')
-      <div class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </div>
     </div>
+
+    <div class="menu-toggle" id="menu-toggle">
+    <i class="fas fa-bars"></i>
   </header>
 
-  <nav class="mobile-menu" id="mobile-menu">
-    <!-- Solo los 4 enlaces solicitados en menú móvil -->
-    <a href="{{ route('ahorro') }}" class="mobile-nav-link">Ahorro</a>
-    <a href="{{ route('consejos.ahorro') }}" class="mobile-nav-link">Consejos</a>
-    <a href="{{ route('objetivos.nuevo') }}" class="mobile-nav-link">Objetivos</a>
-    <a href="{{ route('graficas.ahorro') }}" class="mobile-nav-link">Gráficas</a>
-  </nav>
+ <nav class="mobile-menu" id="mobile-menu">
+  <a href="{{ route('ahorro') }}" class="mobile-nav-link {{ request()->routeIs('ahorro') ? 'active' : '' }}">Ahorro</a>
+  <a href="{{ route('consejos.ahorro') }}" class="mobile-nav-link {{ request()->is('consejos') ? 'active' : '' }}">Consejos</a>
+  <a href="{{ route('objetivos.nuevo') }}" class="mobile-nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
+  <a href="{{ route('graficas.ahorro') }}" class="mobile-nav-link {{ request()->routeIs('graficas.ahorro') ? 'active' : '' }}">Gráficas</a>
+</nav>
 
   <main class="contenido">
     <div class="form-container">
@@ -81,8 +79,10 @@
     </div>
   </div>
 
-  <button type="submit" class="btn-guardar" disabled>Guardar</button>
-</form>
+  <div class="botones-container">
+   <button type="button" class="btn-cancelar" id="btn-cancelar" disabled>Cancelar</button>
+   <button type="submit" class="btn-guardar" disabled>Guardar</button>
+  </div>
 
 
     </div>
@@ -227,6 +227,82 @@ form.addEventListener("submit", (e) => {
   }
 });
 
+// Agregar esto después de definir las variables de los campos
+const btnCancelar = document.getElementById('btn-cancelar');
+
+// Función para verificar si hay campos con datos
+function hayCamposConDatos() {
+  return nombre.value.trim() !== '' || 
+         monto.value.trim() !== '' || 
+         desde.value !== '' || 
+         hasta.value !== '';
+}
+
+// Función para actualizar el estado del botón Cancelar
+function actualizarBotonCancelar() {
+  btnCancelar.disabled = !hayCamposConDatos();
+}
+
+// Detectar error inmediato al cambiar las fechas
+desde.addEventListener("change", validarFechasInmediato);
+hasta.addEventListener("change", validarFechasInmediato);
+
+// ✅ Función para limpiar campos (cancelar)
+btnCancelar.addEventListener('click', function() {
+  if (hayCamposConDatos()) {
+    // Limpiar campos
+    nombre.value = '';
+    monto.value = '';
+    desde.value = '';
+    hasta.value = '';
+    
+    // Restablecer estado de interacción
+    Object.keys(campoInteractuado).forEach(key => {
+      campoInteractuado[key] = false;
+    });
+    
+    // Restablecer estilos
+    document.querySelectorAll('.input-icon').forEach(icon => {
+      icon.classList.remove('show');
+    });
+    
+    document.querySelectorAll('input').forEach(input => {
+      input.classList.remove('error');
+      input.classList.remove('success');
+    });
+    
+    // Deshabilitar botones
+    guardarBtn.disabled = true;
+    btnCancelar.disabled = true;
+    
+  }
+});
+
+// Event listeners para actualizar el estado del botón Cancelar
+[nombre, monto, desde, hasta].forEach(input => {
+  input.addEventListener("input", function() {
+    campoInteractuado[this.id] = true;
+    validarFormulario();
+    actualizarBotonCancelar();
+  });
+  input.addEventListener("change", function() {
+    campoInteractuado[this.id] = true;
+    validarFormulario();
+    actualizarBotonCancelar();
+  });
+  input.addEventListener("blur", function() {
+    campoInteractuado[this.id] = true;
+    validarFormulario();
+    actualizarBotonCancelar();
+  });
+});
+
+// Inicializar estado del botón Cancelar
+window.addEventListener("load", function() {
+  validarFormulario();
+  actualizarBotonCancelar();
+});
+
 // Cerrar menú móvil al hacer clic en un enlace
 document.querySelectorAll('.mobile-nav-link').forEach(link => {
   link.addEventListener('click', function() {
@@ -235,6 +311,17 @@ document.querySelectorAll('.mobile-nav-link').forEach(link => {
 });
 
 window.addEventListener("load", validarFormulario);
+
+// ✅ Detectar cambio en las fechas y mostrar mensaje inmediato si son inválidas
+function validarFechasInmediato() {
+  const fechaDesde = new Date(desde.value);
+  const fechaHasta = new Date(hasta.value);
+
+  if (desde.value && hasta.value && fechaHasta < fechaDesde) {
+    alertify.error("La fecha final no puede ser menor que la inicial.");
+  }
+}
+
   </script>
 </body>
 </html>

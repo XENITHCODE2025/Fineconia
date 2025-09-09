@@ -12,6 +12,9 @@
   <!-- Fuente Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
+  <!-- Fuente Open Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
   <!-- Archivo de estilos externo -->
   @vite('resources/css/GraficasDeObjetivos.css')
 
@@ -21,31 +24,22 @@
 <body>
   <!-- HEADER -->
   <header class="header">
-    <!-- Logo -->
     <div class="logo-container">
       <img src="img/LogoCompleto.jpg" alt="Logo" class="responsive-logo">
     </div>
-
-    <!-- Menú de navegación -->
     <div class="menu">
-      <!-- Solo los 4 enlaces solicitados -->
       <a href="{{ route('ahorro') }}" class="nav-link {{ request()->routeIs('ahorro') ? 'active' : '' }}">Ahorro</a>
       <a href="{{ route('consejos.ahorro') }}" class="nav-link {{ request()->is('consejos') ? 'active' : '' }}">Consejos</a>
       <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
       <a href="{{ route('graficas.ahorro') }}" class="nav-link active">Gráficas</a>
-
-      @include('partials.header-user')
-
-      <!-- Botón hamburguesa (visible solo en móvil) -->
-      <div class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </div>
     </div>
+
+    <div class="menu-toggle" id="menu-toggle">
+    <i class="fas fa-bars"></i>
   </header>
 
-  <!-- Menú desplegable para móvil -->
+  <!-- Menú móvil -->
   <nav class="mobile-menu" id="mobile-menu">
-    <!-- Solo los 4 enlaces solicitados en menú móvil -->
     <a href="{{ route('ahorro') }}" class="mobile-nav-link">Ahorro</a>
     <a href="{{ route('consejos.ahorro') }}" class="mobile-nav-link">Consejos</a>
     <a href="{{ route('objetivos.nuevo') }}" class="mobile-nav-link">Objetivos</a>
@@ -57,36 +51,13 @@
     <h2 class="titulo">Gráficas de Objetivos de Ahorro</h2>
     <p class="subtitulo">Visualiza el progreso de cada meta financiera</p>
 
-    <!-- Contenedor de todas las gráficas -->
-    <div class="graficas-grid">
-      <!-- Tarjeta de gráfica -->
-      <div class="grafica-card">
-        <h3>Viaje</h3>
-        <p>Meta: $1000 (Ahorrado: $600)</p>
-        <div class="grafica-container">
-          <canvas id="viajeChart"></canvas>
-          <div class="porcentaje-texto">60.0%</div>
-        </div>
-      </div>
+    <!-- Contenedor dinámico -->
+    <div id="graficas-container" class="graficas-grid"></div>
 
-      <div class="grafica-card">
-        <h3>Laptop</h3>
-        <p>Meta: $500 (Ahorrado: $400)</p>
-        <div class="grafica-container">
-          <canvas id="laptopChart"></canvas>
-          <div class="porcentaje-texto">80.0%</div>
-        </div>
-      </div>
-
-      <div class="grafica-card">
-        <h3>Emergencia</h3>
-        <p>Meta: $500 (Ahorrado: $100)</p>
-        <div class="grafica-container">
-          <canvas id="emergenciaChart"></canvas>
-          <div class="porcentaje-texto">20.0%</div>
-        </div>
-      </div>
-    </div>
+    <!-- Mensaje si no hay metas -->
+    <p id="sin-metas" class="subtitulo" style="display: none; text-align: center; color: #888; font-style: italic;">
+      Aún no tienes metas de ahorro registradas
+    </p>
   </main>
 
   <!-- FOOTER -->
@@ -97,54 +68,125 @@
     </div>
   </footer>
 
-  <!-- SCRIPT -->
   <script>
-    // ✅ Menú móvil
-    document.getElementById("menu-toggle").addEventListener("click", function () {
-      document.getElementById("mobile-menu").classList.toggle("active");
-    });
-
-    function checkScreenSize() {
-      const mobileMenu = document.getElementById("mobile-menu");
-      if (window.innerWidth > 768 && mobileMenu.classList.contains("active")) {
-        mobileMenu.classList.remove("active");
-      }
+  // Menú móvil
+  const menuToggle = document.getElementById("menu-toggle");
+if (menuToggle) {
+  menuToggle.addEventListener("click", function () {
+    const mobileMenu = document.getElementById("mobile-menu");
+    if (mobileMenu) {
+      mobileMenu.classList.toggle("active");
     }
-    window.addEventListener("load", checkScreenSize);
-    window.addEventListener("resize", checkScreenSize);
+  });
+}
 
-    // Cerrar menú móvil al hacer clic en un enlace
-    document.querySelectorAll('.mobile-nav-link').forEach(link => {
-      link.addEventListener('click', function() {
-        document.getElementById('mobile-menu').classList.remove('active');
-      });
+  function checkScreenSize() {
+    const mobileMenu = document.getElementById("mobile-menu");
+    if (window.innerWidth > 768 && mobileMenu.classList.contains("active")) {
+      mobileMenu.classList.remove("active");
+    }
+  }
+  window.addEventListener("load", checkScreenSize);
+  window.addEventListener("resize", checkScreenSize);
+
+  document.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      document.getElementById('mobile-menu').classList.remove('active');
     });
+  });
 
-    // Función para crear gráficas con Chart.js
-    function crearGrafica(id, porcentaje, color) {
-      new Chart(document.getElementById(id), {
-        type: 'doughnut',
-        data: {
-          datasets: [{
-            data: [porcentaje, 100 - porcentaje],
-            backgroundColor: [color, '#e0e0e0'],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          cutout: '70%',
-          plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false }
-          }
+  // Crear gráfica con colores del CSS
+  function crearGrafica(id, porcentaje) {
+    const colorAvance = getComputedStyle(document.documentElement).getPropertyValue('--color-verde-avance').trim();
+    const colorFaltante = getComputedStyle(document.documentElement).getPropertyValue('--color-gris-faltante').trim();
+
+    new Chart(document.getElementById(id), {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [porcentaje, 100 - porcentaje],
+          backgroundColor: [colorAvance, colorFaltante],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
         }
-      });
-    }
+      }
+    });
+  }
 
-    // Crear cada gráfica
-    crearGrafica("viajeChart", 60, "#4CAF50");
-    crearGrafica("laptopChart", 80, "#2196F3");
-    crearGrafica("emergenciaChart", 20, "#FF9800");
-  </script>
+  // Crear tarjeta HTML con gráfica
+  function crearTarjeta(meta) {
+    const porcentaje = meta.meta > 0 ? (meta.ahorrado / meta.meta) * 100 : 0;
+    const porcentajeRedondeado = porcentaje.toFixed(1);
+
+    const tarjeta = document.createElement('div');
+    tarjeta.className = 'grafica-card';
+
+    const idCanvas = `chart-${meta.nombre.replace(/\s+/g, '-')}-${Math.random().toString(36).substr(2, 5)}`;
+
+    tarjeta.innerHTML = `
+      <h3>${meta.nombre}</h3>
+      <p>Meta: $${meta.meta} (Ahorrado: $${meta.ahorrado})</p>
+      <div class="grafica-container">
+        <canvas id="${idCanvas}"></canvas>
+        <div class="porcentaje-texto">${porcentajeRedondeado}%</div>
+      </div>
+    `;
+
+    document.getElementById('graficas-container').appendChild(tarjeta);
+    crearGrafica(idCanvas, porcentaje);
+  }
+
+  // Mostrar ejemplos si no hay datos reales
+  function mostrarMetasDeEjemplo() {
+    const ejemplos = [
+      { nombre: 'Vacaciones en la playa', meta: 1000, ahorrado: 450 },
+      { nombre: 'Compra de laptop', meta: 1500, ahorrado: 900 },
+      { nombre: 'Fondo de emergencia', meta: 2000, ahorrado: 1200 }
+    ];
+
+    ejemplos.forEach(meta => crearTarjeta(meta));
+
+    const mensajeEjemplo = document.createElement('p');
+    mensajeEjemplo.textContent = '“Aún no tienes metas de ahorro registradas” - Mostrando ejemplos de graficas';
+    mensajeEjemplo.style.textAlign = 'center';
+    mensajeEjemplo.style.fontStyle = 'italic';
+    mensajeEjemplo.style.color = '#888';
+
+    document.querySelector('main.contenido').appendChild(mensajeEjemplo);
+  }
+
+  // Cargar las metas desde la API
+  async function cargarMetas() {
+    const contenedor = document.getElementById('graficas-container');
+    const sinMetas = document.getElementById('sin-metas');
+    contenedor.innerHTML = '';
+    sinMetas.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/objetivos');
+      const datos = await res.json();
+
+      if (!datos || datos.length === 0) {
+        mostrarMetasDeEjemplo();
+        return;
+      }
+
+      datos.forEach(meta => crearTarjeta(meta));
+    } catch (error) {
+      console.error('Error al cargar las metas:', error);
+      mostrarMetasDeEjemplo();
+    }
+  }
+
+  // Ejecutar al cargar el DOM
+  window.addEventListener('DOMContentLoaded', cargarMetas);
+</script>
+
 </body>
 </html>

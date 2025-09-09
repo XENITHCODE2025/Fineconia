@@ -72,7 +72,8 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    /* Vista y datos de la gráfica de pastel de presupuestos */
+    /* Vista y datos de la gráfica de pastel de presupuestos
+    pruebitas */
     Route::get(
         '/graficas/presupuestos',
         [GraficasPresupuestoController::class, 'index']

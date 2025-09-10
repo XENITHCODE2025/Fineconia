@@ -233,7 +233,8 @@
     }
 
     function actualizarSaldoUsuario() {
-      saldoUsuarioLabel.innerText = `Saldo actual: ${formatCurrency(saldoUsuario)}`;
+    saldoUsuarioLabel.style.fontFamily = "'Open Sans', sans-serif";
+    saldoUsuarioLabel.innerText = `Saldo actual: ${formatCurrency(saldoUsuario)}`;
     }
 
     cantidadInput.addEventListener("input", () => {

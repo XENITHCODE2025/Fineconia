@@ -141,7 +141,8 @@ Route::middleware(['auth'])->group(function () {
 
         /* ───── LISTA FINAL ─────
        concat() evita el error “getKey()” porque no necesita
-       las llaves internas del modelo → */
+       las llaves internas del modelo → 
+       probando*/
         $transacciones = $gastos
             ->concat($ingresos)
             ->sortByDesc('fecha')

@@ -20,7 +20,7 @@ class AhorroController extends Controller
     {
 
         $request->validate([
-            'cantidad' => 'required|numeric|min:1'
+            'cantidad' => 'required|numeric|min:0.01'
         ]);
 
         $userId = Auth::id();

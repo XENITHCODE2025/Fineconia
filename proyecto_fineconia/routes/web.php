@@ -14,9 +14,8 @@ use App\Http\Controllers\TransaccionesController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\GraficasPresupuestoController;
-
+use App\Http\Controllers\ConsejosController;
 use App\Models\ObjetivoAhorro;
-
 use App\Http\Controllers\ObjetivoController;
 use App\Http\Controllers\AhorroController;
 
@@ -141,7 +140,8 @@ Route::middleware(['auth'])->group(function () {
 
         /* ───── LISTA FINAL ─────
        concat() evita el error “getKey()” porque no necesita
-       las llaves internas del modelo → */
+       las llaves internas del modelo → 
+       probando*/
         $transacciones = $gastos
             ->concat($ingresos)
             ->sortByDesc('fecha')
@@ -156,15 +156,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/objetivos', [ObjetivoAhorroController::class, 'store'])->name('objetivos.store');
     Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
 
-    // Abonar a un objetivo
+// Abonar a un objetivo
     Route::post('/objetivos/{id}/abonar', [AhorroController::class, 'abonar'])->name('objetivos.abonar');
 
-
-
+    //crud consejos de ahorro
+   Route::get('/consejos', [ConsejosController::class, 'index'])->name('consejos.ahorro');
+   Route::get('/consejos/{id}', [ConsejosController::class, 'getConsejo']);
     
 
     // Rutas para consejos de ahorro y gráficas de ahorro
-    Route::get('/ahorro.con', [AhorroController::class, 'indexConsejos'])->name('consejos.ahorro');
+    Route::get('/ahorro.con', [App\Http\Controllers\AhorroController::class, 'indexConsejos'])
+    ->name('consejos.ahorro');
+
 
     Route::get('/ahorro.gra', [AhorroController::class, 'indexGraficasAhorro'])->name('graficas.ahorro');
 

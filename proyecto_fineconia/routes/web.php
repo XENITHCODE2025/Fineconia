@@ -152,10 +152,13 @@ Route::middleware(['auth'])->group(function () {
 
     // CRUD Objetivos
     Route::get('/ahorro', [ObjetivoAhorroController::class, 'indexMostrar'])->name('ahorro');
-    Route::get('/ahorro', [AhorroController::class, 'index'])->name('ahorro');
     Route::get('/objetivos', [ObjetivoAhorroController::class, 'index'])->name('objetivos.index');
     Route::post('/objetivos', [ObjetivoAhorroController::class, 'store'])->name('objetivos.store');
     Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
+
+    // Abonar a un objetivo
+    Route::post('/objetivos/{id}/abonar', [AhorroController::class, 'abonar'])->name('objetivos.abonar');
+
 
 
     

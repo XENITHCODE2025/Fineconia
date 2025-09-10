@@ -75,12 +75,15 @@
 
     <!-- Objetivos actuales -->
     <div class="goal-wrapper">
-      <h3 class="goal-title">Tus Objetivos de Ahorro</h3>
-      <div id="goals-container" class="goals-scroll-container">
-        <!-- Las tarjetas se cargarán dinámicamente -->
-      </div>
-    </div>
+  <div class="titulo-objetivos d-flex justify-content-between align-items-center px-4 py-3">
+  <h2 class="titulo mb-0">Tus Objetivos de Ahorro</h2>
+  <span id="contador-objetivos" class="contador">10/100</span>
+</div>
+  <div id="goals-container" class="goals-scroll-container">
+    <!-- Las tarjetas se cargarán dinámicamente -->
   </div>
+</div>
+
 
   <!-- Modal ABONAR -->
   <div class="modal fade" id="modalAbonar" tabindex="-1" aria-labelledby="modalAbonarLabel" aria-hidden="true">
@@ -92,7 +95,7 @@
         </div>
         <div class="modal-body">
           <label for="cantidad">Cantidad a ingresar:</label>
-          <input type="number" id="cantidad" class="form-control" placeholder="0.00">
+          <input type="text" id="cantidad" class="form-control" placeholder="0.00" inputmode="decimal" autocomplete="off">
           <div id="cantidad-error" style="display:none; color:red; font-size: 0.9em;">Cantidad inválida</div>
 
           <!-- Mostrar saldo actual del usuario -->
@@ -108,181 +111,197 @@
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const objetivosEndpoint = "{{ route('objetivos.index') }}";
-    let selectedGoal = null;
-    // Variable para almacenar el saldo actual del usuario
-    let saldoUsuario = parseFloat({{$saldoDisponible}});
+  <!-- Modal de Límite de Objetivos -->
+<div class="modal fade" id="modalLimiteObjetivos" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content custom-limite-modal">
+      <div class="modal-body text-center">
+        <p class="modal-text">Has alcanzado el límite máximo de objetivos.</p>
+        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    async function cargarObjetivos() {
-      try {
-        const res = await fetch(objetivosEndpoint);
-        const objetivos = await res.json();
-        const container = document.getElementById("goals-container");
-        container.innerHTML = "";
 
-        if (objetivos.length === 0) {
-          container.innerHTML = `<div class="alert alert-info text-center w-100">No tienes objetivos de ahorro registrados.</div>`;
-          return;
-        } 
+ <!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        // Crear tarjetas para cada objetivo
-objetivos.forEach(goal => {
-  const montoActual = parseFloat(goal.monto_ahorrado ?? 0);
-  const montoMeta = parseFloat(goal.monto ?? 0);
-  if (isNaN(montoMeta) || montoMeta === 0) return;
+<script>
+  const objetivosEndpoint = "{{ route('objetivos.index') }}";
+  let selectedGoal = null;
+  let saldoUsuario = parseFloat({{ $saldoDisponible }});
 
-  const progreso = (montoActual / montoMeta) * 100;
-  const card = document.createElement("div");
-  card.classList.add("goal-card");
-  card.dataset.meta = montoMeta;
-  card.dataset.actual = montoActual;
-  card.dataset.id = goal.id;
+  async function cargarObjetivos() {
+    try {
+      const res = await fetch(objetivosEndpoint);
+      const objetivos = await res.json();
+      const container = document.getElementById("goals-container");
+      const contador = document.getElementById("contador-objetivos");
 
-  let boton = "";
-  if (montoActual >= montoMeta) {
-    boton = `<button class="btn btn-success mt-2" disabled>Completado 🎉</button>`;
-  } else {
-    boton = `<button class="btn-goal btn btn-primary mt-2">Abonar</button>`;
+      // Actualizar contador de objetivos
+      if (contador) contador.innerText = `${objetivos.length}/100`;
+
+      container.innerHTML = "";
+
+      if (objetivos.length === 0) {
+        container.innerHTML = `<div class="alert alert-info text-center w-100">No tienes objetivos de ahorro registrados.</div>`;
+        return;
+      }
+
+      objetivos.forEach((goal, index) => {
+        const montoActual = parseFloat(goal.monto_ahorrado ?? 0);
+        const montoMeta = parseFloat(goal.monto ?? 0);
+        if (isNaN(montoMeta) || montoMeta === 0) return;
+
+        const progreso = (montoActual / montoMeta) * 100;
+        const card = document.createElement("div");
+        card.classList.add("goal-card");
+        card.dataset.meta = montoMeta;
+        card.dataset.actual = montoActual;
+        card.dataset.id = goal.id;
+
+        let boton = "";
+        if (montoActual >= montoMeta) {
+          boton = `<button class="btn btn-success mt-2" disabled>Completado 🎉</button>`;
+        } else {
+          boton = `<button class="btn-goal btn btn-primary mt-2">Abonar</button>`;
+        }
+
+        card.innerHTML = `
+          <div class="goal-badge">${index + 1}</div>
+          <h5>${goal.nombre}</h5>
+          <p>$${montoActual.toLocaleString()} / $${montoMeta.toLocaleString()}</p>
+          <div class="progress">
+            <div class="progress-bar" style="width: ${Math.min(progreso, 100)}%"></div>
+          </div>
+          <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta + 'T12:00:00').toLocaleDateString()}</p>
+          ${boton}
+        `;
+
+        container.appendChild(card);
+      });
+
+    } catch (error) {
+      console.error("Error cargando objetivos:", error);
+    }
   }
 
-  card.innerHTML = `
-    <h5>${goal.nombre}</h5>
-    <p>$${montoActual.toLocaleString()} / $${montoMeta.toLocaleString()}</p>
-    <div class="progress">
-      <div class="progress-bar" style="width: ${Math.min(progreso, 100)}%"></div>
-    </div>
-    <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta + 'T12:00:00').toLocaleDateString()}</p>
-    ${boton}
-  `;
+  document.addEventListener("DOMContentLoaded", () => {
+    cargarObjetivos();
 
-  container.appendChild(card);
-});
-        
+    // Navegación
+    document.getElementById('finanzas_personales').addEventListener('click', () => window.location.href = "{{ route('finanzas.personales') }}");
+    document.getElementById('gastos_ingresos').addEventListener('click', () => window.location.href = "{{ route('gastos-ingresos') }}");
+    document.getElementById('presupuestos').addEventListener('click', () => window.location.href = "{{ route('presupuesto') }}");
+    document.getElementById('ahorros').addEventListener('click', () => window.location.href = "{{ route('ahorro') }}");
 
-      } catch (error) {
-        console.error("Error cargando objetivos:", error);
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      cargarObjetivos();
-
-      // Navegación
-      document.getElementById('finanzas_personales').addEventListener('click', () => window.location.href = "{{ route('finanzas.personales') }}");
-      document.getElementById('gastos_ingresos').addEventListener('click', () => window.location.href = "{{ route('gastos-ingresos') }}");
-      document.getElementById('presupuestos').addEventListener('click', () => window.location.href = "{{ route('presupuesto') }}");
-      document.getElementById('ahorros').addEventListener('click', () => window.location.href = "{{ route('ahorro') }}");
-
-      // Abrir modal al dar clic en Abonar
-      document.addEventListener("click", function(e) {
-        if (e.target && e.target.classList.contains("btn-goal")) {
-          selectedGoal = e.target.closest(".goal-card");
-          const modal = new bootstrap.Modal(document.getElementById("modalAbonar"));
-
-          document.getElementById("cantidad").value = "";
-          document.getElementById("btnGuardarAbono").disabled = true;
-          document.getElementById("cantidad-error").style.display = "none";
-          document.getElementById("cantidad").classList.remove("error");
+    // Validar límite de objetivos al dar clic en "Nuevo Objetivo"
+    const btnNuevoObjetivo = document.querySelector('.custom-btn[href*="objetivos.nuevo"]');
+    if (btnNuevoObjetivo) {
+      btnNuevoObjetivo.addEventListener('click', function (e) {
+        const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
+        if (totalObjetivos >= 100) {
+          e.preventDefault();
+          const modal = new bootstrap.Modal(document.getElementById("modalLimiteObjetivos"));
           modal.show();
         }
       });
+    }
 
-      const cantidadInput = document.getElementById("cantidad");
-      const btnGuardar = document.getElementById("btnGuardarAbono");
-      const errorDiv = document.getElementById("cantidad-error");
-      const saldoUsuarioLabel = document.getElementById("saldoActualUsuario");
+    // Abrir modal al dar clic en Abonar
+    document.addEventListener("click", function (e) {
+      if (e.target && e.target.classList.contains("btn-goal")) {
+        selectedGoal = e.target.closest(".goal-card");
+        const modal = new bootstrap.Modal(document.getElementById("modalAbonar"));
 
-      function formatCurrency(value) {
-        return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById("cantidad").value = "";
+        document.getElementById("btnGuardarAbono").disabled = true;
+        document.getElementById("cantidad-error").style.display = "none";
+        document.getElementById("cantidad").classList.remove("error");
+        modal.show();
+      }
+    });
+
+    const cantidadInput = document.getElementById("cantidad");
+    const btnGuardar = document.getElementById("btnGuardarAbono");
+    const errorDiv = document.getElementById("cantidad-error");
+    const saldoUsuarioLabel = document.getElementById("saldoActualUsuario");
+
+    function formatCurrency(value) {
+      return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function actualizarSaldoUsuario() {
+      saldoUsuarioLabel.innerText = `Saldo actual: ${formatCurrency(saldoUsuario)}`;
+    }
+
+    cantidadInput.addEventListener("input", () => {
+      let valor = parseFloat(cantidadInput.value);
+      btnGuardar.disabled = true;
+      errorDiv.style.display = "none";
+      cantidadInput.classList.remove("error");
+
+      let actual = parseFloat(selectedGoal.dataset.actual);
+      let meta = parseFloat(selectedGoal.dataset.meta);
+      let restante = meta - actual;
+
+      if (isNaN(valor) || valor <= 0) {
+        cantidadInput.classList.add("error");
+        errorDiv.innerText = "Ingresa un monto válido mayor a 0";
+        errorDiv.style.display = "block";
+        return;
       }
 
-      function actualizarSaldoUsuario() {
-        saldoUsuarioLabel.innerText = `Saldo actual: ${formatCurrency(saldoUsuario)}`;
+      if (valor > saldoUsuario) {
+        errorDiv.innerText = `No tienes suficiente saldo. Tu saldo actual es: ${formatCurrency(saldoUsuario)}`;
+        errorDiv.style.display = "block";
+        cantidadInput.classList.add("error");
+        return;
       }
 
-cantidadInput.addEventListener("input", () => {
-  let valor = parseFloat(cantidadInput.value);
-  btnGuardar.disabled = true;
-  errorDiv.style.display = "none";
-  cantidadInput.classList.remove("error");
+      if (valor > restante) {
+        errorDiv.innerText = `El valor excede el restante necesario (${formatCurrency(restante)})`;
+        errorDiv.style.display = "block";
+        cantidadInput.classList.add("error");
+        return;
+      }
 
-  let actual = parseFloat(selectedGoal.dataset.actual);
-  let meta = parseFloat(selectedGoal.dataset.meta);
-  let restante = meta - actual;
+      btnGuardar.disabled = false;
+    });
 
-  if (isNaN(valor) || valor <= 0) {
-    cantidadInput.classList.add("error");
-    errorDiv.innerText = "Ingresa un monto válido mayor a 0";
-    errorDiv.style.display = "block";
-    return;
-  }
+    btnGuardar.addEventListener("click", async () => {
+      let valor = parseFloat(cantidadInput.value);
+      if (isNaN(valor) || valor <= 0) return;
 
-  cantidadInput.value = Math.floor(valor * 100) / 100;
+      try {
+        const res = await fetch(`/objetivos/${selectedGoal.dataset.id}/abonar`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+          },
+          body: JSON.stringify({ cantidad: valor })
+        });
 
-  // Validar saldo suficiente
-  if (valor > saldoUsuario) {
-    errorDiv.innerText = `No tienes suficiente saldo. Tu saldo actual es: ${formatCurrency(saldoUsuario)}`;
-    errorDiv.style.display = "block";
-    cantidadInput.classList.add("error");
-    return;
-  }
+        const data = await res.json();
 
-  // ✅ Validar que no supere lo restante
-  if (valor > restante) {
-    errorDiv.innerText = `El valor excede el restante necesario (${formatCurrency(restante)})`;
-    errorDiv.style.display = "block";
-    cantidadInput.classList.add("error");
-    return; // ⛔ No habilitamos el botón
-  }
+        if (!res.ok) {
+          alertify.error(data.error || "Error al abonar");
+          return;
+        }
 
-  // ✅ Solo si todo es válido habilitamos Guardar
-  btnGuardar.disabled = false;
-});
+        saldoUsuario -= valor;
+        actualizarSaldoUsuario();
 
-      btnGuardar.addEventListener("click", async () => {
-        let valor = parseFloat(cantidadInput.value);
-        if (isNaN(valor) || valor <= 0) return;
+        selectedGoal.dataset.actual = data.nuevo_monto;
 
-        try {
-          const res = await fetch(`/objetivos/${selectedGoal.dataset.id}/abonar`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({
-              cantidad: valor
-            })
-          });
+        const montoParrafo = selectedGoal.querySelector("p:first-of-type");
+        montoParrafo.innerText = `$${parseFloat(data.nuevo_monto).toLocaleString()} / $${parseFloat(data.meta).toLocaleString()}`;
 
-          const data = await res.json();
-
-          if (!res.ok) {
-            alertify.error(data.error || "Error al abonar");
-            return;
-          }
-
-          // ✅ Actualizar saldo local y tarjeta
-          saldoUsuario -= valor;
-          actualizarSaldoUsuario();
-
-          // ✅ Actualizar dataset
-selectedGoal.dataset.actual = data.nuevo_monto;
-
-// ✅ Actualizar texto de montos
-const montoParrafo = selectedGoal.querySelector("p:first-of-type");
-montoParrafo.innerText =
-  `$${parseFloat(data.nuevo_monto).toLocaleString()} / $${parseFloat(data.meta).toLocaleString()}`;
-
-// ✅ Actualizar barra de progreso
-const progressBarCard = selectedGoal.querySelector(".progress-bar");
-const porcentaje = (data.nuevo_monto / data.meta) * 100;
-progressBarCard.style.width = `${Math.min(porcentaje, 100)}%`;
-
-// ✅ Si ya completó la meta, cambiar botón en vivo
+        const progressBarCard = selectedGoal.querySelector(".progress-bar");
+        const porcentaje = (data.nuevo_monto / data.meta) * 100;
+        progressBarCard.style.width = `${Math.min(porcentaje, 100)}%`;
 if (data.nuevo_monto >= data.meta) {
   const btn = selectedGoal.querySelector(".btn-goal");
   if (btn) {
@@ -290,37 +309,81 @@ if (data.nuevo_monto >= data.meta) {
   }
 }
 
-          alertify.success("Abono registrado correctamente ✅");
+alertify.success("Abono registrado correctamente ✅");
 
-          // Cerrar modal
-          setTimeout(() => {
-            const modal = bootstrap.Modal.getInstance(document.getElementById("modalAbonar"));
-            modal.hide();
-          }, 1000);
+// 🔽 Limpieza del formulario
+cantidadInput.value = "";
+btnGuardar.disabled = true;
+errorDiv.style.display = "none";
+cantidadInput.classList.remove("error");
 
-        } catch (err) {
-          console.error(err);
-          alertify.error("Error de conexión");
-        }
-      });
+// 🔽 Ocultar el modal
+setTimeout(() => {
+  const modal = bootstrap.Modal.getInstance(document.getElementById("modalAbonar"));
+  modal.hide();
+}, 100);
+
+
+      } catch (err) {
+        console.error(err);
+        alertify.error("Error de conexión");
+      }
     });
-  </script>
+  });
+</script>
 
-  <script>
-    document.getElementById("btn-ver-grafica").addEventListener("click", function() {
-      window.location.href = "{{ route('graficas.ahorro') }}";
-    });
-  </script>
+<!-- Botón Ver Gráfica -->
+<script>
+  document.getElementById("btn-ver-grafica").addEventListener("click", function () {
+    window.location.href = "{{ route('graficas.ahorro') }}";
+  });
+</script>
 
-  <script>
-    document.getElementById("btn-ver-consejo").addEventListener("click", function() {
-      // Cambia los valores según el consejo que quieras mostrar
-      const categoria = "metas";
-      const consejo = 5;
+<!-- Botón Ver Consejo -->
+<script>
+  document.getElementById("btn-ver-consejo").addEventListener("click", function () {
+    const categoria = "metas";
+    const consejo = 5;
+    window.location.href = "{{ route('consejos.ahorro') }}" + `?categoria=${categoria}&consejo=${consejo}`;
+  });
+</script>
 
-      window.location.href = "{{ route('consejos.ahorro') }}" + `?categoria=${categoria}&consejo=${consejo}`;
-    });
-  </script>
+<script>
+const cantidadInput = document.getElementById("cantidad");
+const btnGuardar = document.getElementById("btnGuardarAbono");
+const errorDiv = document.getElementById("cantidad-error");
+
+cantidadInput.addEventListener("input", () => {
+  const valor = cantidadInput.value.trim();
+
+  // Permitir números enteros o decimales con hasta 2 decimales, o campo vacío
+  const regex = /^\d*(\.\d{0,2})?$/;
+
+  if (regex.test(valor) && valor !== '.') {
+    errorDiv.style.display = "none";
+    const numValor = parseFloat(valor);
+    btnGuardar.disabled = !(numValor > 0);
+
+  } else {
+    errorDiv.innerText = "Cantidad inválida";
+    errorDiv.style.display = "block";
+    btnGuardar.disabled = true;
+  }
+});
+
+// Validar y formatear al perder foco
+cantidadInput.addEventListener("blur", () => {
+  let valor = cantidadInput.value.trim();
+
+  if (valor === '') return;
+
+  let numValor = parseFloat(valor);
+  if (!isNaN(numValor)) {
+    cantidadInput.value = numValor.toFixed(2);
+  }
+});
+</script>
+
 
 </body>
 

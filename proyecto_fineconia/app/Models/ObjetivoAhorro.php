@@ -16,6 +16,7 @@ class ObjetivoAhorro extends Model
         'user_id',
         'nombre',
         'monto',
+        'monto_ahorrado',
         'fecha_desde',
         'fecha_hasta',
     ];

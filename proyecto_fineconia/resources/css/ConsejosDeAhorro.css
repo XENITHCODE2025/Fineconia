@@ -1,5 +1,15 @@
 /* --- RESETEO GENERAL --- */
 /*  Aprovado */
+/* Estilo para el título principal */
+
+/* Estilo para la lista de subconsejos */
+.subconsejos-list li {
+  font-size: 1.2rem;   /* más grande que el normal */
+  margin-bottom: 8px;
+  line-height: 1.5;
+  color: #34495e;
+}
+
 * {
   margin: 0;
   padding: 0;

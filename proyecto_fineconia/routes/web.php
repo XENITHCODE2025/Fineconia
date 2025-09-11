@@ -14,11 +14,11 @@ use App\Http\Controllers\TransaccionesController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\GraficasPresupuestoController;
-
+use App\Http\Controllers\ConsejosController;
 use App\Models\ObjetivoAhorro;
-
 use App\Http\Controllers\ObjetivoController;
 use App\Http\Controllers\AhorroController;
+
 
 use App\Models\Gasto;
 use App\Models\Presupuesto;
@@ -43,7 +43,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/bienvenida', fn() => view('Bienvenida'))->name('bienvenida');
     Route::get('/finanzas-personales', fn() => view('Finanzas_personales'))->name('finanzas.personales');
-    
+
 
     Route::get('/reportes', [ReporteController::class, 'index'])
         ->name('reportes');
@@ -84,7 +84,7 @@ Route::middleware(['auth'])->group(function () {
         [GraficasPresupuestoController::class, 'data']
     )->name('graficas.presupuesto.data');
 
-     //Boton Ajustar Presupuesto
+    //Boton Ajustar Presupuesto
     Route::get('/presupuestos/registro', [PresupuestoController::class, 'index'])->name('presupuestos.index');
     // Presupuestos – eliminar
     Route::delete('/presupuestos/{id_Presupuesto}', [PresupuestoController::class, 'destroy'])->name('presupuestos.destroy');
@@ -160,12 +160,18 @@ Route::middleware(['auth'])->group(function () {
     // Abonar a un objetivo
     Route::post('/objetivos/{id}/abonar', [AhorroController::class, 'abonar'])->name('objetivos.abonar');
 
+    //Graficas de objetivos de ahorro
+    Route::middleware('auth')->get('/api/objetivos', [AhorroController::class, 'apiObjetivos']);
 
+    //crud consejos de ahorro
+    Route::get('/consejos', [ConsejosController::class, 'index'])->name('consejos.ahorro');
+    Route::get('/consejos/{id}', [ConsejosController::class, 'getConsejo']);
 
-    
 
     // Rutas para consejos de ahorro y gráficas de ahorro
-    Route::get('/ahorro.con', [AhorroController::class, 'indexConsejos'])->name('consejos.ahorro');
+    Route::get('/ahorro.con', [App\Http\Controllers\AhorroController::class, 'indexConsejos'])
+        ->name('consejos.ahorro');
+
 
     Route::get('/ahorro.gra', [AhorroController::class, 'indexGraficasAhorro'])->name('graficas.ahorro');
 
@@ -181,7 +187,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ingresos/crear', [IngresoController::class, 'create'])->name('ingresos.create');
     Route::post('/ingresos', [IngresoController::class, 'store'])->name('ingresos.store');
     Route::delete('/ingresos/{id}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
-    Route::put   ('/ingresos/{id}', [IngresoController::class, 'update'])->name('ingresos.update');
+    Route::put('/ingresos/{id}', [IngresoController::class, 'update'])->name('ingresos.update');
 
 
     Route::get('/transacciones', [TransaccionesController::class, 'lista'])

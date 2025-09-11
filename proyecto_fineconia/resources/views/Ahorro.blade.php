@@ -95,7 +95,7 @@
         </div>
         <div class="modal-body">
           <label for="cantidad">Cantidad a ingresar:</label>
-          <input type="text" id="cantidad" class="form-control" placeholder="0.00" inputmode="decimal" autocomplete="off">
+          <input type="number" id="cantidad" class="form-control" placeholder="0.00" inputmode="decimal" autocomplete="off">
           <div id="cantidad-error" style="display:none; color:red; font-size: 0.9em;">Cantidad inválida</div>
 
           <!-- Mostrar saldo actual del usuario -->
@@ -208,20 +208,25 @@
         }
       });
     }
+// Abrir modal al dar clic en Abonar
+document.addEventListener("click", function (e) {
+  if (e.target && e.target.classList.contains("btn-goal")) {
+    selectedGoal = e.target.closest(".goal-card");
+    const modal = new bootstrap.Modal(document.getElementById("modalAbonar"));
 
-    // Abrir modal al dar clic en Abonar
-    document.addEventListener("click", function (e) {
-      if (e.target && e.target.classList.contains("btn-goal")) {
-        selectedGoal = e.target.closest(".goal-card");
-        const modal = new bootstrap.Modal(document.getElementById("modalAbonar"));
+    // 🔹 Obtener nombre del objetivo y actualizar título
+    const objetivoNombre = selectedGoal.querySelector("h5").innerText;
+    document.getElementById("modalAbonarLabel").innerText = objetivoNombre;
 
-        document.getElementById("cantidad").value = "";
-        document.getElementById("btnGuardarAbono").disabled = true;
-        document.getElementById("cantidad-error").style.display = "none";
-        document.getElementById("cantidad").classList.remove("error");
-        modal.show();
-      }
-    });
+    // Reiniciar estado del formulario
+    document.getElementById("cantidad").value = "";
+    document.getElementById("btnGuardarAbono").disabled = true;
+    document.getElementById("cantidad-error").style.display = "none";
+    document.getElementById("cantidad").classList.remove("error");
+
+    modal.show();
+  }
+});
 
     const cantidadInput = document.getElementById("cantidad");
     const btnGuardar = document.getElementById("btnGuardarAbono");
@@ -354,29 +359,41 @@ const cantidadInput = document.getElementById("cantidad");
 const btnGuardar = document.getElementById("btnGuardarAbono");
 const errorDiv = document.getElementById("cantidad-error");
 
+// 🔹 Bloquear letras (solo permitir números, punto y teclas de control)
+cantidadInput.addEventListener("keypress", (e) => {
+  const char = String.fromCharCode(e.which);
+
+  // Permitir números y el punto decimal
+  if (!/[0-9.]/.test(char)) {
+    e.preventDefault();
+  }
+
+  // Solo un punto decimal permitido
+  if (char === "." && cantidadInput.value.includes(".")) {
+    e.preventDefault();
+  }
+});
+
+// 🔹 Validación en cada cambio
 cantidadInput.addEventListener("input", () => {
   const valor = cantidadInput.value.trim();
+  const regex = /^\d*(\.\d{0,2})?$/; // hasta 2 decimales
 
-  // Permitir números enteros o decimales con hasta 2 decimales, o campo vacío
-  const regex = /^\d*(\.\d{0,2})?$/;
-
-  if (regex.test(valor) && valor !== '.') {
+  if (regex.test(valor) && valor !== ".") {
     errorDiv.style.display = "none";
     const numValor = parseFloat(valor);
     btnGuardar.disabled = !(numValor > 0);
-
   } else {
-    errorDiv.innerText = "Cantidad inválida";
+    errorDiv.innerText = "Cantidad inválida (solo números con máximo 2 decimales)";
     errorDiv.style.display = "block";
     btnGuardar.disabled = true;
   }
 });
 
-// Validar y formatear al perder foco
+// 🔹 Formatear al perder foco
 cantidadInput.addEventListener("blur", () => {
   let valor = cantidadInput.value.trim();
-
-  if (valor === '') return;
+  if (valor === "") return;
 
   let numValor = parseFloat(valor);
   if (!isNaN(numValor)) {
@@ -384,6 +401,9 @@ cantidadInput.addEventListener("blur", () => {
   }
 });
 </script>
+
+
+
 
 
 </body>

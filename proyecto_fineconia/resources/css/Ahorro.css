@@ -444,3 +444,24 @@ input.form-control.is-valid {
 .roboto-slab {
   font-family: 'Roboto Slab', serif;
 }
+
+h5 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; /* 700 = Bold */
+}
+
+/* Subtítulos y textos secundarios del modal Abonar */
+#modalAbonar label,
+#modalAbonar p,
+#modalAbonar .modal-text {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400; /* Regular */
+  color: #000000;   /* Negro */
+}
+
+/* Título del modal Abonar */
+#modalAbonar .modal-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; /* Bold */
+  color: #FFFFFF;   /* Blanco */
+}

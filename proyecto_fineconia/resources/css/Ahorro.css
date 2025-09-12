@@ -286,7 +286,7 @@
 
 /* Botón */
 .goal-card .btn-goal {
-  background-color: #a3d4dd;
+  background-color: #2d5d63;
   border: none;
   padding: 10px 25px;
   border-radius: 20px;
@@ -315,12 +315,12 @@
 }
 
 #modalAbonar .btn-dark {
-  background-color: #2a4145;
+  background-color: #427F2B;
   border: none;
 }
 
 #modalAbonar .btn-dark:hover {
-  background-color: #1d2d2f;
+  background-color: #427F2B;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Open+Sans&display=swap');
@@ -415,4 +415,32 @@
   padding: 5px 8px;
   border-top-right-radius: 10px; /* Cambiar la esquina redondeada */
   border-bottom-left-radius: 10px; /* Para que coincida con el nuevo lado */
+}
+
+#contador-objetivos {
+  cursor: default;
+}
+
+.titulo {
+  cursor: default;
+}
+
+#modalAbonar .btn-secondary {
+  background-color: #DE3B3B;
+  color: rgb(255, 255, 255);
+  border: none;
+  font-weight: 600;
+}
+
+#modalAbonar .btn-secondary:hover {
+  background-color: #DE3B3B;
+}
+
+input.form-control.is-invalid,
+input.form-control.is-valid {
+  background-image: none !important;
+}
+
+.roboto-slab {
+  font-family: 'Roboto Slab', serif;
 }

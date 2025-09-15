@@ -200,6 +200,44 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
   </div>
 </div>
+<!-- Modal personalizado -->
+<div id="limiteModal" style="
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background-color:rgba(0,0,0,0.4);
+  z-index:9999;
+  justify-content:center;
+  align-items:center;">
+  <div style="
+    background-color:#fff;
+    padding:20px 30px;
+    border-radius:12px;
+    max-width:400px;
+    text-align:center;
+    font-family:'Open Sans',sans-serif;
+    color:#000;
+    position:relative;">
+    <h3 style="margin-bottom:10px;">Límite alcanzado</h3>
+    <p style="margin-bottom:40px;">Has alcanzado el límite máximo de objetivos.</p>
+
+    <!-- Botón alineado abajo a la derecha -->
+    <div style="
+      width:100%;
+      display:flex;
+      justify-content:flex-end;">
+      <button id="cerrarModalBtn" style="
+        padding:8px 20px;
+        border:1px solid #000;
+        background-color:#e0e0e0;
+        color:#000;
+        border-radius:6px;
+        cursor:pointer;">Aceptar</button>
+    </div>
+  </div>
+</div>
+
 
  <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -276,14 +314,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Validar límite de objetivos al dar clic en "Nuevo Objetivo"
 
 document.getElementById('btnCrearObjetivo').addEventListener('click', (e)=>{
-  e.preventDefault();
-  const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
-  if (totalObjetivos >= 100) {
-    alertify.alert('Límite alcanzado', 'Has alcanzado el límite máximo de objetivos.');
-  } else {
-    window.location.href = "{{ route('objetivos.nuevo') }}";
-  }
-});
+    e.preventDefault();
+    const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
+    if (totalObjetivos >= 100) {
+      // Mostrar el modal personalizado
+      document.getElementById('limiteModal').style.display = 'flex';
+    } else {
+      window.location.href = "{{ route('objetivos.nuevo') }}";
+    }
+  });
+
+  // Cerrar el modal al hacer clic en “Aceptar”
+  document.getElementById('cerrarModalBtn').addEventListener('click', ()=>{
+    document.getElementById('limiteModal').style.display = 'none';
+  });
 
 
 

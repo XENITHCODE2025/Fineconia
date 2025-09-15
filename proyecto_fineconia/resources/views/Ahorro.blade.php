@@ -314,14 +314,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Validar límite de objetivos al dar clic en "Nuevo Objetivo"
 
 document.getElementById('btnCrearObjetivo').addEventListener('click', (e)=>{
-  e.preventDefault();
-  const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
-  if (totalObjetivos >= 100) {
-    alertify.alert('Límite alcanzado', 'Has alcanzado el límite máximo de objetivos.');
-  } else {
-    window.location.href = "{{ route('objetivos.nuevo') }}";
-  }
-});
+    e.preventDefault();
+    const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
+    if (totalObjetivos >= 100) {
+      // Mostrar el modal personalizado
+      document.getElementById('limiteModal').style.display = 'flex';
+    } else {
+      window.location.href = "{{ route('objetivos.nuevo') }}";
+    }
+  });
+
+  // Cerrar el modal al hacer clic en “Aceptar”
+  document.getElementById('cerrarModalBtn').addEventListener('click', ()=>{
+    document.getElementById('limiteModal').style.display = 'none';
+  });
 
 
 

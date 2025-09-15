@@ -60,7 +60,8 @@
       </div>
       <div class="custom-card-body">
         <p>Establece metas de ahorro personalizadas según tus necesidades. Define objetivos específicos, asigna montos y fechas límite, y calcula cuánto deberías ahorrar periódicamente para alcanzarlos.</p>
-        <a href="{{ route('objetivos.nuevo') }}" class="custom-btn">Crear Objetivo</a>
+        <a href="#" id="btnCrearObjetivo" class="custom-btn">Crear Objetivo</a>
+
       </div>
     </div>
 
@@ -199,6 +200,46 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
   </div>
 </div>
+<!-- Modal personalizado -->
+<div id="limiteModal" style="
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background-color:rgba(0,0,0,0.4);
+  font-family:'Open Sans',regular;
+  z-index:9999;
+  justify-content:center;
+  align-items:center;">
+  <div style="
+    background-color:#fff;
+    padding:20px 30px;
+    border-radius:12px;
+    max-width:400px;
+    text-align:center;
+    font-family:'Open Sans',regular;
+    color:#000;
+    position:relative;">
+    <h3 style="margin-bottom:10px; font-family:'Open Sans',regular;">Límite alcanzado</h3>
+    <p style="margin-bottom:40px; font-family:'Open Sans',regular;">Has alcanzado el límite máximo de objetivos.</p>
+
+    <!-- Botón alineado abajo a la derecha -->
+    <div style="
+      width:100%;
+      display:flex;
+      justify-content:flex-end;">
+      <button id="cerrarModalBtn" style="
+        padding:8px 20px;
+        border:1px solid #000;
+        background-color:#e0e0e0;
+        font-family:'Open Sans',regular;
+        color:#000;
+        border-radius:6px;
+        cursor:pointer;">Aceptar</button>
+    </div>
+  </div>
+</div>
+
 
  <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -273,17 +314,24 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('ahorros').addEventListener('click', () => window.location.href = "{{ route('ahorro') }}");
 
     // Validar límite de objetivos al dar clic en "Nuevo Objetivo"
-    const btnNuevoObjetivo = document.querySelector('.custom-btn[href*="objetivos.nuevo"]');
-    if (btnNuevoObjetivo) {
-      btnNuevoObjetivo.addEventListener('click', function (e) {
-        const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
-        if (totalObjetivos >= 100) {
-          e.preventDefault();
-          const modal = new bootstrap.Modal(document.getElementById("modalLimiteObjetivos"));
-          modal.show();
-        }
-      });
+
+document.getElementById('btnCrearObjetivo').addEventListener('click', (e)=>{
+    e.preventDefault();
+    const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
+    if (totalObjetivos >= 100) {
+      // Mostrar el modal personalizado
+      document.getElementById('limiteModal').style.display = 'flex';
+    } else {
+      window.location.href = "{{ route('objetivos.nuevo') }}";
     }
+  });
+
+  // Cerrar el modal al hacer clic en “Aceptar”
+  document.getElementById('cerrarModalBtn').addEventListener('click', ()=>{
+    document.getElementById('limiteModal').style.display = 'none';
+  });
+
+
 
 // Abrir modal al dar clic en Abonar
 document.addEventListener("click", function (e) {
@@ -477,6 +525,13 @@ cantidadInput.addEventListener("blur", () => {
     cantidadInput.value = numValor.toFixed(2);
   }
 });
+
+@if(session('success'))
+  
+    alertify.success("{{ session('success') }}");
+  
+@endif
+
 </script>
 
 <script>

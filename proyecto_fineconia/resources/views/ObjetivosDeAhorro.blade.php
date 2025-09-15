@@ -1,4 +1,4 @@
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -18,6 +18,11 @@
 @if(session('success'))
 <script>
     alertify.success("{{ session('success') }}");
+</script>
+@endif
+@if(session('error'))
+<script>
+    alertify.error("{{ session('error') }}");
 </script>
 @endif
 <body>
@@ -47,44 +52,43 @@
   <main class="contenido">
     <div class="form-container">
       <h2>Nuevo objetivo de ahorro</h2>
-  <form id="objetivo-form" action="{{ route('objetivos.store') }}" method="POST">
-  @csrf
-  <label for="nombre">Nombre del objetivo:</label>
-  <div class="input-container">
-    <input type="text" id="nombre" name="nombre" required>
-    <span class="input-icon" id="icon-nombre"></span>
-  </div>
+      <form id="objetivo-form" action="{{ route('objetivos.store') }}" method="POST">
+        @csrf
+        <label for="nombre">Nombre del objetivo:</label>
+        <div class="input-container">
+          <input type="text" id="nombre" name="nombre" required>
+          <span class="input-icon" id="icon-nombre"></span>
+        </div>
 
-  <label for="monto">Monto:</label>
-  <div class="input-container">
-    <input type="number" id="monto" name="monto" min="1" required>
-    <span class="input-icon" id="icon-monto"></span>
-  </div>
+        <label for="monto">Monto:</label>
+        <div class="input-container">
+          <input type="number" id="monto" name="monto" min="1" required>
+          <span class="input-icon" id="icon-monto"></span>
+        </div>
 
-  <label>Fecha del objetivo</label>
-  <div class="fechas">
-    <div class="fecha-item">
-      <label for="desde">Desde:</label>
-      <div class="fecha-input-wrapper">
-        <input type="date" id="desde" name="fecha_desde" required>
-        <span class="fecha-icon" id="icon-desde"></span>
-      </div>
-    </div>
-    <div class="fecha-item">
-      <label for="hasta">Hasta:</label>
-      <div class="fecha-input-wrapper">
-        <input type="date" id="hasta" name="fecha_hasta" required>
-        <span class="fecha-icon" id="icon-hasta"></span>
-      </div>
-    </div>
-  </div>
+        <label>Fecha del objetivo</label>
+        <div class="fechas">
+          <div class="fecha-item">
+            <label for="desde">Desde:</label>
+            <div class="fecha-input-wrapper">
+              <input type="date" id="desde" name="fecha_desde" required>
+              <span class="fecha-icon" id="icon-desde"></span>
+            </div>
+          </div>
+          <div class="fecha-item">
+            <label for="hasta">Hasta:</label>
+            <div class="fecha-input-wrapper">
+              <input type="date" id="hasta" name="fecha_hasta" required>
+              <span class="fecha-icon" id="icon-hasta"></span>
+            </div>
+          </div>
+        </div>
 
-  <div class="botones-container">
-   <button type="button" class="btn-cancelar" id="btn-cancelar" disabled>Cancelar</button>
-   <button type="submit" class="btn-guardar" disabled>Guardar</button>
-  </div>
-
-
+        <div class="botones-container">
+          <button type="button" class="btn-cancelar" id="btn-cancelar" disabled>Cancelar</button>
+          <button type="submit" class="btn-guardar" disabled>Guardar</button>
+        </div>
+      </form>
     </div>
   </main>
 
@@ -96,253 +100,277 @@
   </footer>
 
   <script>
-    
- // ✅ Menú móvil
-document.getElementById("menu-toggle").addEventListener("click", function () {
-  document.getElementById("mobile-menu").classList.toggle("active");
-});
+    // ✅ Menú móvil
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+      document.getElementById("mobile-menu").classList.toggle("active");
+    });
 
-function checkScreenSize() {
-  const mobileMenu = document.getElementById("mobile-menu");
-  if (window.innerWidth > 768 && mobileMenu.classList.contains("active")) {
-    mobileMenu.classList.remove("active");
-  }
-}
-
-window.addEventListener("load", checkScreenSize);
-window.addEventListener("resize", checkScreenSize);
-
-const form = document.getElementById('objetivo-form');
-const guardarBtn = document.querySelector('.btn-guardar');
-const btnCancelar = document.getElementById('btn-cancelar');
-
-const nombre = document.getElementById('nombre');
-const monto = document.getElementById('monto');
-const desde = document.getElementById('desde');
-const hasta = document.getElementById('hasta');
-
-const campoInteractuado = {
-  nombre: false,
-  monto: false,
-  desde: false,
-  hasta: false
-};
-
-// Objeto para rastrear errores ya mostrados
-const erroresMostrados = {
-  fechaDesdePasado: false,
-  fechaHastaAnterior: false
-};
-
-function actualizarIcono(input, valido, iconId) {
-  const iconElement = document.getElementById(iconId);
-
-  if (input.value.trim() === '') {
-    iconElement.classList.remove('show');
-    iconElement.innerHTML = '';
-    input.classList.remove('error');
-    input.classList.remove('success');
-    return;
-  }
-
-  if (campoInteractuado[input.id]) {
-    if (valido) {
-      iconElement.innerHTML = '<i class="fas fa-check-circle"></i>';
-      iconElement.classList.add('show');
-      input.classList.remove("error");
-      input.classList.add("success");
-      
-      // Cuando se corrige un error, resetear su estado de mostrado
-      if (input.id === 'desde') {
-        erroresMostrados.fechaDesdePasado = false;
-      } else if (input.id === 'hasta') {
-        erroresMostrados.fechaHastaAnterior = false;
+    function checkScreenSize() {
+      const mobileMenu = document.getElementById("mobile-menu");
+      if (window.innerWidth > 768 && mobileMenu.classList.contains("active")) {
+        mobileMenu.classList.remove("active");
       }
-    } else {
-      iconElement.innerHTML = '<i class="fas fa-times-circle"></i>';
-      iconElement.classList.add('show');
-      input.classList.remove("success");
-      input.classList.add("error");
     }
-  } else {
-    iconElement.classList.remove('show');
-    input.classList.remove("success");
-    input.classList.remove("error");
-  }
-}
 
-function validarFormulario() {
-  let valido = true;
-  const erroresInmediatos = [];
+    window.addEventListener("load", checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
 
-  const fechaDesde = desde.value;
-  const fechaHasta = hasta.value;
-  const hoyStr = new Date().toISOString().split('T')[0]; // Formato "YYYY-MM-DD"
+    const form = document.getElementById('objetivo-form');
+    const guardarBtn = document.querySelector('.btn-guardar');
+    const btnCancelar = document.getElementById('btn-cancelar');
 
-  // Nombre
-  if (nombre.value.trim() === "") {
-    actualizarIcono(nombre, false, 'icon-nombre');
-    valido = false;
-  } else {
-    actualizarIcono(nombre, true, 'icon-nombre');
-  }
+    const nombre = document.getElementById('nombre');
+    const monto = document.getElementById('monto');
+    const desde = document.getElementById('desde');
+    const hasta = document.getElementById('hasta');
 
-  // Monto
-  if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) {
-    actualizarIcono(monto, false, 'icon-monto');
-    valido = false;
-  } else {
-    actualizarIcono(monto, true, 'icon-monto');
-  }
+    const campoInteractuado = {
+      nombre: false,
+      monto: false,
+      desde: false,
+      hasta: false
+    };
 
-  // Fecha Desde
-  if (fechaDesde === "") {
-    actualizarIcono(desde, false, 'icon-desde');
-    valido = false;
-    erroresMostrados.fechaDesdePasado = false; // Resetear si está vacío
-  } else if (fechaDesde < hoyStr) {
-    actualizarIcono(desde, false, 'icon-desde');
-    valido = false;
-    
-    // Solo mostrar el error si no se ha mostrado antes
-    if (!erroresMostrados.fechaDesdePasado) {
-      erroresInmediatos.push("La fecha Desde tiene que ser igual o mayor a la actual");
-      erroresMostrados.fechaDesdePasado = true;
+    // Objeto para rastrear errores ya mostrados
+    const erroresMostrados = {
+      fechaDesdePasado: false,
+      fechaHastaAnterior: false
+    };
+
+    function actualizarIcono(input, valido, iconId) {
+      const iconElement = document.getElementById(iconId);
+
+      if (input.value.trim() === '') {
+        iconElement.classList.remove('show');
+        iconElement.innerHTML = '';
+        input.classList.remove('error');
+        input.classList.remove('success');
+        return;
+      }
+
+      if (campoInteractuado[input.id]) {
+        if (valido) {
+          iconElement.innerHTML = '<i class="fas fa-check-circle"></i>';
+          iconElement.classList.add('show');
+          input.classList.remove("error");
+          input.classList.add("success");
+          
+          // Cuando se corrige un error, resetear su estado de mostrado
+          if (input.id === 'desde') {
+            erroresMostrados.fechaDesdePasado = false;
+          } else if (input.id === 'hasta') {
+            erroresMostrados.fechaHastaAnterior = false;
+          }
+        } else {
+          iconElement.innerHTML = '<i class="fas fa-times-circle"></i>';
+          iconElement.classList.add('show');
+          input.classList.remove("success");
+          input.classList.add("error");
+        }
+      } else {
+        iconElement.classList.remove('show');
+        input.classList.remove("success");
+        input.classList.remove("error");
+      }
     }
-  } else {
-    actualizarIcono(desde, true, 'icon-desde');
-    erroresMostrados.fechaDesdePasado = false; // Resetear cuando es válido
-  }
 
-  // Fecha Hasta
-  if (fechaHasta === "") {
-    actualizarIcono(hasta, false, 'icon-hasta');
-    valido = false;
-    erroresMostrados.fechaHastaAnterior = false; // Resetear si está vacío
-  } else if (fechaHasta <= fechaDesde) {
-    actualizarIcono(hasta, false, 'icon-hasta');
-    valido = false;
-    
-    // Solo mostrar el error si no se ha mostrado antes
-    if (!erroresMostrados.fechaHastaAnterior) {
-      erroresInmediatos.push("La fecha Hasta debe ser mayor a la fecha Desde");
-      erroresMostrados.fechaHastaAnterior = true;
+    function validarFormulario() {
+      let valido = true;
+      const erroresInmediatos = [];
+
+      const fechaDesde = desde.value;
+      const fechaHasta = hasta.value;
+      const hoyStr = new Date().toISOString().split('T')[0]; // Formato "YYYY-MM-DD"
+
+      // Nombre
+      if (nombre.value.trim() === "") {
+        actualizarIcono(nombre, false, 'icon-nombre');
+        valido = false;
+      } else {
+        actualizarIcono(nombre, true, 'icon-nombre');
+      }
+
+      // Monto
+      if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) {
+        actualizarIcono(monto, false, 'icon-monto');
+        valido = false;
+      } else {
+        actualizarIcono(monto, true, 'icon-monto');
+      }
+
+      // Fecha Desde
+      if (fechaDesde === "") {
+        actualizarIcono(desde, false, 'icon-desde');
+        valido = false;
+        erroresMostrados.fechaDesdePasado = false; // Resetear si está vacío
+      } else if (fechaDesde < hoyStr) {
+        actualizarIcono(desde, false, 'icon-desde');
+        valido = false;
+        
+        // Solo mostrar el error si no se ha mostrado antes
+        if (!erroresMostrados.fechaDesdePasado) {
+          erroresInmediatos.push("La fecha Desde tiene que ser igual o mayor a la actual");
+          erroresMostrados.fechaDesdePasado = true;
+        }
+      } else {
+        actualizarIcono(desde, true, 'icon-desde');
+        erroresMostrados.fechaDesdePasado = false; // Resetear cuando es válido
+      }
+
+      // Fecha Hasta
+      if (fechaHasta === "") {
+        actualizarIcono(hasta, false, 'icon-hasta');
+        valido = false;
+        erroresMostrados.fechaHastaAnterior = false; // Resetear si está vacío
+      } else if (fechaHasta <= fechaDesde) {
+        actualizarIcono(hasta, false, 'icon-hasta');
+        valido = false;
+        
+        // Solo mostrar el error si no se ha mostrado antes
+        if (!erroresMostrados.fechaHastaAnterior) {
+          erroresInmediatos.push("La fecha Hasta debe ser mayor a la fecha Desde");
+          erroresMostrados.fechaHastaAnterior = true;
+        }
+      } else {
+        actualizarIcono(hasta, true, 'icon-hasta');
+        erroresMostrados.fechaHastaAnterior = false; // Resetear cuando es válido
+      }
+
+      // Mostrar errores solo si hay nuevos
+      if (erroresInmediatos.length > 0) {
+        alertify.error(erroresInmediatos.join("<br>"));
+      }
+
+      guardarBtn.disabled = !valido;
     }
-  } else {
-    actualizarIcono(hasta, true, 'icon-hasta');
-    erroresMostrados.fechaHastaAnterior = false; // Resetear cuando es válido
-  }
 
-  // Mostrar errores solo si hay nuevos
-  if (erroresInmediatos.length > 0) {
-    alertify.error(erroresInmediatos.join("<br>"));
-  }
+    function hayCamposConDatos() {
+      return nombre.value.trim() !== '' ||
+            monto.value.trim() !== '' ||
+            desde.value !== '' ||
+            hasta.value !== '';
+    }
 
-  guardarBtn.disabled = !valido;
-}
+    function actualizarBotonCancelar() {
+      btnCancelar.disabled = !hayCamposConDatos();
+    }
 
-function hayCamposConDatos() {
-  return nombre.value.trim() !== '' ||
-         monto.value.trim() !== '' ||
-         desde.value !== '' ||
-         hasta.value !== '';
-}
+    [nombre, monto, desde, hasta].forEach(input => {
+      input.addEventListener("input", function () {
+        campoInteractuado[this.id] = true;
+        validarFormulario();
+        actualizarBotonCancelar();
+      });
 
-function actualizarBotonCancelar() {
-  btnCancelar.disabled = !hayCamposConDatos();
-}
+      input.addEventListener("change", function () {
+        campoInteractuado[this.id] = true;
+        validarFormulario();
+        actualizarBotonCancelar();
+      });
 
-[nombre, monto, desde, hasta].forEach(input => {
-  input.addEventListener("input", function () {
-    campoInteractuado[this.id] = true;
-    validarFormulario();
-    actualizarBotonCancelar();
-  });
-
-  input.addEventListener("change", function () {
-    campoInteractuado[this.id] = true;
-    validarFormulario();
-    actualizarBotonCancelar();
-  });
-
-  input.addEventListener("blur", function () {
-    campoInteractuado[this.id] = true;
-    validarFormulario();
-    actualizarBotonCancelar();
-  });
-});
-
-// ✅ Botón Cancelar
-btnCancelar.addEventListener('click', function () {
-  if (hayCamposConDatos()) {
-    nombre.value = '';
-    monto.value = '';
-    desde.value = '';
-    hasta.value = '';
-
-    Object.keys(campoInteractuado).forEach(key => {
-      campoInteractuado[key] = false;
-    });
-    
-    // Resetear los errores mostrados
-    Object.keys(erroresMostrados).forEach(key => {
-      erroresMostrados[key] = false;
+      input.addEventListener("blur", function () {
+        campoInteractuado[this.id] = true;
+        validarFormulario();
+        actualizarBotonCancelar();
+      });
     });
 
-    document.querySelectorAll('.input-icon, .fecha-icon').forEach(icon => {
-      icon.classList.remove('show');
-      icon.innerHTML = '';
+    // ✅ Botón Cancelar
+    btnCancelar.addEventListener('click', function () {
+      if (hayCamposConDatos()) {
+        nombre.value = '';
+        monto.value = '';
+        desde.value = '';
+        hasta.value = '';
+
+        Object.keys(campoInteractuado).forEach(key => {
+          campoInteractuado[key] = false;
+        });
+        
+        // Resetear los errores mostrados
+        Object.keys(erroresMostrados).forEach(key => {
+          erroresMostrados[key] = false;
+        });
+
+        document.querySelectorAll('.input-icon, .fecha-icon').forEach(icon => {
+          icon.classList.remove('show');
+          icon.innerHTML = '';
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+          input.classList.remove('error');
+          input.classList.remove('success');
+        });
+
+        guardarBtn.disabled = true;
+        btnCancelar.disabled = true;
+      }
     });
 
-    document.querySelectorAll('input').forEach(input => {
-      input.classList.remove('error');
-      input.classList.remove('success');
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      let errores = [];
+
+      Object.keys(campoInteractuado).forEach(key => campoInteractuado[key] = true);
+      validarFormulario();
+
+      const hoyStr = new Date().toISOString().split('T')[0];
+
+      if (nombre.value.trim() === "") errores.push("El campo 'Nombre del objetivo' es obligatorio.");
+      if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) errores.push("El campo 'Monto' debe ser mayor a 0.");
+      if (desde.value === "") {
+        errores.push("Debes seleccionar la fecha Desde.");
+      } else if (desde.value < hoyStr) {
+        errores.push("La fecha Desde tiene que ser igual o mayor a la actual.");
+      }
+
+      if (hasta.value === "") {
+        errores.push("Debes seleccionar la fecha Hasta.");
+      } else if (hasta.value <= desde.value) {
+        errores.push("La fecha Hasta debe ser mayor a la fecha Desde.");
+      }
+
+      if (errores.length > 0) {
+        alertify.error(errores.join("<br>"));
+        return;
+      }
+
+      // ✅ Verificar límite de objetivos antes de enviar
+      try {
+        const response = await fetch('{{ route("objetivos.count") }}', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          }
+        });
+
+        const data = await response.json();
+        
+        if (data.count >= 100) {
+          alertify.error('Has alcanzado el límite máximo de objetivos.');
+          return;
+        }
+
+        // Si todo está bien, enviar el formulario
+        form.submit();
+      } catch (error) {
+        console.error('Error:', error);
+        alertify.error('Error al verificar el límite de objetivos.');
+      }
     });
 
-    guardarBtn.disabled = true;
-    btnCancelar.disabled = true;
-  }
-});
+    window.addEventListener("load", function () {
+      validarFormulario();
+      actualizarBotonCancelar();
+    });
 
-form.addEventListener("submit", (e) => {
-  let errores = [];
-
-  Object.keys(campoInteractuado).forEach(key => campoInteractuado[key] = true);
-  validarFormulario();
-
-  const hoyStr = new Date().toISOString().split('T')[0];
-
-  if (nombre.value.trim() === "") errores.push("El campo 'Nombre del objetivo' es obligatorio.");
-  if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) errores.push("El campo 'Monto' debe ser mayor a 0.");
-  if (desde.value === "") {
-    errores.push("Debes seleccionar la fecha Desde.");
-  } else if (desde.value < hoyStr) {
-    errores.push("La fecha Desde tiene que ser igual o mayor a la actual.");
-  }
-
-  if (hasta.value === "") {
-    errores.push("Debes seleccionar la fecha Hasta.");
-  } else if (hasta.value <= desde.value) {
-    errores.push("La fecha Hasta debe ser mayor a la fecha Desde.");
-  }
-
-  if (errores.length > 0) {
-    e.preventDefault();
-    alertify.error(errores.join("<br>"));
-  }
-});
-
-window.addEventListener("load", function () {
-  validarFormulario();
-  actualizarBotonCancelar();
-});
-
-document.querySelectorAll('.mobile-nav-link').forEach(link => {
-  link.addEventListener('click', function () {
-    document.getElementById('mobile-menu').classList.remove('active');
-  });
-});
-
-</script>
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', function () {
+        document.getElementById('mobile-menu').classList.remove('active');
+      });
+    });
+  </script>
 </body>
 </html>

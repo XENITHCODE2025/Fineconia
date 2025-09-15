@@ -60,7 +60,8 @@
       </div>
       <div class="custom-card-body">
         <p>Establece metas de ahorro personalizadas según tus necesidades. Define objetivos específicos, asigna montos y fechas límite, y calcula cuánto deberías ahorrar periódicamente para alcanzarlos.</p>
-        <a href="{{ route('objetivos.nuevo') }}" class="custom-btn">Crear Objetivo</a>
+        <a href="#" id="btnCrearObjetivo" class="custom-btn">Crear Objetivo</a>
+
       </div>
     </div>
 
@@ -273,17 +274,18 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('ahorros').addEventListener('click', () => window.location.href = "{{ route('ahorro') }}");
 
     // Validar límite de objetivos al dar clic en "Nuevo Objetivo"
-    const btnNuevoObjetivo = document.querySelector('.custom-btn[href*="objetivos.nuevo"]');
-    if (btnNuevoObjetivo) {
-      btnNuevoObjetivo.addEventListener('click', function (e) {
-        const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
-        if (totalObjetivos >= 100) {
-          e.preventDefault();
-          const modal = new bootstrap.Modal(document.getElementById("modalLimiteObjetivos"));
-          modal.show();
-        }
-      });
-    }
+
+document.getElementById('btnCrearObjetivo').addEventListener('click', (e)=>{
+  e.preventDefault();
+  const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
+  if (totalObjetivos >= 100) {
+    alertify.alert('Límite alcanzado', 'Has alcanzado el límite máximo de objetivos.');
+  } else {
+    window.location.href = "{{ route('objetivos.nuevo') }}";
+  }
+});
+
+
 
 // Abrir modal al dar clic en Abonar
 document.addEventListener("click", function (e) {
@@ -477,6 +479,13 @@ cantidadInput.addEventListener("blur", () => {
     cantidadInput.value = numValor.toFixed(2);
   }
 });
+
+@if(session('success'))
+  
+    alertify.success("{{ session('success') }}");
+  
+@endif
+
 </script>
 
 <script>

@@ -156,6 +156,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/objetivos', [ObjetivoAhorroController::class, 'index'])->name('objetivos.index');
     Route::post('/objetivos', [ObjetivoAhorroController::class, 'store'])->name('objetivos.store');
     Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
+    // Agregar esta ruta para verificar el conteo de objetivos
+    Route::get('/objetivos/count', [ObjetivoAhorroController::class, 'count'])->name('objetivos.count');
 
     // Abonar a un objetivo
     Route::post('/objetivos/{id}/abonar', [AhorroController::class, 'abonar'])->name('objetivos.abonar');

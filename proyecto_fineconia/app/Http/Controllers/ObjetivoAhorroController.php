@@ -40,35 +40,49 @@ class ObjetivoAhorroController extends Controller
         return response()->json($objetivos);
     }
     public function store(Request $request)
-    {
-        $request->validate([
-            'nombre'      => 'required|string|max:255',
-            'monto'       => 'required|numeric|min:1',
-            'fecha_desde' => 'required|date',
-            'fecha_hasta' => 'required|date|after_or_equal:fecha_desde',
-        ]);
-
-        $objetivo = ObjetivoAhorro::create([
-            'user_id'     => Auth::id(),
-            'nombre'      => $request->nombre,
-            'monto'       => $request->monto,
-            'fecha_desde' => $request->fecha_desde,
-            'fecha_hasta' => $request->fecha_hasta,
-        ]);
-
-        // ✅ Si la petición viene de fetch/ajax, responder JSON
+{
+    // ✅ Validar límite de objetivos (máximo 100)
+    $objetivosCount = ObjetivoAhorro::where('user_id', Auth::id())->count();
+    if ($objetivosCount >= 100) {
         if ($request->ajax()) {
             return response()->json([
-                'status' => 'ok',
-                'objetivo' => $objetivo
-            ]);
+                'status' => 'error',
+                'message' => 'Has alcanzado el límite máximo de 100 objetivos.'
+            ], 422);
         }
-
+        
         return redirect()
-       ->route('ahorro')
-       ->with('success', 'Objetivo guardado con éxito.');
-
+            ->route('ahorro')
+            ->with('error', 'Has alcanzado el límite máximo de 100 objetivos.');
     }
+
+    $request->validate([
+        'nombre'      => 'required|string|max:255',
+        'monto'       => 'required|numeric|min:1',
+        'fecha_desde' => 'required|date',
+        'fecha_hasta' => 'required|date|after_or_equal:fecha_desde',
+    ]);
+
+    $objetivo = ObjetivoAhorro::create([
+        'user_id'     => Auth::id(),
+        'nombre'      => $request->nombre,
+        'monto'       => $request->monto,
+        'fecha_desde' => $request->fecha_desde,
+        'fecha_hasta' => $request->fecha_hasta,
+    ]);
+
+    // ✅ Si la petición viene de fetch/ajax, responder JSON
+    if ($request->ajax()) {
+        return response()->json([
+            'status' => 'ok',
+            'objetivo' => $objetivo
+        ]);
+    }
+
+    return redirect()
+        ->route('ahorro')
+        ->with('success', 'Objetivo guardado con éxito.');
+}
 
     public function update(Request $request, $id)
     {
@@ -100,6 +114,11 @@ class ObjetivoAhorroController extends Controller
             'message' => 'Objetivo eliminado con éxito'
         ]);
     }
+    public function count()
+{
+    $count = ObjetivoAhorro::where('user_id', Auth::id())->count();
+    return response()->json(['count' => $count]);
+}
 }
 
 /* Crear objetivo de ahorro - backend - correctamente funcional */

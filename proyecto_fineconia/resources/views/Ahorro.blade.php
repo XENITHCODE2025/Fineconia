@@ -207,6 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
   top:0;left:0;
   width:100%;height:100%;
   background-color:rgba(0,0,0,0.4);
+  font-family:'Open Sans',regular;
   z-index:9999;
   justify-content:center;
   align-items:center;">
@@ -216,11 +217,11 @@ document.addEventListener('DOMContentLoaded', function () {
     border-radius:12px;
     max-width:400px;
     text-align:center;
-    font-family:'Open Sans',sans-serif;
+    font-family:'Open Sans',regular;
     color:#000;
     position:relative;">
-    <h3 style="margin-bottom:10px;">Límite alcanzado</h3>
-    <p style="margin-bottom:40px;">Has alcanzado el límite máximo de objetivos.</p>
+    <h3 style="margin-bottom:10px; font-family:'Open Sans',regular;">Límite alcanzado</h3>
+    <p style="margin-bottom:40px; font-family:'Open Sans',regular;">Has alcanzado el límite máximo de objetivos.</p>
 
     <!-- Botón alineado abajo a la derecha -->
     <div style="
@@ -231,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
         padding:8px 20px;
         border:1px solid #000;
         background-color:#e0e0e0;
+        font-family:'Open Sans',regular;
         color:#000;
         border-radius:6px;
         cursor:pointer;">Aceptar</button>

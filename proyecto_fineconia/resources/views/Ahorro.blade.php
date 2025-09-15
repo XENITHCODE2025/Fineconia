@@ -9,6 +9,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
   @vite('resources/css/Ahorro.css')
 </head>
@@ -73,7 +75,6 @@
       </div>
     </div>
 
-
     <!-- Objetivos actuales -->
     <div class="goal-wrapper">
   <div class="titulo-objetivos d-flex justify-content-between align-items-center px-4 py-3">
@@ -85,32 +86,108 @@
   </div>
 </div>
 
+<!-- Modal ABONAR -->
+<div class="modal fade" id="modalAbonar" tabindex="-1" aria-labelledby="modalAbonarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title w-100 text-center" id="modalAbonarLabel">Gestión de Ahorro</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      
+      <div class="modal-body">
+        <label for="cantidad" class="roboto-slab">Cantidad a ingresar:</label>
+        
+        <!-- Campo con ícono personalizado -->
+        <div class="position-relative">
+          <input type="number" id="cantidad" class="form-control" placeholder="0.00" inputmode="decimal" autocomplete="off" style="padding-right: 2.5rem;">
+          <div id="icono-validacion" class="position-absolute top-50 translate-middle-y" style="right: 0.75rem; font-size: 1.2rem; display: none;"></div>
+        </div>
 
-  <!-- Modal ABONAR -->
-  <div class="modal fade" id="modalAbonar" tabindex="-1" aria-labelledby="modalAbonarLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalAbonarLabel">Gestión de Ahorro</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <label for="cantidad">Cantidad a ingresar:</label>
-          <input type="number" id="cantidad" class="form-control" placeholder="0.00" inputmode="decimal" autocomplete="off">
-          <div id="cantidad-error" style="display:none; color:red; font-size: 0.9em;">Cantidad inválida</div>
+        <!-- Mensaje de error -->
+        <div id="cantidad-error" style="display:none; color:red; font-size: 0.9em;">Cantidad inválida</div>
 
-          <!-- Mostrar saldo actual del usuario -->
-          <label id="saldoActualUsuario" class="fw-bold mt-3 d-block">
-            Saldo actual: ${{ number_format($saldoDisponible, 2) }}
-          </label>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-dark" id="btnGuardarAbono" disabled>Guardar</button>
-        </div>
+        <!-- Mostrar saldo actual del usuario -->
+        <label id="saldoActualUsuario" class="fw-bold mt-3 d-block">
+         <p class="roboto-slab">Saldo actual: ${{ number_format($saldoDisponible, 2) }}</p>
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnCancelarAbono" disabled>Cancelar</button>
+        <button class="btn btn-dark" id="btnGuardarAbono" disabled>Guardar</button>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Agrega Bootstrap Icons en tu <head> si no está -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const inputCantidad = document.getElementById('cantidad');
+  const errorDiv = document.getElementById('cantidad-error');
+  const iconoValidacion = document.getElementById('icono-validacion');
+  const btnGuardar = document.getElementById('btnGuardarAbono');
+  const btnCancelar = document.getElementById('btnCancelarAbono');
+
+  inputCantidad.addEventListener('input', function () {
+    const valor = parseFloat(inputCantidad.value);
+
+    if (isNaN(valor) || valor <= 0) {
+      inputCantidad.classList.add('is-invalid');
+      inputCantidad.classList.remove('is-valid');
+
+      iconoValidacion.className = 'bi bi-x-circle-fill position-absolute top-50 translate-middle-y';
+      iconoValidacion.style.color = 'red';
+      iconoValidacion.style.right = '0.75rem';
+      iconoValidacion.style.fontSize = '1.2rem';
+      iconoValidacion.style.display = 'inline';
+
+      errorDiv.style.display = 'block';
+      errorDiv.textContent = "La cantidad a abonar debe ser mayor a 0";
+
+      btnGuardar.disabled = true;
+      btnCancelar.disabled = true;
+    } else {
+      inputCantidad.classList.remove('is-invalid');
+      inputCantidad.classList.add('is-valid');
+
+      iconoValidacion.className = 'bi bi-check-circle-fill position-absolute top-50 translate-middle-y';
+      iconoValidacion.style.color = 'green';
+      iconoValidacion.style.right = '0.75rem';
+      iconoValidacion.style.fontSize = '1.2rem';
+      iconoValidacion.style.display = 'inline';
+
+      errorDiv.style.display = 'none';
+
+      btnGuardar.disabled = false;
+      btnCancelar.disabled = false;
+    }
+  });
+
+    btnCancelar.addEventListener('click', function () {
+    // Limpiar campo de cantidad
+    inputCantidad.value = '';
+
+    // Quitar clases de validación
+    inputCantidad.classList.remove('is-valid', 'is-invalid');
+
+    // Ocultar icono de validación
+    iconoValidacion.style.display = 'none';
+
+    // Ocultar mensaje de error
+    errorDiv.style.display = 'none';
+
+    // Deshabilitar botones de nuevo si quieres
+    btnGuardar.disabled = true;
+    btnCancelar.disabled = true;
+  });
+
+});
+</script>
 
   <!-- Modal de Límite de Objetivos -->
 <div class="modal fade" id="modalLimiteObjetivos" tabindex="-1" aria-hidden="true">
@@ -124,14 +201,13 @@
   </div>
 </div>
 
-
  <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
   const objetivosEndpoint = "{{ route('objetivos.index') }}";
   let selectedGoal = null;
-  let saldoUsuario = parseFloat({{ $saldoDisponible }});
+  let saldoUsuario = parseFloat({{$saldoDisponible}});
 
   async function cargarObjetivos() {
     try {
@@ -198,6 +274,7 @@
     document.getElementById('ahorros').addEventListener('click', () => window.location.href = "{{ route('ahorro') }}");
 
     // Validar límite de objetivos al dar clic en "Nuevo Objetivo"
+
 document.getElementById('btnCrearObjetivo').addEventListener('click', (e)=>{
   e.preventDefault();
   const totalObjetivos = parseInt(document.getElementById("contador-objetivos").innerText.split('/')[0]);
@@ -207,6 +284,7 @@ document.getElementById('btnCrearObjetivo').addEventListener('click', (e)=>{
     window.location.href = "{{ route('objetivos.nuevo') }}";
   }
 });
+
 
 
 // Abrir modal al dar clic en Abonar
@@ -316,7 +394,7 @@ if (data.nuevo_monto >= data.meta) {
   }
 }
 
-alertify.success("Abono registrado correctamente ✅");
+alertify.success("Abono registrado correctamente ");
 
 // 🔽 Limpieza del formulario
 cantidadInput.value = "";
@@ -410,10 +488,40 @@ cantidadInput.addEventListener("blur", () => {
 
 </script>
 
+<script>
+  const btnCancelar = document.getElementById("btnCancelarAbono");
 
+  // 🟡 Activar/Desactivar Cancelar cuando se escribe una cantidad
+  cantidadInput.addEventListener("input", () => {
+    const valor = parseFloat(cantidadInput.value);
+    if (!isNaN(valor) && valor > 0) {
+      btnCancelar.disabled = false;
+    } else {
+      btnCancelar.disabled = true;
+    }
+  });
+
+  // 🔄 Función para limpiar los campos del modal
+  function limpiarModal() {
+    cantidadInput.value = "";
+    cantidadInput.classList.remove("error");
+    errorDiv.style.display = "none";
+    btnGuardar.disabled = true;
+    btnCancelar.disabled = true;
+  }
+
+  // 🚫 Cancelar solo limpia (no cierra el modal)
+  btnCancelar.addEventListener("click", () => {
+    limpiarModal();
+  });
+
+  // 🟢 También se limpia al abrir el modal
+  document.getElementById("modalAbonar").addEventListener("show.bs.modal", () => {
+    limpiarModal();
+  });
+</script>
 
 
 
 </body>
-
 </html>

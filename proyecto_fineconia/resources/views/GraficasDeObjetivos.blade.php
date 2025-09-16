@@ -209,8 +209,9 @@
     }
   </script>
 
-  <script>
-  function validarFechas() {
+ <script>
+  // Validación de fechas con condiciones específicas
+  function validarFechas({ mostrarError = false } = {}) {
     const desdeInput = document.getElementById('fecha_desde');
     const hastaInput = document.getElementById('fecha_hasta');
     const desde = new Date(desdeInput.value);
@@ -222,23 +223,27 @@
       input.classList.remove('input-error', 'input-success');
     });
 
-    // Validación de fechas
-    if (desdeInput.value && hastaInput.value && hasta < desde) {
-      alertify.error("La fecha Hasta debe ser mayor o igual a la fecha Desde");
-      desdeInput.classList.add('input-error');
-      hastaInput.classList.add('input-error');
-      valido = false;
-    } else {
-      if (desdeInput.value) desdeInput.classList.add('input-success');
-      if (hastaInput.value) hastaInput.classList.add('input-success');
+    // Solo validar si ambas fechas están completas
+    if (desdeInput.value && hastaInput.value) {
+      if (hasta < desde) {
+        if (mostrarError) {
+          alertify.error("La fecha Hasta debe ser mayor o igual a la fecha Desde");
+        }
+        desdeInput.classList.add('input-error');
+        hastaInput.classList.add('input-error');
+        valido = false;
+      } else {
+        desdeInput.classList.add('input-success');
+        hastaInput.classList.add('input-success');
+      }
     }
 
     return valido;
   }
 
-  // Reescribimos la función cargarMetas para incluir la validación
+  // Cargar metas después de validar fechas correctamente
   async function cargarMetas() {
-    if (!validarFechas()) return;
+    if (!validarFechas({ mostrarError: true })) return;
 
     const contenedor = document.getElementById('graficas-container');
     const sinMetas = document.getElementById('sin-metas');
@@ -269,6 +274,7 @@
     }
   }
 
+  // Limpiar fechas y estilos
   function limpiarFiltro() {
     const desdeInput = document.getElementById('fecha_desde');
     const hastaInput = document.getElementById('fecha_hasta');
@@ -282,6 +288,16 @@
 
     cargarMetas();
   }
+
+  // Agregar listeners para validar automáticamente al cambiar fechas
+  document.addEventListener('DOMContentLoaded', () => {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    desdeInput.addEventListener('change', () => validarFechas({ mostrarError: true }));
+    hastaInput.addEventListener('change', () => validarFechas({ mostrarError: true }));
+  });
+  
 </script>
 
 </body>

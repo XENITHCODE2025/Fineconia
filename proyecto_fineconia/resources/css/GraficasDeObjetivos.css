@@ -260,3 +260,23 @@ body {
 .porcentaje-texto {
   color: var(--color-verde-avance);
 }
+
+input.input-error,
+input.input-success {
+  padding-right: 30px; /* espacio para que el ícono no quede encima del texto */
+  background-repeat: no-repeat;
+  background-position: right 5px center; /* Ajuste hacia la izquierda */
+  background-size: 20px;
+  background-size: 15px; /* 🔽 Tamaño reducido del icono */
+}
+
+input.input-error {
+  border: 2px solid red;
+  background-image: url('https://cdn-icons-png.flaticon.com/512/753/753345.png'); /* ❌ */
+}
+
+input.input-success {
+  border: 2px solid green;
+  background-image: url('https://cdn-icons-png.flaticon.com/512/845/845646.png'); /* ✔️ */
+}
+

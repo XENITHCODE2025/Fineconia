@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
         card.innerHTML = `
           <div class="goal-badge">${index + 1}</div>
           <h5>${goal.nombre}</h5>
-          <p>$${montoActual.toLocaleString()} / $${montoMeta.toLocaleString()}</p>
+          <p>Cantidad abonada: $${montoActual.toLocaleString()} / Meta: $${montoMeta.toLocaleString()}</p>
           <div class="progress">
             <div class="progress-bar" style="width: ${Math.min(progreso, 100)}%"></div>
           </div>

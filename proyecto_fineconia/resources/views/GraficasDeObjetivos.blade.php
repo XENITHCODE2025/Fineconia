@@ -15,6 +15,14 @@
   <!-- Fuente Open Sans -->
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 
+  <!-- Alertify CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<!-- Alertify Theme (opcional) -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+<!-- Alertify JS -->
+
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
   <!-- Archivo de estilos externo -->
   @vite('resources/css/GraficasDeObjetivos.css')
 
@@ -67,6 +75,10 @@
       </button>
     </div>
 
+    <!-- Mensaje si no hay metas en el rango -->
+    <div id="mensaje-sin-metas" style="display: none; font-family: 'Open Sans', sans-serif; color: gray; text-align: center;">
+        No hay metas de ahorro en este rango de tiempo.
+    </div>
 
     <div id="graficas-container" class="graficas-grid"></div>
 
@@ -197,7 +209,80 @@
     }
   </script>
 
+  <script>
+  function validarFechas() {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+    const desde = new Date(desdeInput.value);
+    const hasta = new Date(hastaInput.value);
+    let valido = true;
 
+    // Reset estilos
+    [desdeInput, hastaInput].forEach(input => {
+      input.classList.remove('input-error', 'input-success');
+    });
+
+    // Validación de fechas
+    if (desdeInput.value && hastaInput.value && hasta < desde) {
+      alertify.error("La fecha Hasta debe ser mayor o igual a la fecha Desde");
+      desdeInput.classList.add('input-error');
+      hastaInput.classList.add('input-error');
+      valido = false;
+    } else {
+      if (desdeInput.value) desdeInput.classList.add('input-success');
+      if (hastaInput.value) hastaInput.classList.add('input-success');
+    }
+
+    return valido;
+  }
+
+  // Reescribimos la función cargarMetas para incluir la validación
+  async function cargarMetas() {
+    if (!validarFechas()) return;
+
+    const contenedor = document.getElementById('graficas-container');
+    const sinMetas = document.getElementById('sin-metas');
+    const sinRango = document.getElementById('sin-rango');
+    contenedor.innerHTML = '';
+    sinMetas.style.display = 'none';
+    sinRango.style.display = 'none';
+
+    try {
+      const desde = document.getElementById('fecha_desde').value;
+      const hasta = document.getElementById('fecha_hasta').value;
+      const params = new URLSearchParams();
+      if (desde) params.append('desde', desde);
+      if (hasta) params.append('hasta', hasta);
+
+      const res = await fetch('/api/objetivos?' + params.toString());
+      const datos = await res.json();
+
+      if (!datos || datos.length === 0) {
+        sinRango.style.display = 'block';
+        return;
+      }
+
+      datos.forEach(meta => crearTarjeta(meta));
+    } catch (error) {
+      console.error('Error al cargar las metas:', error);
+      sinMetas.style.display = 'block';
+    }
+  }
+
+  function limpiarFiltro() {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    desdeInput.value = '';
+    hastaInput.value = '';
+
+    // Limpiar estilos visuales
+    desdeInput.classList.remove('input-error', 'input-success');
+    hastaInput.classList.remove('input-error', 'input-success');
+
+    cargarMetas();
+  }
+</script>
 
 </body>
 

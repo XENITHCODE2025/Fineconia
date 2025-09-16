@@ -300,6 +300,116 @@
   
 </script>
 
+<script>
+  async function reiniciarGraficas() {
+    const contenedor = document.getElementById('graficas-container');
+    const sinMetas = document.getElementById('sin-metas');
+    const sinRango = document.getElementById('sin-rango');
+
+    contenedor.innerHTML = '';
+    sinMetas.style.display = 'none';
+    sinRango.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/objetivos');
+      const datos = await res.json();
+
+      if (!datos || datos.length === 0) {
+        sinMetas.style.display = 'block';
+        return;
+      }
+
+      datos.forEach(meta => crearTarjeta(meta));
+    } catch (error) {
+      console.error('Error al reiniciar gráficas:', error);
+      sinMetas.style.display = 'block';
+    }
+  }
+
+  async function validarYReiniciarSiEsNecesario() {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    const desdeStr = desdeInput.value.trim();
+    const hastaStr = hastaInput.value.trim();
+
+    if (!desdeStr || !hastaStr) {
+      // No hacer nada si las fechas están incompletas
+      return;
+    }
+
+    const desde = new Date(desdeStr);
+    const hasta = new Date(hastaStr);
+
+    if (hasta < desde) {
+      // Solo reiniciar sin mostrar mensaje porque ya tienes otro script que lo hace
+      await reiniciarGraficas();
+    }
+  }
+
+  async function cargarMetasConFiltro() {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    const desdeStr = desdeInput.value.trim();
+    const hastaStr = hastaInput.value.trim();
+
+    const contenedor = document.getElementById('graficas-container');
+    const sinMetas = document.getElementById('sin-metas');
+    const sinRango = document.getElementById('sin-rango');
+
+    contenedor.innerHTML = '';
+    sinMetas.style.display = 'none';
+    sinRango.style.display = 'none';
+
+    if (!desdeStr || !hastaStr) {
+      alertify.error("Por favor, ingresa ambas fechas para filtrar.");
+      return;
+    }
+
+    const desde = new Date(desdeStr);
+    const hasta = new Date(hastaStr);
+
+    if (hasta < desde) {
+      // Aquí sí podrías mostrar el mensaje, pero si ya lo tienes afuera, solo reinicia
+      await reiniciarGraficas();
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/objetivos?desde=${desdeStr}&hasta=${hastaStr}`);
+      const datos = await res.json();
+
+      if (!datos || datos.length === 0) {
+        sinRango.style.display = 'block';
+        return;
+      }
+
+      datos.forEach(meta => crearTarjeta(meta));
+    } catch (error) {
+      console.error('Error al cargar las metas:', error);
+      sinMetas.style.display = 'block';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    reiniciarGraficas();
+
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    desdeInput.addEventListener('change', validarYReiniciarSiEsNecesario);
+    hastaInput.addEventListener('change', validarYReiniciarSiEsNecesario);
+
+    const btnFiltrar = document.querySelector('button[onclick="cargarMetas()"], button[onclick]');
+    if (btnFiltrar) {
+      btnFiltrar.removeAttribute('onclick');
+      btnFiltrar.id = 'btn-filtrar';
+      btnFiltrar.addEventListener('click', cargarMetasConFiltro);
+    }
+  });
+</script>
+
 </body>
 
 </html>

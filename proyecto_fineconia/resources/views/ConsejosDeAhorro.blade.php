@@ -7,7 +7,13 @@
   @vite('resources/css/ConsejosDeAhorro.css')
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Fuente Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <!-- Fuente Open Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
 </head>
 <body>
   <header class="header">
@@ -22,13 +28,10 @@
       <a href="{{ route('consejos.ahorro') }}" class="nav-link active">Consejos</a>
       <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
       <a href="{{ route('graficas.ahorro') }}" class="nav-link {{ request()->is('graficas') ? 'active' : '' }}">Gráficas</a>
-
-      @include('partials.header-user')
-      <!-- Botón hamburguesa -->
-      <div class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </div>
     </div>
+
+    <div class="menu-toggle" id="menu-toggle">
+    <i class="fas fa-bars"></i>
   </header>
 
   <!-- Menú desplegable (móvil) -->
@@ -51,36 +54,125 @@
     <section class="consejos-grid">
       <!-- Lado izquierdo: categorías -->
       <div class="categorias">
-        <div class="categoria">
-          <i class="bi bi-clipboard2-check"></i>
-          <span>Presupuesto</span>
-          <i class="bi bi-chevron-down flecha"></i>
-        </div>
-        <div class="categoria">
-          <i class="bi bi-cart3"></i>
-          <span>Compras Inteligentes</span>
-          <i class="bi bi-chevron-down flecha"></i>
-        </div>
-        <div class="categoria">
-          <i class="bi bi-lightbulb"></i>
-          <span>Energía y Servicio</span>
-          <i class="bi bi-chevron-down flecha"></i>
-        </div>
-        <div class="categoria">
-          <i class="bi bi-flag"></i>
-          <span>Metas de ahorro</span>
-          <i class="bi bi-chevron-down flecha"></i>
-        </div>
-        <div class="categoria">
-          <i class="bi bi-people"></i>
-          <span>Familiar</span>
-          <i class="bi bi-chevron-down flecha"></i>
-        </div>
-      </div>
 
-      <!-- Lado derecho: cuadro de texto -->
-      <div id="tarjets" class="tarjeta">
-        <h3>Registra todos tus ingresos y gastos mensuales.</h3>
+        <!-- Presupuesto -->
+       
+<div class="categoria" data-categoria="presupuesto">
+  <i class="bi bi-clipboard2-check"></i>
+  <span>Presupuesto</span>
+  <i class="bi bi-chevron-down flecha"></i>
+</div>
+<ul class="consejos-lista" data-categoria="presupuesto">
+  @foreach($consejosBySlug['presupuesto'] as $c)
+    <li
+      data-id="{{ $c->id }}"
+      data-titulo="{{ $c->titulo }}"
+      data-descripcion="{{ $c->descripcion }}"
+      data-subconsejos='@json($c->subconsejos ?? [])'>
+      <strong>Consejo {{ $loop->iteration }}:</strong> {{ $c->titulo }}
+    </li>
+  @endforeach
+
+  @if($consejosBySlug['presupuesto']->isEmpty())
+    <li class="empty">No hay consejos en esta categoría.</li>
+  @endif
+</ul>
+
+<!-- Compras Inteligentes -->
+<div class="categoria" data-categoria="compras">
+  <i class="bi bi-cart3"></i>
+  <span>Compras Inteligentes</span>
+  <i class="bi bi-chevron-down flecha"></i>
+</div>
+<ul class="consejos-lista" data-categoria="compras">
+  @foreach($consejosBySlug['compras'] as $c)
+    <li 
+      data-id="{{ $c->id }}"
+      data-titulo="{{ $c->titulo ?? '' }}"
+      data-descripcion="{{ $c->descripcion ?? '' }}"
+      data-subconsejos='@json($c->subconsejos ?? [])'>
+      <strong>Consejo {{ $loop->iteration }}:</strong> {{ $c->titulo ?? '' }}
+    </li>
+  @endforeach
+
+  @if($consejosBySlug['compras']->isEmpty())
+    <li class="empty">No hay consejos en esta categoría.</li>
+  @endif
+</ul>
+
+<!-- Energía y Servicio -->
+<div class="categoria" data-categoria="energia">
+  <i class="bi bi-lightbulb"></i>
+  <span>Energía y Servicio</span>
+  <i class="bi bi-chevron-down flecha"></i>
+</div>
+<ul class="consejos-lista" data-categoria="energia">
+  @foreach($consejosBySlug['energia'] as $c)
+    <li
+      data-id="{{ $c->id }}"
+      data-titulo="{{ $c->titulo }}"
+      data-descripcion="{{ $c->descripcion }}"
+      data-subconsejos='@json($c->subconsejos ?? [])'>
+      <strong>Consejo {{ $loop->iteration }}:</strong> {{ $c->titulo }}
+    </li>
+  @endforeach
+
+  @if($consejosBySlug['energia']->isEmpty())
+    <li class="empty">No hay consejos en esta categoría.</li>
+  @endif
+</ul>
+
+<!-- Metas de ahorro -->
+<div class="categoria" data-categoria="metas">
+  <i class="bi bi-flag"></i>
+  <span>Metas de ahorro</span>
+  <i class="bi bi-chevron-down flecha"></i>
+</div>
+<ul class="consejos-lista" data-categoria="metas">
+  @foreach($consejosBySlug['metas'] as $c)
+    <li
+      data-id="{{ $c->id }}"
+      data-titulo="{{ $c->titulo }}"
+      data-descripcion="{{ $c->descripcion }}"
+      data-subconsejos='@json($c->subconsejos ?? [])'>
+      <strong>Consejo {{ $loop->iteration }}:</strong> {{ $c->titulo }}
+    </li>
+  @endforeach
+
+  @if($consejosBySlug['metas']->isEmpty())
+    <li class="empty">No hay consejos en esta categoría.</li>
+  @endif
+</ul>
+
+<!-- Familiar -->
+<div class="categoria" data-categoria="familiar">
+  <i class="bi bi-people"></i>
+  <span>Familiar</span>
+  <i class="bi bi-chevron-down flecha"></i>
+</div>
+<ul class="consejos-lista" data-categoria="familiar">
+  @foreach($consejosBySlug['familiar'] as $c)
+    <li
+      data-id="{{ $c->id }}"
+      data-titulo="{{ $c->titulo }}"
+      data-descripcion="{{ $c->descripcion }}"
+      data-subconsejos='@json($c->subconsejos ?? [])'>
+      <strong>Consejo {{ $loop->iteration }}:</strong> {{ $c->titulo }}
+    </li>
+  @endforeach
+
+  @if($consejosBySlug['familiar']->isEmpty())
+    <li class="empty">No hay consejos en esta categoría.</li>
+  @endif
+</ul>
+
+
+
+</div>
+
+      <!-- Cuadro derecho -->
+      <div id="tarjeta-contenido" class="tarjeta">
+       <h3 id="consejo-titulo">Selecciona una categoria para visualizar sus consejos aqui.</h3>
       </div>
     </section>
   </main>
@@ -92,27 +184,88 @@
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script>
-    // ✅ Menú móvil
-    document.getElementById("menu-toggle").addEventListener("click", function () {
-      document.getElementById("mobile-menu").classList.toggle("active");
-    });
+  document.getElementById("menu-toggle").addEventListener("click", function () {
+  document.getElementById("mobile-menu").classList.toggle("active");
+});
 
-    function checkScreenSize() {
-      const mobileMenu = document.getElementById("mobile-menu");
-      if (window.innerWidth > 768 && mobileMenu.classList.contains("active")) {
-        mobileMenu.classList.remove("active");
+function checkScreenSize() {
+  const mobileMenu = document.getElementById("mobile-menu");
+  if (window.innerWidth > 768 && mobileMenu.classList.contains("active")) {
+    mobileMenu.classList.remove("active");
+  }
+}
+
+window.addEventListener("load", () => {
+  checkScreenSize();
+  // Al cargar la página, aplicamos la clase default-style para el h3
+  document.getElementById('consejo-titulo').classList.add('default-style');
+});
+
+window.addEventListener("resize", checkScreenSize);
+
+document.querySelectorAll('.mobile-nav-link').forEach(link => {
+  link.addEventListener('click', function () {
+    document.getElementById('mobile-menu').classList.remove('active');
+  });
+});
+
+// Expandir categoría (solo una abierta a la vez)
+document.querySelectorAll('.categoria').forEach(categoria => {
+  categoria.addEventListener('click', () => {
+    const cat = categoria.dataset.categoria;
+
+    // Cerrar otras listas
+    document.querySelectorAll('.consejos-lista.visible').forEach(lista => {
+      if (lista.dataset.categoria !== cat) {
+        lista.classList.remove('visible');
       }
-    }
-    window.addEventListener("load", checkScreenSize);
-    window.addEventListener("resize", checkScreenSize);
-
-    // Cerrar menú móvil al hacer clic en un enlace
-    document.querySelectorAll('.mobile-nav-link').forEach(link => {
-      link.addEventListener('click', function() {
-        document.getElementById('mobile-menu').classList.remove('active');
-      });
     });
+
+    // Abrir/cerrar la seleccionada
+    const lista = document.querySelector(`.consejos-lista[data-categoria="${cat}"]`);
+    if (lista) {
+      lista.classList.toggle('visible');
+    }
+  });
+});
+
+
+
+// Cambiar contenido y resaltar de la tarjeta consejos
+document.querySelectorAll('.consejos-lista li').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.consejos-lista li').forEach(li => li.classList.remove('activo'));
+    item.classList.add('activo');
+
+    const titulo = item.dataset.titulo || '';
+    const descripcion = item.dataset.descripcion || '';
+    let subconsejos = [];
+
+    try {
+      subconsejos = JSON.parse(item.dataset.subconsejos || "[]");
+    } catch (e) {
+      subconsejos = [];
+    }
+
+    const tarjeta = document.getElementById('tarjeta-contenido');
+    tarjeta.innerHTML = `
+      <h3 id="consejo-titulo">${titulo}. ${descripcion}</h3>
+      <ul class="subconsejos-list">
+        ${subconsejos.length > 0 
+            ? subconsejos.map(s => `<li>${s}</li>`).join('')
+            : '<li>No hay subconsejos disponibles</li>'
+        }
+      </ul>
+    `;
+  });
+});
+
+
+
+
+
   </script>
 </body>
 </html>

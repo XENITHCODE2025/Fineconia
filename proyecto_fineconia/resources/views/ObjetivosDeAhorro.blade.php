@@ -1,4 +1,4 @@
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -7,7 +7,8 @@
     @vite('resources/css/ObjetivosDeAhorro.css')
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
 
   <!-- ✅ AlertifyJS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
@@ -17,6 +18,11 @@
 @if(session('success'))
 <script>
     alertify.success("{{ session('success') }}");
+</script>
+@endif
+@if(session('error'))
+<script>
+    alertify.error("{{ session('error') }}");
 </script>
 @endif
 <body>
@@ -30,61 +36,59 @@
       <a href="{{ route('consejos.ahorro') }}" class="nav-link">Consejos</a>
       <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
       <a href="{{ route('graficas.ahorro') }}" class="nav-link">Gráficas</a>
-      
-      @include('partials.header-user')
-      <div class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </div>
     </div>
+
+    <div class="menu-toggle" id="menu-toggle">
+    <i class="fas fa-bars"></i>
   </header>
 
-  <nav class="mobile-menu" id="mobile-menu">
-    <!-- Solo los 4 enlaces solicitados en menú móvil -->
-    <a href="{{ route('ahorro') }}" class="mobile-nav-link">Ahorro</a>
-    <a href="{{ route('consejos.ahorro') }}" class="mobile-nav-link">Consejos</a>
-    <a href="{{ route('objetivos.nuevo') }}" class="mobile-nav-link">Objetivos</a>
-    <a href="{{ route('graficas.ahorro') }}" class="mobile-nav-link">Gráficas</a>
-  </nav>
+ <nav class="mobile-menu" id="mobile-menu">
+  <a href="{{ route('ahorro') }}" class="mobile-nav-link {{ request()->routeIs('ahorro') ? 'active' : '' }}">Ahorro</a>
+  <a href="{{ route('consejos.ahorro') }}" class="mobile-nav-link {{ request()->is('consejos') ? 'active' : '' }}">Consejos</a>
+  <a href="{{ route('objetivos.nuevo') }}" class="mobile-nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
+  <a href="{{ route('graficas.ahorro') }}" class="mobile-nav-link {{ request()->routeIs('graficas.ahorro') ? 'active' : '' }}">Gráficas</a>
+</nav>
 
   <main class="contenido">
     <div class="form-container">
       <h2>Nuevo objetivo de ahorro</h2>
-  <form id="objetivo-form" action="{{ route('objetivos.store') }}" method="POST">
-  @csrf
-  <label for="nombre">Nombre del objetivo:</label>
-  <div class="input-container">
-    <input type="text" id="nombre" name="nombre" required>
-    <span class="input-icon" id="icon-nombre"></span>
-  </div>
+      <form id="objetivo-form" action="{{ route('objetivos.store') }}" method="POST">
+        @csrf
+        <label for="nombre">Nombre del objetivo:</label>
+        <div class="input-container">
+          <input type="text" id="nombre" name="nombre" required>
+          <span class="input-icon" id="icon-nombre"></span>
+        </div>
 
-  <label for="monto">Monto:</label>
-  <div class="input-container">
-    <input type="number" id="monto" name="monto" min="1" required>
-    <span class="input-icon" id="icon-monto"></span>
-  </div>
+        <label for="monto">Monto:</label>
+        <div class="input-container">
+          <input type="number" id="monto" name="monto" min="1" required>
+          <span class="input-icon" id="icon-monto"></span>
+        </div>
 
-  <label>Fecha del objetivo</label>
-  <div class="fechas">
-    <div class="fecha-item">
-      <label for="desde">Desde:</label>
-      <div class="fecha-input-wrapper">
-        <input type="date" id="desde" name="fecha_desde" required>
-        <span class="fecha-icon" id="icon-desde"></span>
-      </div>
-    </div>
-    <div class="fecha-item">
-      <label for="hasta">Hasta:</label>
-      <div class="fecha-input-wrapper">
-        <input type="date" id="hasta" name="fecha_hasta" required>
-        <span class="fecha-icon" id="icon-hasta"></span>
-      </div>
-    </div>
-  </div>
+        <label>Fecha del objetivo</label>
+        <div class="fechas">
+          <div class="fecha-item">
+            <label for="desde">Desde:</label>
+            <div class="fecha-input-wrapper">
+              <input type="date" id="desde" name="fecha_desde" required>
+              <span class="fecha-icon" id="icon-desde"></span>
+            </div>
+          </div>
+          <div class="fecha-item">
+            <label for="hasta">Hasta:</label>
+            <div class="fecha-input-wrapper">
+              <input type="date" id="hasta" name="fecha_hasta" required>
+              <span class="fecha-icon" id="icon-hasta"></span>
+            </div>
+          </div>
+        </div>
 
-  <button type="submit" class="btn-guardar" disabled>Guardar</button>
-</form>
-
-
+        <div class="botones-container">
+          <button type="button" class="btn-cancelar" id="btn-cancelar" disabled>Cancelar</button>
+          <button type="submit" class="btn-guardar" disabled>Guardar</button>
+        </div>
+      </form>
     </div>
   </main>
 
@@ -97,144 +101,276 @@
 
   <script>
     // ✅ Menú móvil
-document.getElementById("menu-toggle").addEventListener("click", function () {
-  document.getElementById("mobile-menu").classList.toggle("active");
-});
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+      document.getElementById("mobile-menu").classList.toggle("active");
+    });
 
-function checkScreenSize() {
-  const mobileMenu = document.getElementById("mobile-menu");
-  if (window.innerWidth > 768 && mobileMenu.classList.contains("active")) {
-    mobileMenu.classList.remove("active");
-  }
-}
-window.addEventListener("load", checkScreenSize);
-window.addEventListener("resize", checkScreenSize);
-
-// ✅ Validación con feedback
-const form = document.getElementById('objetivo-form');
-const guardarBtn = document.querySelector('.btn-guardar');
-const nombre = document.getElementById('nombre');
-const monto = document.getElementById('monto');
-const desde = document.getElementById('desde');
-const hasta = document.getElementById('hasta');
-
-// Objeto para rastrear si los campos han sido interactuados
-const campoInteractuado = {
-  nombre: false,
-  monto: false,
-  desde: false,
-  hasta: false
-};
-
-function actualizarIcono(input, valido, iconId, esFecha = false) {
-  const iconElement = document.getElementById(iconId);
-  
-  // Solo mostrar icono si el campo ha sido interactuado
-  if (campoInteractuado[input.id]) {
-    if (valido) {
-      iconElement.innerHTML = '<i class="fas fa-check-circle"></i>';
-      iconElement.classList.add('show');
-      input.classList.remove("error");
-      input.classList.add("success");
-    } else {
-      iconElement.innerHTML = '<i class="fas fa-times-circle"></i>';
-      iconElement.classList.add('show');
-      input.classList.remove("success");
-      input.classList.add("error");
+    function checkScreenSize() {
+      const mobileMenu = document.getElementById("mobile-menu");
+      if (window.innerWidth > 768 && mobileMenu.classList.contains("active")) {
+        mobileMenu.classList.remove("active");
+      }
     }
-  } else {
-    iconElement.classList.remove('show');
-    input.classList.remove("success");
-    input.classList.remove("error");
-  }
-}
 
-function validarFormulario() {
-  let valido = true;
+    window.addEventListener("load", checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
 
-  // Nombre
-  if (nombre.value.trim() === "") {
-    actualizarIcono(nombre, false, 'icon-nombre');
-    valido = false;
-  } else {
-    actualizarIcono(nombre, true, 'icon-nombre');
-  }
+    const form = document.getElementById('objetivo-form');
+    const guardarBtn = document.querySelector('.btn-guardar');
+    const btnCancelar = document.getElementById('btn-cancelar');
 
-  // Monto
-  if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) {
-    actualizarIcono(monto, false, 'icon-monto');
-    valido = false;
-  } else {
-    actualizarIcono(monto, true, 'icon-monto');
-  }
+    const nombre = document.getElementById('nombre');
+    const monto = document.getElementById('monto');
+    const desde = document.getElementById('desde');
+    const hasta = document.getElementById('hasta');
 
-  // Fechas
-  if (desde.value === "" || hasta.value === "") {
-    actualizarIcono(desde, false, 'icon-desde', true);
-    actualizarIcono(hasta, false, 'icon-hasta', true);
-    valido = false;
-  } else {
-    const fechaDesde = new Date(desde.value);
-    const fechaHasta = new Date(hasta.value);
-    if (fechaHasta < fechaDesde) {
-      actualizarIcono(desde, false, 'icon-desde', true);
-      actualizarIcono(hasta, false, 'icon-hasta', true);
-      valido = false;
-    } else {
-      actualizarIcono(desde, true, 'icon-desde', true);
-      actualizarIcono(hasta, true, 'icon-hasta', true);
+    const campoInteractuado = {
+      nombre: false,
+      monto: false,
+      desde: false,
+      hasta: false
+    };
+
+    // Objeto para rastrear errores ya mostrados
+    const erroresMostrados = {
+      fechaDesdePasado: false,
+      fechaHastaAnterior: false
+    };
+
+    function actualizarIcono(input, valido, iconId) {
+      const iconElement = document.getElementById(iconId);
+
+      if (input.value.trim() === '') {
+        iconElement.classList.remove('show');
+        iconElement.innerHTML = '';
+        input.classList.remove('error');
+        input.classList.remove('success');
+        return;
+      }
+
+      if (campoInteractuado[input.id]) {
+        if (valido) {
+          iconElement.innerHTML = '<i class="fas fa-check-circle"></i>';
+          iconElement.classList.add('show');
+          input.classList.remove("error");
+          input.classList.add("success");
+          
+          // Cuando se corrige un error, resetear su estado de mostrado
+          if (input.id === 'desde') {
+            erroresMostrados.fechaDesdePasado = false;
+          } else if (input.id === 'hasta') {
+            erroresMostrados.fechaHastaAnterior = false;
+          }
+        } else {
+          iconElement.innerHTML = '<i class="fas fa-times-circle"></i>';
+          iconElement.classList.add('show');
+          input.classList.remove("success");
+          input.classList.add("error");
+        }
+      } else {
+        iconElement.classList.remove('show');
+        input.classList.remove("success");
+        input.classList.remove("error");
+      }
     }
-  }
 
-  guardarBtn.disabled = !valido;
-}
+    function validarFormulario() {
+      let valido = true;
+      const erroresInmediatos = [];
 
-// Event listeners para marcar campos como interactuados
-[nombre, monto, desde, hasta].forEach(input => {
-  input.addEventListener("input", function() {
-    campoInteractuado[this.id] = true;
-    validarFormulario();
-  });
-  input.addEventListener("change", function() {
-    campoInteractuado[this.id] = true;
-    validarFormulario();
-  });
-  input.addEventListener("blur", function() {
-    campoInteractuado[this.id] = true;
-    validarFormulario();
-  });
-});
+      const fechaDesde = desde.value;
+      const fechaHasta = hasta.value;
+      const hoyStr = new Date().toISOString().split('T')[0]; // Formato "YYYY-MM-DD"
 
-form.addEventListener("submit", (e) => {
-  let errores = [];
+      // Nombre
+      if (nombre.value.trim() === "") {
+        actualizarIcono(nombre, false, 'icon-nombre');
+        valido = false;
+      } else {
+        actualizarIcono(nombre, true, 'icon-nombre');
+      }
 
-  Object.keys(campoInteractuado).forEach(key => campoInteractuado[key] = true);
-  validarFormulario();
+      // Monto
+      if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) {
+        actualizarIcono(monto, false, 'icon-monto');
+        valido = false;
+      } else {
+        actualizarIcono(monto, true, 'icon-monto');
+      }
 
-  if (nombre.value.trim() === "") errores.push("El campo 'Nombre del objetivo' es obligatorio.");
-  if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) errores.push("El campo 'Monto' debe ser mayor a 0.");
-  if (desde.value === "" || hasta.value === "") {
-    errores.push("Debes seleccionar las fechas.");
-  } else {
-    const fechaDesde = new Date(desde.value);
-    const fechaHasta = new Date(hasta.value);
-    if (fechaHasta < fechaDesde) errores.push("La fecha 'Hasta' no puede ser menor que la fecha 'Desde'.");
-  }
+      // Fecha Desde
+      if (fechaDesde === "") {
+        actualizarIcono(desde, false, 'icon-desde');
+        valido = false;
+        erroresMostrados.fechaDesdePasado = false; // Resetear si está vacío
+      } else if (fechaDesde < hoyStr) {
+        actualizarIcono(desde, false, 'icon-desde');
+        valido = false;
+        
+        // Solo mostrar el error si no se ha mostrado antes
+        if (!erroresMostrados.fechaDesdePasado) {
+          erroresInmediatos.push("La fecha Desde tiene que ser igual o mayor a la actual");
+          erroresMostrados.fechaDesdePasado = true;
+        }
+      } else {
+        actualizarIcono(desde, true, 'icon-desde');
+        erroresMostrados.fechaDesdePasado = false; // Resetear cuando es válido
+      }
 
-  if (errores.length > 0) {
-    e.preventDefault(); // 🚨 detiene envío si hay errores
-    alertify.error(errores.join("<br>"));
-  }
-});
+      // Fecha Hasta
+      if (fechaHasta === "") {
+        actualizarIcono(hasta, false, 'icon-hasta');
+        valido = false;
+        erroresMostrados.fechaHastaAnterior = false; // Resetear si está vacío
+      } else if (fechaHasta <= fechaDesde) {
+        actualizarIcono(hasta, false, 'icon-hasta');
+        valido = false;
+        
+        // Solo mostrar el error si no se ha mostrado antes
+        if (!erroresMostrados.fechaHastaAnterior) {
+          erroresInmediatos.push("La fecha Hasta debe ser mayor a la fecha Desde");
+          erroresMostrados.fechaHastaAnterior = true;
+        }
+      } else {
+        actualizarIcono(hasta, true, 'icon-hasta');
+        erroresMostrados.fechaHastaAnterior = false; // Resetear cuando es válido
+      }
 
-// Cerrar menú móvil al hacer clic en un enlace
-document.querySelectorAll('.mobile-nav-link').forEach(link => {
-  link.addEventListener('click', function() {
-    document.getElementById('mobile-menu').classList.remove('active');
-  });
-});
+      // Mostrar errores solo si hay nuevos
+      if (erroresInmediatos.length > 0) {
+        alertify.error(erroresInmediatos.join("<br>"));
+      }
 
-window.addEventListener("load", validarFormulario);
+      guardarBtn.disabled = !valido;
+    }
+
+    function hayCamposConDatos() {
+      return nombre.value.trim() !== '' ||
+            monto.value.trim() !== '' ||
+            desde.value !== '' ||
+            hasta.value !== '';
+    }
+
+    function actualizarBotonCancelar() {
+      btnCancelar.disabled = !hayCamposConDatos();
+    }
+
+    [nombre, monto, desde, hasta].forEach(input => {
+      input.addEventListener("input", function () {
+        campoInteractuado[this.id] = true;
+        validarFormulario();
+        actualizarBotonCancelar();
+      });
+
+      input.addEventListener("change", function () {
+        campoInteractuado[this.id] = true;
+        validarFormulario();
+        actualizarBotonCancelar();
+      });
+
+      input.addEventListener("blur", function () {
+        campoInteractuado[this.id] = true;
+        validarFormulario();
+        actualizarBotonCancelar();
+      });
+    });
+
+    // ✅ Botón Cancelar
+    btnCancelar.addEventListener('click', function () {
+      if (hayCamposConDatos()) {
+        nombre.value = '';
+        monto.value = '';
+        desde.value = '';
+        hasta.value = '';
+
+        Object.keys(campoInteractuado).forEach(key => {
+          campoInteractuado[key] = false;
+        });
+        
+        // Resetear los errores mostrados
+        Object.keys(erroresMostrados).forEach(key => {
+          erroresMostrados[key] = false;
+        });
+
+        document.querySelectorAll('.input-icon, .fecha-icon').forEach(icon => {
+          icon.classList.remove('show');
+          icon.innerHTML = '';
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+          input.classList.remove('error');
+          input.classList.remove('success');
+        });
+
+        guardarBtn.disabled = true;
+        btnCancelar.disabled = true;
+      }
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      let errores = [];
+
+      Object.keys(campoInteractuado).forEach(key => campoInteractuado[key] = true);
+      validarFormulario();
+
+      const hoyStr = new Date().toISOString().split('T')[0];
+
+      if (nombre.value.trim() === "") errores.push("El campo 'Nombre del objetivo' es obligatorio.");
+      if (monto.value.trim() === "" || parseFloat(monto.value) <= 0) errores.push("El campo 'Monto' debe ser mayor a 0.");
+      if (desde.value === "") {
+        errores.push("Debes seleccionar la fecha Desde.");
+      } else if (desde.value < hoyStr) {
+        errores.push("La fecha Desde tiene que ser igual o mayor a la actual.");
+      }
+
+      if (hasta.value === "") {
+        errores.push("Debes seleccionar la fecha Hasta.");
+      } else if (hasta.value <= desde.value) {
+        errores.push("La fecha Hasta debe ser mayor a la fecha Desde.");
+      }
+
+      if (errores.length > 0) {
+        alertify.error(errores.join("<br>"));
+        return;
+      }
+
+      // ✅ Verificar límite de objetivos antes de enviar
+      try {
+        const response = await fetch('{{ route("objetivos.count") }}', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          }
+        });
+
+        const data = await response.json();
+        
+        if (data.count >= 100) {
+          alertify.error('Has alcanzado el límite máximo de objetivos.');
+          return;
+        }
+
+        // Si todo está bien, enviar el formulario
+        form.submit();
+      } catch (error) {
+        console.error('Error:', error);
+        alertify.error('Error al verificar el límite de objetivos.');
+      }
+    });
+
+    window.addEventListener("load", function () {
+      validarFormulario();
+      actualizarBotonCancelar();
+    });
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', function () {
+        document.getElementById('mobile-menu').classList.remove('active');
+      });
+    });
   </script>
 </body>
 </html>

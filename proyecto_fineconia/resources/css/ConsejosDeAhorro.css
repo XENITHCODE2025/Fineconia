@@ -1,8 +1,20 @@
+/* --- RESETEO GENERAL --- */
+/*  Aprovado */
+/* Estilo para el título principal */
+
+/* Estilo para la lista de subconsejos */
+.subconsejos-list li {
+  font-size: 1.2rem;   /* más grande que el normal */
+  margin-bottom: 8px;
+  line-height: 1.5;
+  color: #34495e;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Open Sans', sans-serif; /* Cambiado de Poppins a Open Sans */
 }
 
 body {
@@ -36,7 +48,8 @@ body {
 
 .menu .nav-link {
   color: white;
-  text-decoration: none; /* 🔹 quitar subrayado */
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif; /* ✅ Cambiado a Poppins */
 }
 
 /* Estilo para el enlace activo */
@@ -45,10 +58,9 @@ body {
   font-weight: bold;
 }
 
-.nombre {
-  font-weight: normal;
-  font-family: 'Open Sans', sans-serif;
-  color: white;
+.user-name-text {
+  font-family: 'Open Sans', sans-serif !important;
+  font-weight: 400 !important;
 }
 
 .user-icon {
@@ -75,8 +87,9 @@ body {
 .mobile-menu a {
   color: white;
   padding: 10px;
-  text-decoration: none; /* 🔹 quitar subrayado */
-  border-bottom: none;   /* 🔹 quitar línea inferior */
+  text-decoration: none;
+  border-bottom: none;
+  font-family: 'Open Sans', sans-serif; /* Cambiado a Open Sans */
 }
 
 .mobile-menu a:hover {
@@ -113,13 +126,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .footer-links a {
   color: white;
-  text-decoration: none; /* 🔹 quitar subrayado */
-  font-family: 'Poppins', sans-serif;
+  text-decoration: none;
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* RESPONSIVE */
@@ -151,32 +164,36 @@ body {
 /* Estilos adicionales */
 .nav-link {
   cursor: pointer;
+  font-family: 'Poppins', sans-serif; /* ✅ Aseguramos Poppins aquí también */
 }
 
 .mobile-menu a {
   cursor: pointer;
 }
 
-/* Títulos */
 .titulo-consejos {
   text-align: center;
   margin-bottom: 10px;
-  background: linear-gradient(to right, #8fc9d5, #e6f9ed);
+  background: linear-gradient(to right, #94BFC7, #b8d8dd);
   border-radius: 12px;
   padding: 20px;
 }
 
+
 .titulo-consejos h2 {
   font-size: 22px;
-  font-weight: bold;
+  font-weight: 2700; /* Más grueso que 700 */
   margin: 0;
+  font-family: 'Poppins', sans-serif;
 }
+
 
 .subtexto-consejos {
   text-align: center;
   color: #555;
   margin-bottom: 25px;
   font-size: 15px;
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* Grid principal */
@@ -190,8 +207,9 @@ body {
 .categorias {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
+
 .categoria {
   background-color: #e6e7e8;
   padding: 15px;
@@ -201,15 +219,20 @@ body {
   justify-content: space-between;
   font-weight: bold;
   cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
 }
+
 .categoria i {
   font-size: 20px;
   color: #2f4d4f;
+  font-family: 'Poppins', sans-serif !important;
 }
+
 .categoria span {
   flex: 1;
   margin-left: 10px;
   font-size: 16px;
+  font-family: 'Poppins', sans-serif !important;
 }
 
 /* Cuadro derecho */
@@ -221,21 +244,33 @@ body {
   box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
   text-align: center;
 }
+
 .tarjeta h3 {
   color: #2eb872;
   font-size: 18px;
   margin-bottom: 15px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
 }
+
+.tarjeta h3.default-style {
+  color: #777;
+  font-family: 'Open Sans', sans-serif;
+  font-size: inherit;
+  font-weight: normal;
+}
+
 .tarjeta ul {
   list-style: disc inside;
   color: #333;
   line-height: 2.0;
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .consejos-grid {
-    grid-template-columns: 1fr; /* Se apila */
+    grid-template-columns: 1fr;
   }
 }
 
@@ -243,12 +278,76 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif !important;
 }
 
 .footer-links a {
   color: white;
-  text-decoration: underline;   /* 🔹 Subrayado como en la imagen */
-  font-size: 18px;              /* Ajusta según necesites */
+  text-decoration: underline;
+  font-size: 18px;
   line-height: 1.4;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* ✅ Animación desplegable para listas de consejos */
+.consejos-lista {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
+  background-color: #f4f4f4;
+  border-radius: 6px;
+  margin-top: 5px;
+  padding: 0 10px;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.consejos-lista.visible {
+  max-height: 600px;
+  padding: 10px;
+}
+
+.consejos-lista li {
+  list-style: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+  color: #333;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.consejos-lista li:hover {
+  background-color: #e0f7fa;
+}
+
+.consejos-lista li.activo {
+  background-color: #d1e7dd;
+  font-weight: bold;
+  border-left: 4px solid #2eb872;
+}
+
+.consejos-lista {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  list-style: none;
+  padding-left: 1.2rem;
+  margin: 0;
+}
+
+.consejos-lista.visible {
+  max-height: 132px;
+  overflow-y: auto;
+  border-left: 2px solid #ddd;
+  padding-left: 1rem;
+}
+
+.consejos-lista.visible::-webkit-scrollbar {
+  width: 6px;
+}
+
+.consejos-lista.visible::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
 }

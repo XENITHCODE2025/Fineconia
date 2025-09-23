@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\ObjetivoAhorro;
 use Illuminate\Http\Request;
+use App\Models\Ingreso;
+use App\Models\Gasto;
+use App\Models\Presupuesto;
 use Illuminate\Support\Facades\Auth;
 
 class ObjetivoAhorroController extends Controller
@@ -15,19 +18,22 @@ class ObjetivoAhorroController extends Controller
 
     public function indexMostrar()
     {
-       
+        $userId = auth()->id();
 
-    $objetivos = ObjetivoAhorro::where('user_id', auth()->id())->get();
+        // Calcular saldo disponible
+        $totalIngresos      = Ingreso::where('user_id', $userId)->sum('monto');
+        $totalPresupuestos  = Presupuesto::where('user_id', $userId)->sum('monto');
+        $totalGastos        = Gasto::where('user_id', $userId)->sum('monto');
+        $totalAhorros       = \App\Models\ObjetivoAhorro::where('user_id', $userId)->sum('monto_ahorrado');
 
+        $saldoDisponible = $totalIngresos - $totalPresupuestos - $totalGastos - $totalAhorros;
 
-    return view('Ahorro', compact('objetivos'));
-
-
-
+        return view('Ahorro', compact('saldoDisponible'));
     }
-    
+
+
     // ✅ Registrar un nuevo objetivo
-     public function index()
+    public function index()
     {
         $objetivos = ObjetivoAhorro::where('user_id', Auth::id())->get();
 
@@ -35,6 +41,21 @@ class ObjetivoAhorroController extends Controller
     }
     public function store(Request $request)
 {
+    // ✅ Validar límite de objetivos (máximo 100)
+    $objetivosCount = ObjetivoAhorro::where('user_id', Auth::id())->count();
+    if ($objetivosCount >= 100) {
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Has alcanzado el límite máximo de 100 objetivos.'
+            ], 422);
+        }
+        
+        return redirect()
+            ->route('ahorro')
+            ->with('error', 'Has alcanzado el límite máximo de 100 objetivos.');
+    }
+
     $request->validate([
         'nombre'      => 'required|string|max:255',
         'monto'       => 'required|numeric|min:1',
@@ -50,7 +71,7 @@ class ObjetivoAhorroController extends Controller
         'fecha_hasta' => $request->fecha_hasta,
     ]);
 
-     // ✅ Si la petición viene de fetch/ajax, responder JSON
+    // ✅ Si la petición viene de fetch/ajax, responder JSON
     if ($request->ajax()) {
         return response()->json([
             'status' => 'ok',
@@ -58,27 +79,29 @@ class ObjetivoAhorroController extends Controller
         ]);
     }
 
-    return redirect()->route('objetivos.nuevo')->with('success', 'Objetivo creado con éxito');
+    return redirect()
+        ->route('ahorro')
+        ->with('success', 'Objetivo guardado con éxito.');
 }
 
-public function update(Request $request, $id)
-{
-    $objetivo = ObjetivoAhorro::where('user_id', Auth::id())->findOrFail($id);
+    public function update(Request $request, $id)
+    {
+        $objetivo = ObjetivoAhorro::where('user_id', Auth::id())->findOrFail($id);
 
-    $request->validate([
-        'nombre'      => 'required|string|max:255',
-        'monto'       => 'required|numeric|min:1',
-        'fecha_desde' => 'required|date',
-        'fecha_hasta' => 'required|date|after_or_equal:fecha_desde',
-    ]);
+        $request->validate([
+            'nombre'      => 'required|string|max:255',
+            'monto'       => 'required|numeric|min:1',
+            'fecha_desde' => 'required|date',
+            'fecha_hasta' => 'required|date|after_or_equal:fecha_desde',
+        ]);
 
-    $objetivo->update($request->only(['nombre', 'monto', 'fecha_desde', 'fecha_hasta']));
+        $objetivo->update($request->only(['nombre', 'monto', 'fecha_desde', 'fecha_hasta']));
 
-    return response()->json([
-        'message'  => 'Objetivo actualizado con éxito',
-        'objetivo' => $objetivo,
-    ]);
-}
+        return response()->json([
+            'message'  => 'Objetivo actualizado con éxito',
+            'objetivo' => $objetivo,
+        ]);
+    }
 
 
     // ✅ Eliminar un objetivo
@@ -91,6 +114,11 @@ public function update(Request $request, $id)
             'message' => 'Objetivo eliminado con éxito'
         ]);
     }
+    public function count()
+{
+    $count = ObjetivoAhorro::where('user_id', Auth::id())->count();
+    return response()->json(['count' => $count]);
+}
 }
 
 /* Crear objetivo de ahorro - backend - correctamente funcional */

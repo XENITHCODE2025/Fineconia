@@ -286,7 +286,7 @@
 
 /* Botón */
 .goal-card .btn-goal {
-  background-color: #a3d4dd;
+  background-color: #2d5d63;
   border: none;
   padding: 10px 25px;
   border-radius: 20px;
@@ -294,4 +294,174 @@
   font-weight: 600;
   margin-top: 10px;
   cursor: pointer;
+}
+
+/* ---- Modal Abonar personalizado ---- */
+#modalAbonar .modal-content {
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#modalAbonar .modal-header {
+  background: #2a4145;
+  color: #fff;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+#modalAbonar .modal-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+#modalAbonar .btn-dark {
+  background-color: #427F2B;
+  border: none;
+}
+
+#modalAbonar .btn-dark:hover {
+  background-color: #427F2B;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Open+Sans&display=swap');
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.goal-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.goal-counter {
+  font-family: 'Roboto Slab', serif;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.custom-limite-modal {
+  border-radius: 12px;
+  background-color: #ffffff;
+  padding: 30px;
+}
+
+.custom-limite-modal .modal-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+.custom-limite-modal .btn-dark {
+  background-color: #2a4145;
+  border-radius: 20px;
+  padding: 10px 25px;
+  border: none;
+  font-weight: 600;
+}
+
+.titulo-objetivos {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: #2d555d;
+  color: white;
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.titulo-objetivos h2,
+.titulo-objetivos .contador {
+  margin: 0;
+  font-size: 2.7rem; /* Mismo tamaño para ambos */
+  font-weight: bold;
+}
+
+#goals-container {
+  padding: 20px;
+  background-color: #2d555d;
+  max-height: 550px;
+  overflow-y: auto;
+
+  /* Oculta la scrollbar (pero mantiene el scroll funcional) */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.goal-card {
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.goal-badge {
+  position: absolute;
+  top: 0;
+  right: 0; /* Cambiado de left: 0 a right: 0 */
+  background-color: #fff;
+  color: #2d555d;
+  font-weight: bold;
+  font-size: 0.85rem;
+  padding: 5px 8px;
+  border-top-right-radius: 10px; /* Cambiar la esquina redondeada */
+  border-bottom-left-radius: 10px; /* Para que coincida con el nuevo lado */
+}
+
+#contador-objetivos {
+  cursor: default;
+}
+
+.titulo {
+  cursor: default;
+}
+
+#modalAbonar .btn-secondary {
+  background-color: #DE3B3B;
+  color: rgb(255, 255, 255);
+  border: none;
+  font-weight: 600;
+}
+
+#modalAbonar .btn-secondary:hover {
+  background-color: #DE3B3B;
+}
+
+input.form-control.is-invalid,
+input.form-control.is-valid {
+  background-image: none !important;
+}
+
+.roboto-slab {
+  font-family: 'Roboto Slab', serif;
+}
+
+h5 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; /* 700 = Bold */
+}
+
+/* Subtítulos y textos secundarios del modal Abonar */
+#modalAbonar label,
+#modalAbonar p,
+#modalAbonar .modal-text {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400; /* Regular */
+  color: #000000;   /* Negro */
+}
+
+/* Título del modal Abonar */
+#modalAbonar .modal-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; /* Bold */
+  color: #FFFFFF;   /* Blanco */
 }

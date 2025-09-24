@@ -275,9 +275,14 @@
       });
     });
 
-    // ✅ Botón Cancelar
-    btnCancelar.addEventListener('click', function () {
-      if (hayCamposConDatos()) {
+    // ✅ Botón Cancelar con confirmación
+btnCancelar.addEventListener('click', function () {
+  if (hayCamposConDatos()) {
+
+    alertify.confirm(
+      "¿Está seguro que desea cancelar?",
+      function () {
+        // ✅ Botón Sí: limpiar formulario
         nombre.value = '';
         monto.value = '';
         desde.value = '';
@@ -286,8 +291,7 @@
         Object.keys(campoInteractuado).forEach(key => {
           campoInteractuado[key] = false;
         });
-        
-        // Resetear los errores mostrados
+
         Object.keys(erroresMostrados).forEach(key => {
           erroresMostrados[key] = false;
         });
@@ -304,8 +308,29 @@
 
         guardarBtn.disabled = true;
         btnCancelar.disabled = true;
+
+        alertify.success('Acción cancelada');
+      },
+    )
+    .set('labels', {ok:'Sí', cancel:'No'})
+    .set('closable', true) // permite cerrar con X
+    .set('title', '')      // header vacío
+    .set('onclose', function () {
+      // ✅ Solo mensaje si se cierra con X
+      const dialog = document.querySelector('.ajs-dialog');
+      if (dialog && !dialog.dataset.cerradoPorBoton) {
+        alertify.error('Acción cancelada');
       }
     });
+
+    // ✅ Marcar que se cerró por botón para que onclose no lo vuelva a disparar
+    const okBtn = document.querySelector('.ajs-ok');
+    const cancelBtn = document.querySelector('.ajs-cancel');
+
+    okBtn.onclick = () => document.querySelector('.ajs-dialog').dataset.cerradoPorBoton = true;
+    cancelBtn.onclick = () => document.querySelector('.ajs-dialog').dataset.cerradoPorBoton = true;
+  }
+});
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();

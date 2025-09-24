@@ -349,3 +349,72 @@ input.success {
   font-size: 18px;              /* Ajusta según necesites */
   line-height: 1.4;
 }
+
+/* ✅ Bajar el confirm */
+.alertify .ajs-dialog {
+  border-radius: 16px !important;
+  overflow: hidden;
+  top: 150px !important; /* ⬇ más abajo en la pantalla */
+}
+
+/* ✅ Header con más altura (para la X) */
+.alertify .ajs-header {
+  background-color: #31565e !important;
+  color: #fff !important;
+  font-weight: 600;
+  min-height: 50px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* ✅ Botón Sí (rojo) */
+.alertify .ajs-footer .ajs-buttons .ajs-ok {
+  background-color: #CB3737 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  padding: 6px 14px;
+  border: none !important;
+}
+
+/* ✅ Botón No (azul verdoso) */
+.alertify .ajs-footer .ajs-buttons .ajs-cancel {
+  background-color: #31565E !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  padding: 6px 14px;
+  border: none !important;
+}
+
+/* ✅ Estilo para la X */
+.alertify .ajs-closer {
+  color: #fff !important;
+  font-size: 26px !important;
+  position: absolute !important;
+  right: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%);
+  opacity: 0.9 !important;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* ✅ Hover de la X */
+.alertify .ajs-closer:hover {
+  color: #CB3737 !important;
+  transform: scale(1.3);
+}
+
+/* ✅ Solo para los cuadros de AlertifyJS */
+.ajs-dialog,
+.ajs-header,
+.ajs-body,
+.ajs-footer,
+.ajs-content,
+.ajs-message,
+.ajs-button,
+.ajs-ok,
+.ajs-cancel {
+  font-family: 'Open Sans', sans-serif !important;
+  font-weight: 400; /* Regular */
+}

@@ -54,6 +54,24 @@
     <section class="consejos-grid">
       <!-- Lado izquierdo: categorías -->
       <div class="categorias">
+<section class="filtro-consejos">
+  <!-- Botón de categorías -->
+  <select id="filtro-categoria">
+    <option value="todas">Categorías</option>
+    <option value="presupuesto">Presupuesto</option>
+    <option value="compras">Compras Inteligentes</option>
+    <option value="energia">Energía y Servicio</option>
+    <option value="metas">Metas de ahorro</option>
+    <option value="familiar">Familiar</option>
+  </select>
+
+  <!-- Caja de búsqueda con mensaje de error -->
+  <div class="busqueda-container">
+    <input type="text" id="buscador-consejos" placeholder="Buscar consejo..." />
+    <p id="mensaje-error" class="mensaje-error"></p>
+  </div>
+</section>
+
 
         <!-- Presupuesto -->
        
@@ -267,5 +285,69 @@ document.querySelectorAll('.consejos-lista li').forEach(item => {
 
 
   </script>
+
+  <script>
+const filtroCategoria = document.getElementById('filtro-categoria');
+const buscador = document.getElementById('buscador-consejos');
+const mensajeError = document.getElementById('mensaje-error');
+const todasLasCategorias = document.querySelectorAll('.consejos-lista');
+const tarjeta = document.getElementById('tarjeta-contenido');
+
+function ejecutarBusqueda() {
+  const categoriaSeleccionada = filtroCategoria.value;
+  const textoBusqueda = buscador.value.trim().toLowerCase();
+
+  // Validación campo vacío
+  if (!textoBusqueda) {
+    mensajeError.textContent = "Ingrese al menos una palabra";
+    mensajeError.classList.add("visible");
+    return;
+  } else {
+    mensajeError.classList.remove("visible");
+  }
+
+  let resultados = [];
+
+  todasLasCategorias.forEach(lista => {
+    const cat = lista.dataset.categoria;
+
+    // Filtrar por categoría seleccionada
+    if (categoriaSeleccionada === 'todas' || categoriaSeleccionada === cat) {
+      lista.querySelectorAll('li').forEach(li => {
+        const titulo = li.dataset.titulo?.toLowerCase() || "";
+        const descripcion = li.dataset.descripcion?.toLowerCase() || "";
+
+        if (titulo.includes(textoBusqueda) || descripcion.includes(textoBusqueda)) {
+          resultados.push({
+            titulo: li.dataset.titulo,
+            descripcion: li.dataset.descripcion
+          });
+        }
+      });
+    }
+  });
+
+  // Mostrar resultados
+  if (resultados.length > 0) {
+    tarjeta.innerHTML = `
+      <h3 id="consejo-titulo">Resultados de la búsqueda:</h3>
+      <ul class="subconsejos-list">
+        ${resultados.map(r => `<li><strong>${r.titulo}:</strong> ${r.descripcion}</li>`).join('')}
+      </ul>
+    `;
+  } else {
+    tarjeta.innerHTML = `<h3 id="consejo-titulo">No se han encontrado resultados para su búsqueda</h3>`;
+  }
+}
+
+// Ejecutar búsqueda al presionar Enter
+buscador.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    ejecutarBusqueda();
+  }
+});
+</script>
+
 </body>
 </html>

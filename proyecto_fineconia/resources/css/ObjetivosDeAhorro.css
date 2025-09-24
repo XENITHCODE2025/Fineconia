@@ -343,21 +343,23 @@ input.success {
   font-family: 'Poppins', sans-serif;
 }
 
+/* Footer links */
 .footer-links a {
   color: white;
-  text-decoration: underline;   /* 🔹 Subrayado como en la imagen */
-  font-size: 18px;              /* Ajusta según necesites */
+  text-decoration: underline;   /* Subrayado */
+  font-size: 18px;
   line-height: 1.4;
 }
 
-/* ✅ Bajar el confirm */
+/* Contenedor principal del diálogo */
 .alertify .ajs-dialog {
   border-radius: 16px !important;
   overflow: hidden;
-  top: 150px !important; /* ⬇ más abajo en la pantalla */
+  top: 150px !important; /* más abajo en la pantalla */
+  border: 0.5px solid #000 !important; /* borde negro */
 }
 
-/* ✅ Header con más altura (para la X) */
+/* Header */
 .alertify .ajs-header {
   background-color: #31565e !important;
   color: #fff !important;
@@ -369,7 +371,13 @@ input.success {
   position: relative;
 }
 
-/* ✅ Botón Sí (rojo) */
+/* Cuerpo del diálogo */
+.alertify .ajs-body {
+  text-align: center !important; /* centra el texto */
+  font-size: 16px; /* opcional, ajustar tamaño */
+}
+
+/* Botón Sí (rojo) */
 .alertify .ajs-footer .ajs-buttons .ajs-ok {
   background-color: #CB3737 !important;
   color: #fff !important;
@@ -378,7 +386,7 @@ input.success {
   border: none !important;
 }
 
-/* ✅ Botón No (azul verdoso) */
+/* Botón No (azul verdoso) */
 .alertify .ajs-footer .ajs-buttons .ajs-cancel {
   background-color: #31565E !important;
   color: #fff !important;
@@ -387,7 +395,7 @@ input.success {
   border: none !important;
 }
 
-/* ✅ Estilo para la X */
+/* Estilo para la X (cerrar) */
 .alertify .ajs-closer {
   color: #fff !important;
   font-size: 26px !important;
@@ -399,13 +407,13 @@ input.success {
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
-/* ✅ Hover de la X */
+/* Hover de la X */
 .alertify .ajs-closer:hover {
   color: #CB3737 !important;
   transform: scale(1.3);
 }
 
-/* ✅ Solo para los cuadros de AlertifyJS */
+/* Tipografía general para todos los elementos de AlertifyJS */
 .ajs-dialog,
 .ajs-header,
 .ajs-body,

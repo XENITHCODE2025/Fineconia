@@ -292,44 +292,38 @@ const mensajeError = document.getElementById('mensaje-error');
 const todasLasCategorias = document.querySelectorAll('.consejos-lista');
 const tarjeta = document.getElementById('tarjeta-contenido');
 
-// Cambia a false si prefieres que coincida con ANY (OR) en lugar de ALL (AND)
-const matchAllKeywords = true;
+// Configuración: true = todas las palabras deben coincidir (AND), false = al menos una (OR)
+const modoAND = true;
 
-// Normaliza texto: quita acentos, deja minúsculas y elimina puntuación extra
+// Normaliza texto: quita acentos, minúsculas, limpia espacios
 function normalizeText(s) {
   return String(s || '')
-    .normalize('NFD')                         // separar letras + diacríticos
-    .replace(/[\u0300-\u036f]/g, '')         // quitar diacríticos
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, ' ')            // quitar puntuación (deja espacios)
     .replace(/\s+/g, ' ')
     .trim();
 }
 
-// Escape para evitar inyección al insertar HTML (si usas innerHTML)
-function escapeHtml(str) {
-  return String(str || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+// Resalta coincidencias en el texto
+function resaltarCoincidencias(textoOriginal, palabrasClave) {
+  let resultado = textoOriginal;
+  palabrasClave.forEach(p => {
+    if (p) {
+      const regex = new RegExp(`(${p})`, 'gi');
+      resultado = resultado.replace(regex, "<mark>$1</mark>");
+    }
+  });
+  return resultado;
 }
 
 function ejecutarBusqueda() {
   const categoriaSeleccionada = filtroCategoria.value || 'todas';
-  const textoRaw = buscador.value || '';
-  const textoBusquedaNormalized = normalizeText(textoRaw);
+  const textoBusqueda = normalizeText(buscador.value);
 
-  // dividir en palabras clave
-  const palabrasClave = textoBusquedaNormalized.split(/\s+/).filter(Boolean);
-
-  // Mostrar error si no hay palabra (pero igual limpiamos los campos después)
-  if (palabrasClave.length === 0) {
+  if (!textoBusqueda) {
     mensajeError.textContent = "Ingrese al menos una palabra";
     mensajeError.classList.add("visible");
-
-    // limpiar campos según requisito (siempre limpiar al presionar Enter)
     buscador.value = "";
     filtroCategoria.value = "todas";
     return;
@@ -337,53 +331,45 @@ function ejecutarBusqueda() {
     mensajeError.classList.remove("visible");
   }
 
+  const palabrasClave = textoBusqueda.split(" ").filter(Boolean);
   const resultados = [];
 
   todasLasCategorias.forEach(lista => {
-    const cat = lista.dataset.categoria || lista.getAttribute('data-categoria') || '';
+    const cat = lista.dataset.categoria || "";
 
     if (categoriaSeleccionada === 'todas' || categoriaSeleccionada === cat) {
       lista.querySelectorAll('li').forEach(li => {
-        // Fallback: usa data-* si existe, si no toma el textContent del <li> o subelementos
-        const tituloRaw = li.dataset.titulo || li.getAttribute('data-titulo') ||
-                          (li.querySelector('.titulo') ? li.querySelector('.titulo').textContent : '') ||
-                          li.textContent || '';
-        const descripcionRaw = li.dataset.descripcion || li.getAttribute('data-descripcion') ||
-                               (li.querySelector('.descripcion') ? li.querySelector('.descripcion').textContent : '') ||
-                               '';
+        const tituloRaw = li.dataset.titulo || "";
+        const descripcionRaw = li.dataset.descripcion || "";
 
         const fuente = normalizeText(`${tituloRaw} ${descripcionRaw}`);
 
-        // AND (todas) o OR (cualquiera)
-        const coincide = matchAllKeywords
+        const coincide = modoAND
           ? palabrasClave.every(p => fuente.includes(p))
           : palabrasClave.some(p => fuente.includes(p));
 
         if (coincide) {
           resultados.push({
-            titulo: tituloRaw.trim(),
-            descripcion: descripcionRaw.trim()
+            titulo: resaltarCoincidencias(tituloRaw, palabrasClave),
+            descripcion: resaltarCoincidencias(descripcionRaw, palabrasClave)
           });
         }
       });
     }
   });
 
-  // Mostrar resultados con contador
   if (resultados.length > 0) {
     tarjeta.innerHTML = `
       <h3 id="consejo-titulo">Resultados de la búsqueda (${resultados.length}):</h3>
       <ul class="subconsejos-list">
-        ${resultados.map(r =>
-          `<li><strong>${escapeHtml(r.titulo)}:</strong> ${escapeHtml(r.descripcion)}</li>`
-        ).join('')}
+        ${resultados.map(r => `<li><strong>${r.titulo}:</strong> ${r.descripcion}</li>`).join('')}
       </ul>
     `;
   } else {
-    tarjeta.innerHTML = `<h3 id="consejo-titulo">No se han encontrado resultados para tu búsqueda</h3>`;
+    tarjeta.innerHTML = `<h3 id="consejo-titulo">No se han encontrado resultados para su búsqueda</h3>`;
   }
 
-  // ✅ Limpiar los campos siempre (independientemente de si hubo resultados)
+  // Limpiar campos
   buscador.value = "";
   filtroCategoria.value = "todas";
 }
@@ -395,12 +381,6 @@ buscador.addEventListener('keydown', e => {
     ejecutarBusqueda();
   }
 });
-
-// Si tienes un botón de buscar (id="btn-buscar"), conectar también
-const btnBuscar = document.getElementById('btn-buscar');
-if (btnBuscar) {
-  btnBuscar.addEventListener('click', ejecutarBusqueda);
-}
 </script>
 
 

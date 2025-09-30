@@ -246,10 +246,10 @@ body {
 }
 
 .tarjeta h3 {
-  color: #2eb872;
+  color: #427f2b;
   font-size: 18px;
   margin-bottom: 15px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-weight: bold;
 }
 
@@ -350,4 +350,80 @@ body {
 .consejos-lista.visible::-webkit-scrollbar-thumb {
   background-color: #ccc;
   border-radius: 4px;
+
+}
+
+.filtro-consejos {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  max-width: 1400px; /* antes era 1200px */
+  width: 100%;        /* que ocupe todo el ancho disponible */
+  margin: 0 auto 20px auto;
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+/* Contenedor de búsqueda dentro del filtro */
+.busqueda-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Ambos elementos mismos tamaños y estilo */
+#filtro-categoria,
+#buscador-consejos {
+  flex: 1.5;
+  height: 42px;
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: 1px solid #000; 
+  background-color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0px 4px 6px -2px rgba(0, 0, 0, 0.25); /* sombreado inferior */
+}
+
+/* Sombra extra al enfocarse */
+#filtro-categoria:focus,
+#buscador-consejos:focus {
+  outline: none;
+  border-color: #31565e;
+  box-shadow: 0px 6px 10px -2px rgba(49, 86, 94, 0.35);
+}
+
+/* Flecha personalizada del select */
+#filtro-categoria {
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg fill="%2331565e" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat;
+  background-position: calc(100% - 10px) center;
+  background-size: 16px;
+}
+
+/* Mensaje de error centrado debajo de la búsqueda */
+.mensaje-error {
+  font-size: 12px;
+  color: #DE3B3B;
+  margin-top: 5px;
+  min-height: 18px;
+  text-align: center;
+  visibility: hidden;
+}
+
+.mensaje-error.visible {
+  visibility: visible;
+}
+
+/* Color de resaltado personalizado para coincidencias */
+mark {
+  background-color: #F9B924; /* amarillo/naranja que pediste */
+  color: #000;               /* texto negro para buen contraste */
+  padding: 0 2px;
+  border-radius: 3px;
 }

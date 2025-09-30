@@ -54,6 +54,24 @@
     <section class="consejos-grid">
       <!-- Lado izquierdo: categorías -->
       <div class="categorias">
+<section class="filtro-consejos">
+  <!-- Botón de categorías -->
+  <select id="filtro-categoria">
+    <option value="todas">Categorías</option>
+    <option value="presupuesto">Presupuesto</option>
+    <option value="compras">Compras Inteligentes</option>
+    <option value="energia">Energía y Servicio</option>
+    <option value="metas">Metas de ahorro</option>
+    <option value="familiar">Familiar</option>
+  </select>
+
+  <!-- Caja de búsqueda con mensaje de error -->
+  <div class="busqueda-container">
+    <input type="text" id="buscador-consejos" placeholder="Buscar consejo..." />
+    <p id="mensaje-error" class="mensaje-error"></p>
+  </div>
+</section>
+
 
         <!-- Presupuesto -->
        
@@ -267,5 +285,104 @@ document.querySelectorAll('.consejos-lista li').forEach(item => {
 
 
   </script>
+<script>
+const filtroCategoria = document.getElementById('filtro-categoria');
+const buscador = document.getElementById('buscador-consejos');
+const mensajeError = document.getElementById('mensaje-error');
+const todasLasCategorias = document.querySelectorAll('.consejos-lista');
+const tarjeta = document.getElementById('tarjeta-contenido');
+
+// Configuración: true = todas las palabras deben coincidir (AND), false = al menos una (OR)
+const modoAND = true;
+
+// Normaliza texto: quita acentos, minúsculas, limpia espacios
+function normalizeText(s) {
+  return String(s || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Resalta coincidencias en el texto
+function resaltarCoincidencias(textoOriginal, palabrasClave) {
+  let resultado = textoOriginal;
+  palabrasClave.forEach(p => {
+    if (p) {
+      const regex = new RegExp(`(${p})`, 'gi');
+      resultado = resultado.replace(regex, "<mark>$1</mark>");
+    }
+  });
+  return resultado;
+}
+
+function ejecutarBusqueda() {
+  const categoriaSeleccionada = filtroCategoria.value || 'todas';
+  const textoBusqueda = normalizeText(buscador.value);
+
+  if (!textoBusqueda) {
+    mensajeError.textContent = "Ingrese al menos una palabra";
+    mensajeError.classList.add("visible");
+    buscador.value = "";
+    filtroCategoria.value = "todas";
+    return;
+  } else {
+    mensajeError.classList.remove("visible");
+  }
+
+  const palabrasClave = textoBusqueda.split(" ").filter(Boolean);
+  const resultados = [];
+
+  todasLasCategorias.forEach(lista => {
+    const cat = lista.dataset.categoria || "";
+
+    if (categoriaSeleccionada === 'todas' || categoriaSeleccionada === cat) {
+      lista.querySelectorAll('li').forEach(li => {
+        const tituloRaw = li.dataset.titulo || "";
+        const descripcionRaw = li.dataset.descripcion || "";
+
+        const fuente = normalizeText(`${tituloRaw} ${descripcionRaw}`);
+
+        const coincide = modoAND
+          ? palabrasClave.every(p => fuente.includes(p))
+          : palabrasClave.some(p => fuente.includes(p));
+
+        if (coincide) {
+          resultados.push({
+            titulo: resaltarCoincidencias(tituloRaw, palabrasClave),
+            descripcion: resaltarCoincidencias(descripcionRaw, palabrasClave)
+          });
+        }
+      });
+    }
+  });
+
+  if (resultados.length > 0) {
+    tarjeta.innerHTML = `
+      <h3 id="consejo-titulo">Resultados de la búsqueda (${resultados.length}):</h3>
+      <ul class="subconsejos-list">
+        ${resultados.map(r => `<li><strong>${r.titulo}:</strong> ${r.descripcion}</li>`).join('')}
+      </ul>
+    `;
+  } else {
+    tarjeta.innerHTML = `<h3 id="consejo-titulo">No se han encontrado resultados para su búsqueda</h3>`;
+  }
+
+  // Limpiar campos
+  buscador.value = "";
+  filtroCategoria.value = "todas";
+}
+
+// Ejecutar búsqueda al presionar Enter
+buscador.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    ejecutarBusqueda();
+  }
+});
+</script>
+
+
 </body>
 </html>

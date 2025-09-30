@@ -15,6 +15,14 @@
   <!-- Fuente Open Sans -->
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 
+  <!-- Alertify CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<!-- Alertify Theme (opcional) -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+<!-- Alertify JS -->
+
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
   <!-- Archivo de estilos externo -->
   @vite('resources/css/GraficasDeObjetivos.css')
 
@@ -67,6 +75,10 @@
       </button>
     </div>
 
+    <!-- Mensaje si no hay metas en el rango -->
+    <div id="mensaje-sin-metas" style="display: none; font-family: 'Open Sans', sans-serif; color: gray; text-align: center;">
+        No hay metas de ahorro en este rango de tiempo.
+    </div>
 
     <div id="graficas-container" class="graficas-grid"></div>
 
@@ -197,7 +209,206 @@
     }
   </script>
 
+ <script>
+  // Validación de fechas con condiciones específicas
+  function validarFechas({ mostrarError = false } = {}) {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+    const desde = new Date(desdeInput.value);
+    const hasta = new Date(hastaInput.value);
+    let valido = true;
 
+    // Reset estilos
+    [desdeInput, hastaInput].forEach(input => {
+      input.classList.remove('input-error', 'input-success');
+    });
+
+    // Solo validar si ambas fechas están completas
+    if (desdeInput.value && hastaInput.value) {
+      if (hasta < desde) {
+        if (mostrarError) {
+          alertify.error("La fecha Hasta debe ser mayor o igual a la fecha Desde");
+        }
+        desdeInput.classList.add('input-error');
+        hastaInput.classList.add('input-error');
+        valido = false;
+      } else {
+        desdeInput.classList.add('input-success');
+        hastaInput.classList.add('input-success');
+      }
+    }
+
+    return valido;
+  }
+
+  // Cargar metas después de validar fechas correctamente
+  async function cargarMetas() {
+    if (!validarFechas({ mostrarError: true })) return;
+
+    const contenedor = document.getElementById('graficas-container');
+    const sinMetas = document.getElementById('sin-metas');
+    const sinRango = document.getElementById('sin-rango');
+    contenedor.innerHTML = '';
+    sinMetas.style.display = 'none';
+    sinRango.style.display = 'none';
+
+    try {
+      const desde = document.getElementById('fecha_desde').value;
+      const hasta = document.getElementById('fecha_hasta').value;
+      const params = new URLSearchParams();
+      if (desde) params.append('desde', desde);
+      if (hasta) params.append('hasta', hasta);
+
+      const res = await fetch('/api/objetivos?' + params.toString());
+      const datos = await res.json();
+
+      if (!datos || datos.length === 0) {
+        sinRango.style.display = 'block';
+        return;
+      }
+
+      datos.forEach(meta => crearTarjeta(meta));
+    } catch (error) {
+      console.error('Error al cargar las metas:', error);
+      sinMetas.style.display = 'block';
+    }
+  }
+
+  // Limpiar fechas y estilos
+  function limpiarFiltro() {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    desdeInput.value = '';
+    hastaInput.value = '';
+
+    // Limpiar estilos visuales
+    desdeInput.classList.remove('input-error', 'input-success');
+    hastaInput.classList.remove('input-error', 'input-success');
+
+    cargarMetas();
+  }
+
+  // Agregar listeners para validar automáticamente al cambiar fechas
+  document.addEventListener('DOMContentLoaded', () => {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    desdeInput.addEventListener('change', () => validarFechas({ mostrarError: true }));
+    hastaInput.addEventListener('change', () => validarFechas({ mostrarError: true }));
+  });
+  
+</script>
+
+<script>
+  async function reiniciarGraficas() {
+    const contenedor = document.getElementById('graficas-container');
+    const sinMetas = document.getElementById('sin-metas');
+    const sinRango = document.getElementById('sin-rango');
+
+    contenedor.innerHTML = '';
+    sinMetas.style.display = 'none';
+    sinRango.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/objetivos');
+      const datos = await res.json();
+
+      if (!datos || datos.length === 0) {
+        sinMetas.style.display = 'block';
+        return;
+      }
+
+      datos.forEach(meta => crearTarjeta(meta));
+    } catch (error) {
+      console.error('Error al reiniciar gráficas:', error);
+      sinMetas.style.display = 'block';
+    }
+  }
+
+  async function validarYReiniciarSiEsNecesario() {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    const desdeStr = desdeInput.value.trim();
+    const hastaStr = hastaInput.value.trim();
+
+    if (!desdeStr || !hastaStr) {
+      // No hacer nada si las fechas están incompletas
+      return;
+    }
+
+    const desde = new Date(desdeStr);
+    const hasta = new Date(hastaStr);
+
+    if (hasta < desde) {
+      // Solo reiniciar sin mostrar mensaje porque ya tienes otro script que lo hace
+      await reiniciarGraficas();
+    }
+  }
+
+  async function cargarMetasConFiltro() {
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    const desdeStr = desdeInput.value.trim();
+    const hastaStr = hastaInput.value.trim();
+
+    const contenedor = document.getElementById('graficas-container');
+    const sinMetas = document.getElementById('sin-metas');
+    const sinRango = document.getElementById('sin-rango');
+
+    contenedor.innerHTML = '';
+    sinMetas.style.display = 'none';
+    sinRango.style.display = 'none';
+
+    if (!desdeStr || !hastaStr) {
+      alertify.error("Por favor, ingresa ambas fechas para filtrar.");
+      return;
+    }
+
+    const desde = new Date(desdeStr);
+    const hasta = new Date(hastaStr);
+
+    if (hasta < desde) {
+      // Aquí sí podrías mostrar el mensaje, pero si ya lo tienes afuera, solo reinicia
+      await reiniciarGraficas();
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/objetivos?desde=${desdeStr}&hasta=${hastaStr}`);
+      const datos = await res.json();
+
+      if (!datos || datos.length === 0) {
+        sinRango.style.display = 'block';
+        return;
+      }
+
+      datos.forEach(meta => crearTarjeta(meta));
+    } catch (error) {
+      console.error('Error al cargar las metas:', error);
+      sinMetas.style.display = 'block';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    reiniciarGraficas();
+
+    const desdeInput = document.getElementById('fecha_desde');
+    const hastaInput = document.getElementById('fecha_hasta');
+
+    desdeInput.addEventListener('change', validarYReiniciarSiEsNecesario);
+    hastaInput.addEventListener('change', validarYReiniciarSiEsNecesario);
+
+    const btnFiltrar = document.querySelector('button[onclick="cargarMetas()"], button[onclick]');
+    if (btnFiltrar) {
+      btnFiltrar.removeAttribute('onclick');
+      btnFiltrar.id = 'btn-filtrar';
+      btnFiltrar.addEventListener('click', cargarMetasConFiltro);
+    }
+  });
+</script>
 
 </body>
 

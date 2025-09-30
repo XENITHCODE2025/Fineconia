@@ -465,3 +465,33 @@ h5 {
   font-weight: 700; /* Bold */
   color: #FFFFFF;   /* Blanco */
 }
+
+#modalEliminarObjetivo,
+#modalEliminarObjetivo * {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+/* Icono Eliminar */
+.btn-eliminar {
+  color: #DE3B3B !important;      /* color rojo */
+  font-size: 24px;                /* tamaño del icono */
+  cursor: pointer;                /* indica que es clickeable */
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  transform: scale(1.2);          /* efecto ligero al pasar mouse */
+}
+
+/* Icono Actualizar */
+.btn-actualizar {
+  color: #3B75A8 !important;      /* color verde */
+  font-size: 24px;                /* tamaño del icono */
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.btn-actualizar:hover {
+  transform: scale(1.2);
+}
+

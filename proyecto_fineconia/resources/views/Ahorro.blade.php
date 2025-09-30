@@ -122,6 +122,76 @@
   </div>
 </div>
 
+<!-- Modal de Eliminación de Objetivo -->
+<div id="modalEliminarObjetivo" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background-color:rgba(0,0,0,0.4);
+  z-index:9999;
+  justify-content:center;
+  align-items:center;">
+  
+  <div style="
+    background-color:#fff;
+    border:1px solid #000;
+    border-radius:12px;
+    max-width:600px;  /* ahora más ancho */
+    width:90%;
+    font-family:'Open Sans',sans-serif;
+    color:#000;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;">
+    
+    <!-- HEADER -->
+    <div style="
+      background-color:#2A4145;
+      color:white;
+      padding:15px 20px;
+      text-align:center;
+      font-size:1.3em;
+      font-weight:bold;">
+      Confirmar eliminación
+    </div>
+    
+    <!-- BODY -->
+    <div id="mensajeEliminar" style="
+      padding:25px 20px;
+      text-align:center;
+      font-size:1em;">
+      ¿Está seguro que desea eliminar el objetivo?
+    </div>
+    
+    <!-- FOOTER -->
+    <div style="
+      display:flex;
+      justify-content:flex-end;  /* los botones a la derecha */
+      gap:15px;
+      padding:15px;
+      background-color:#f5f5f5;">
+      <button id="btnEliminarSi" style="
+        background-color:#CB3737;
+        color:white;
+        border:none;
+        border-radius:8px;
+        padding:10px 30px;
+        cursor:pointer;
+        min-width:100px;">Si</button>
+      <button id="btnEliminarNo" style="
+        background-color:#31565E;
+        color:white;
+        border:none;
+        border-radius:8px;
+        padding:10px 30px;
+        cursor:pointer;
+        min-width:100px;">No</button>
+    </div>
+    
+  </div>
+</div>
+
 <!-- Agrega Bootstrap Icons en tu <head> si no está -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -249,60 +319,70 @@ document.addEventListener('DOMContentLoaded', function () {
   let selectedGoal = null;
   let saldoUsuario = parseFloat({{$saldoDisponible}});
 
-  async function cargarObjetivos() {
-    try {
-      const res = await fetch(objetivosEndpoint);
-      const objetivos = await res.json();
-      const container = document.getElementById("goals-container");
-      const contador = document.getElementById("contador-objetivos");
+   async function cargarObjetivos() {
+  try {
+    const res = await fetch(objetivosEndpoint);
+    const objetivos = await res.json();
+    const container = document.getElementById("goals-container");
+    const contador = document.getElementById("contador-objetivos");
 
-      // Actualizar contador de objetivos
-      if (contador) contador.innerText = `${objetivos.length}/100`;
+    // Actualizar contador de objetivos
+    if (contador) contador.innerText = `${objetivos.length}/100`;
 
-      container.innerHTML = "";
+    container.innerHTML = "";
 
-      if (objetivos.length === 0) {
-        container.innerHTML = `<div class="alert alert-info text-center w-100">No tienes objetivos de ahorro registrados.</div>`;
-        return;
+    if (objetivos.length === 0) {
+      container.innerHTML = `<div class="alert alert-info text-center w-100">No tienes objetivos de ahorro registrados.</div>`;
+      return;
+    }
+
+    objetivos.forEach((goal, index) => {
+      const montoActual = parseFloat(goal.monto_ahorrado ?? 0);
+      const montoMeta = parseFloat(goal.monto ?? 0);
+      if (isNaN(montoMeta) || montoMeta === 0) return;
+
+      const progreso = (montoActual / montoMeta) * 100;
+      const card = document.createElement("div");
+      card.classList.add("goal-card", "position-relative", "p-3", "mb-3");
+      card.dataset.meta = montoMeta;
+      card.dataset.actual = montoActual;
+      card.dataset.id = goal.id;
+      card.dataset.nombre = goal.nombre;
+
+      let abonarBtn = "";
+      if (montoActual >= montoMeta) {
+        abonarBtn = `<button class="btn btn-success mt-2" disabled>Completado 🎉</button>`;
+      } else {
+        abonarBtn = `<button class="btn-goal btn btn-primary mt-2">Abonar</button>`;
       }
 
-      objetivos.forEach((goal, index) => {
-        const montoActual = parseFloat(goal.monto_ahorrado ?? 0);
-        const montoMeta = parseFloat(goal.monto ?? 0);
-        if (isNaN(montoMeta) || montoMeta === 0) return;
+      // Íconos en la esquina superior izquierda con nuevo color
+      const iconos = `
+        <div style="position:absolute; top:10px; left:10px; display:flex; gap:10px;">
+          <i class="bi bi-trash btn-eliminar" style="color:#2D555D; cursor:pointer; font-size:1.2rem;" title="Eliminar"></i>
+          <i class="bi bi-pencil-square btn-actualizar" style="color:#2D555D; cursor:pointer; font-size:1.2rem;" title="Actualizar"></i>
+        </div>
+      `;
 
-        const progreso = (montoActual / montoMeta) * 100;
-        const card = document.createElement("div");
-        card.classList.add("goal-card");
-        card.dataset.meta = montoMeta;
-        card.dataset.actual = montoActual;
-        card.dataset.id = goal.id;
+      card.innerHTML = `
+        ${iconos}
+        <div class="goal-badge">${index + 1}</div>
+        <h5>${goal.nombre}</h5>
+        <p>Cantidad abonada: $${montoActual.toLocaleString()} / Meta: $${montoMeta.toLocaleString()}</p>
+        <div class="progress">
+          <div class="progress-bar" style="width: ${Math.min(progreso, 100)}%"></div>
+        </div>
+        <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta + 'T12:00:00').toLocaleDateString()}</p>
+        ${abonarBtn}
+      `;
 
-        let boton = "";
-        if (montoActual >= montoMeta) {
-          boton = `<button class="btn btn-success mt-2" disabled>Completado 🎉</button>`;
-        } else {
-          boton = `<button class="btn-goal btn btn-primary mt-2">Abonar</button>`;
-        }
+      container.appendChild(card);
+    });
 
-        card.innerHTML = `
-          <div class="goal-badge">${index + 1}</div>
-          <h5>${goal.nombre}</h5>
-          <p>Cantidad abonada: $${montoActual.toLocaleString()} / Meta: $${montoMeta.toLocaleString()}</p>
-          <div class="progress">
-            <div class="progress-bar" style="width: ${Math.min(progreso, 100)}%"></div>
-          </div>
-          <p class="mt-2">FECHA LÍMITE: ${new Date(goal.fecha_hasta + 'T12:00:00').toLocaleDateString()}</p>
-          ${boton}
-        `;
-
-        container.appendChild(card);
-      });
-
-    } catch (error) {
-      console.error("Error cargando objetivos:", error);
-    }
+  } catch (error) {
+    console.error("Error cargando objetivos:", error);
   }
+}
 
   document.addEventListener("DOMContentLoaded", () => {
     cargarObjetivos();
@@ -568,6 +648,156 @@ cantidadInput.addEventListener("blur", () => {
 </script>
 
 
+<script>
+/*
+  📌 Script para manejar el comportamiento de los objetivos de ahorro:
+  - Abrir y cerrar modal de confirmación de eliminación.
+  - Lógica para eliminar un objetivo en backend.
+  - Redirección para actualizar un objetivo.
+  - Controla el scroll de la página cuando el modal está abierto.
+*/
+
+document.addEventListener("click", function(e){
+  const modal = document.getElementById("modalEliminarObjetivo");
+
+  // 👉 Abrir modal de eliminar
+  if(e.target && e.target.classList.contains("btn-eliminar")){
+    selectedGoal = e.target.closest(".goal-card"); // tarjeta seleccionada
+    const nombre = selectedGoal.dataset.nombre; // nombre del objetivo
+    document.getElementById("mensajeEliminar").innerText = 
+      `¿Está seguro que desea eliminar el objetivo "${nombre}" ?`;
+    modal.style.display = "flex";           // mostrar modal
+    document.body.style.overflow = "hidden"; // bloquear scroll
+  }
+
+  // 👉 Botón "Sí" (confirmar eliminar)
+  if(e.target && e.target.id === "btnEliminarSi"){
+    const goalId = selectedGoal.dataset.id; // id del objetivo
+    // Llamada a backend para eliminar objetivo
+    fetch(`/objetivos/${goalId}`, {
+      method: 'DELETE',
+      headers:{
+        'X-CSRF-TOKEN': '{{ csrf_token() }}' // protección CSRF en Laravel
+      }
+    }).then(res => {
+      if(res.ok){
+        selectedGoal.remove(); // quitar tarjeta del DOM
+        alertify.success("Objetivo de ahorro eliminado correctamente");
+      } else {
+        alertify.error("Error al eliminar objetivo");
+      }
+      modal.style.display = "none";   // cerrar modal
+      document.body.style.overflow = ""; // restaurar scroll
+    });
+  }
+
+  // 👉 Botón "No" (cancelar eliminación)
+  if(e.target && e.target.id === "btnEliminarNo"){
+    modal.style.display = "none";   // cerrar modal
+    document.body.style.overflow = ""; // restaurar scroll
+  }
+
+  // 👉 Botón actualizar (redirigir a formulario con datos)
+  if(e.target && e.target.classList.contains("btn-actualizar")){
+    selectedGoal = e.target.closest(".goal-card");
+
+    // Obtener datos del objetivo de la tarjeta
+    const goalId = selectedGoal.dataset.id;
+    const nombre = encodeURIComponent(selectedGoal.dataset.nombre);
+    const montoActual = encodeURIComponent(selectedGoal.dataset.actual);
+    const montoMeta = encodeURIComponent(selectedGoal.dataset.meta);
+    const fechaLimite = encodeURIComponent(
+      selectedGoal.querySelector("p.mt-2").innerText.replace("FECHA LÍMITE: ","")
+    );
+
+    // Redirigir con los datos en query string
+    window.location.href = 
+      `{{ route('objetivos.nuevo') }}?id=${goalId}&nombre=${nombre}&montoActual=${montoActual}&montoMeta=${montoMeta}&fechaLimite=${fechaLimite}`;
+  }
+});
+</script>
+
+<script>
+  // Función para limpiar completamente el modal de abonar
+  function limpiarModalAbonar() {
+    const inputCantidad = document.getElementById('cantidad');
+    const errorDiv = document.getElementById('cantidad-error');
+    const iconoValidacion = document.getElementById('icono-validacion');
+    const btnGuardar = document.getElementById('btnGuardarAbono');
+    const btnCancelar = document.getElementById('btnCancelarAbono');
+
+    // Resetear campos y estilos
+    inputCantidad.value = '';
+    inputCantidad.classList.remove('is-valid', 'is-invalid');
+    iconoValidacion.style.display = 'none';
+    errorDiv.style.display = 'none';
+
+    btnGuardar.disabled = true;
+    btnCancelar.disabled = true;
+  }
+
+  // Evento: Al mostrar el modal (abrir)
+  document.getElementById("modalAbonar").addEventListener("show.bs.modal", () => {
+    limpiarModalAbonar();
+  });
+
+  // Evento: Al ocultar el modal (cerrar)
+  document.getElementById("modalAbonar").addEventListener("hidden.bs.modal", () => {
+    limpiarModalAbonar();
+  });
+
+  // Evento: Validación en tiempo real
+  document.getElementById('cantidad').addEventListener('input', function () {
+    const inputCantidad = this;
+    const valor = parseFloat(inputCantidad.value);
+    const errorDiv = document.getElementById('cantidad-error');
+    const iconoValidacion = document.getElementById('icono-validacion');
+    const btnGuardar = document.getElementById('btnGuardarAbono');
+    const btnCancelar = document.getElementById('btnCancelarAbono');
+
+    // Si está vacío, limpiar validaciones
+    if (!inputCantidad.value.trim()) {
+      iconoValidacion.style.display = 'none';
+      inputCantidad.classList.remove('is-valid', 'is-invalid');
+      errorDiv.style.display = 'none';
+      btnGuardar.disabled = true;
+      btnCancelar.disabled = true;
+      return;
+    }
+
+    // Valor inválido
+    if (isNaN(valor) || valor <= 0) {
+      inputCantidad.classList.add('is-invalid');
+      inputCantidad.classList.remove('is-valid');
+
+      iconoValidacion.className = 'bi bi-x-circle-fill position-absolute top-50 translate-middle-y';
+      iconoValidacion.style.color = 'red';
+      iconoValidacion.style.right = '0.75rem';
+      iconoValidacion.style.fontSize = '1.2rem';
+      iconoValidacion.style.display = 'inline';
+
+      errorDiv.textContent = "La cantidad a abonar debe ser mayor a 0";
+      errorDiv.style.display = 'block';
+
+      btnGuardar.disabled = true;
+      btnCancelar.disabled = true;
+    } else {
+      // Valor válido
+      inputCantidad.classList.remove('is-invalid');
+      inputCantidad.classList.add('is-valid');
+
+      iconoValidacion.className = 'bi bi-check-circle-fill position-absolute top-50 translate-middle-y';
+      iconoValidacion.style.color = 'green';
+      iconoValidacion.style.right = '0.75rem';
+      iconoValidacion.style.fontSize = '1.2rem';
+      iconoValidacion.style.display = 'inline';
+
+      errorDiv.style.display = 'none';
+      btnGuardar.disabled = false;
+      btnCancelar.disabled = false;
+    }
+  });
+</script>
 
 </body>
 </html>

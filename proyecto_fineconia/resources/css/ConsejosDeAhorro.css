@@ -246,10 +246,10 @@ body {
 }
 
 .tarjeta h3 {
-  color: #2eb872;
+  color: #427f2b;
   font-size: 18px;
   margin-bottom: 15px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-weight: bold;
 }
 
@@ -379,7 +379,7 @@ body {
   height: 42px;
   padding: 10px 15px;
   border-radius: 12px;
-  border: 1px solid #000;
+  border: 1px solid #000; 
   background-color: #fff;
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
@@ -418,4 +418,12 @@ body {
 
 .mensaje-error.visible {
   visibility: visible;
+}
+
+/* Color de resaltado personalizado para coincidencias */
+mark {
+  background-color: #F9B924; /* amarillo/naranja que pediste */
+  color: #000;               /* texto negro para buen contraste */
+  padding: 0 2px;
+  border-radius: 3px;
 }

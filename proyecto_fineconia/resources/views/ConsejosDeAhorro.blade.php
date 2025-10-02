@@ -341,18 +341,49 @@ function ejecutarBusqueda() {
       lista.querySelectorAll('li').forEach(li => {
         const tituloRaw = li.dataset.titulo || "";
         const descripcionRaw = li.dataset.descripcion || "";
+        const subconsejosRaw = li.dataset.subconsejos || "[]";
 
-        const fuente = normalizeText(`${tituloRaw} ${descripcionRaw}`);
+        let subconsejosArray = [];
+        try {
+          subconsejosArray = JSON.parse(subconsejosRaw);
+        } catch (e) {
+          subconsejosArray = [];
+        }
 
-        const coincide = modoAND
-          ? palabrasClave.every(p => fuente.includes(p))
-          : palabrasClave.some(p => fuente.includes(p));
+        // Crear lista de coincidencias por línea
+        let coincidencias = [];
 
-        if (coincide) {
-          resultados.push({
-            titulo: resaltarCoincidencias(tituloRaw, palabrasClave),
-            descripcion: resaltarCoincidencias(descripcionRaw, palabrasClave)
-          });
+        // Título
+        const tituloNorm = normalizeText(tituloRaw);
+        const tituloCoincide = modoAND
+          ? palabrasClave.every(p => tituloNorm.includes(p))
+          : palabrasClave.some(p => tituloNorm.includes(p));
+        if (tituloCoincide) {
+          coincidencias.push(resaltarCoincidencias(tituloRaw, palabrasClave));
+        }
+
+        // Descripción
+        const descNorm = normalizeText(descripcionRaw);
+        const descCoincide = modoAND
+          ? palabrasClave.every(p => descNorm.includes(p))
+          : palabrasClave.some(p => descNorm.includes(p));
+        if (descCoincide) {
+          coincidencias.push(resaltarCoincidencias(descripcionRaw, palabrasClave));
+        }
+
+        // Subconsejos
+        subconsejosArray.forEach(s => {
+          const sNorm = normalizeText(s);
+          const subCoincide = modoAND
+            ? palabrasClave.every(p => sNorm.includes(p))
+            : palabrasClave.some(p => sNorm.includes(p));
+          if (subCoincide) {
+            coincidencias.push(resaltarCoincidencias(s, palabrasClave));
+          }
+        });
+
+        if (coincidencias.length > 0) {
+          resultados.push(coincidencias);
         }
       });
     }
@@ -360,13 +391,19 @@ function ejecutarBusqueda() {
 
   if (resultados.length > 0) {
     tarjeta.innerHTML = `
-      <h3 id="consejo-titulo">Resultados de la búsqueda (${resultados.length}):</h3>
+      <h3 id="consejo-titulo">Resultados de la búsqueda (${resultados.length} coincidencias):</h3>
+      <p class="palabra-buscada">Palabra buscada: <strong>"${buscador.value}"</strong></p>
       <ul class="subconsejos-list">
-        ${resultados.map(r => `<li><strong>${r.titulo}:</strong> ${r.descripcion}</li>`).join('')}
+        ${resultados.map(lineas => 
+          lineas.map(l => `<li>${l}</li>`).join('')
+        ).join('')}
       </ul>
     `;
   } else {
-    tarjeta.innerHTML = `<h3 id="consejo-titulo">No se han encontrado resultados para su búsqueda</h3>`;
+    tarjeta.innerHTML = `
+      <h3 id="consejo-titulo">No se han encontrado resultados para su búsqueda</h3>
+      <p class="palabra-buscada">Palabra buscada: <strong>"${buscador.value}"</strong></p>
+    `;
   }
 
   // Limpiar campos
@@ -382,6 +419,9 @@ buscador.addEventListener('keydown', e => {
   }
 });
 </script>
+
+
+
 
 
 </body>

@@ -156,6 +156,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/objetivos', [ObjetivoAhorroController::class, 'index'])->name('objetivos.index');
     Route::post('/objetivos', [ObjetivoAhorroController::class, 'store'])->name('objetivos.store');
     Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
+    Route::put('/objetivos/{id}', [ObjetivoAhorroController::class, 'update'])->name('objetivos.update'); // Actualizar un objetivo
+    Route::delete('/objetivos/{id}', [ObjetivoAhorroController::class, 'destroy'])->name('objetivos.destroy'); // Eliminar un objetivo
+    // para ver lo que abonaste
+    Route::get('/objetivos/{id}/abonado', [AhorroController::class, 'getAbonado'])->name('objetivos.abonado');
+
+
+
     // Agregar esta ruta para verificar el conteo de objetivos
     Route::get('/objetivos/count', [ObjetivoAhorroController::class, 'count'])->name('objetivos.count');
 

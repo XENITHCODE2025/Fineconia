@@ -378,13 +378,11 @@
 
 <!-- SCRIPT FINAL -->
 <script>
-let selectedGoalEliminar = null;
-
 document.addEventListener("click", function(e) {
   const modalActualizar = document.getElementById("modalActualizar");
   const modalEliminar = document.getElementById("modalEliminarObjetivo");
 
-  // Abrir modal eliminar
+  // 🗑 Abrir modal eliminar
   if (e.target && e.target.classList.contains("btn-eliminar")) {
     selectedGoalEliminar = e.target.closest(".goal-card");
 
@@ -394,9 +392,10 @@ document.addEventListener("click", function(e) {
     }
 
     const nombre = selectedGoalEliminar.dataset.nombre || "";
-    const abonado = parseFloat(selectedGoalEliminar.dataset.abonado || 0);
+    const abonado = parseFloat(selectedGoalEliminar.dataset.actual || 0);
     const recibir = abonado;
 
+    // Llenar modal dinámicamente
     document.getElementById("mensajeEliminar").innerText = `¿Está seguro que desea eliminar el objetivo "${nombre}"?`;
     document.getElementById("subtituloEliminar").innerText =
       `Este objetivo tiene $${abonado.toLocaleString()} abonados. Al eliminarlo, el dinero se devolverá a tu saldo general. Recibirás: $${recibir.toLocaleString()}`;
@@ -404,34 +403,34 @@ document.addEventListener("click", function(e) {
     modalEliminar.style.display = "flex";
   }
 
-  // Abrir modal actualizar
+  // ✏️ Abrir modal actualizar
   if (e.target && e.target.classList.contains("btn-actualizar")) {
     const selectedGoal = e.target.closest(".goal-card");
     const goalId = selectedGoal?.dataset?.id || "";
     const nombre = selectedGoal?.dataset?.nombre || "";
     const monto = selectedGoal?.dataset?.meta || "";
-    const fechaDesde = selectedGoal?.dataset?.desde || "";
-    const fechaHasta = selectedGoal?.dataset?.hasta || "";
-    const abonado = parseFloat(selectedGoal?.dataset?.abonado || "0");
+    const fechaDesde = selectedGoal?.dataset?.fecha_desde || "";
+    const fechaHasta = selectedGoal?.dataset?.fecha_hasta || "";
+    const abonado = parseFloat(selectedGoal?.dataset?.actual || "0"); // monto ahorrado actual
 
     const inputNombre = document.getElementById("nombre");
     const inputMonto = document.getElementById("monto");
     const inputDesde = document.getElementById("desde");
     const inputHasta = document.getElementById("hasta");
 
+    // Llenar campos con datos actuales
     inputNombre.value = nombre;
     inputMonto.value = monto;
     inputDesde.value = fechaDesde;
     inputHasta.value = fechaHasta;
 
+    // 🧩 Bloquear campos según abonos
     if (!isNaN(abonado) && abonado > 0) {
-      // Solo permitir editar nombre y fecha hasta
       inputNombre.disabled = false;
       inputHasta.disabled = false;
       inputMonto.disabled = true;
       inputDesde.disabled = true;
     } else {
-      // Permitir editar todo
       inputNombre.disabled = false;
       inputMonto.disabled = false;
       inputDesde.disabled = false;
@@ -443,47 +442,114 @@ document.addEventListener("click", function(e) {
   }
 });
 
-// Cancelar actualización
+// ❌ Cancelar actualización
 document.getElementById("btnCancelar").addEventListener("click", () => {
   document.getElementById("modalActualizar").style.display = "none";
 });
 
-// Guardar actualización
-document.getElementById("btnGuardar").addEventListener("click", () => {
-  try {
-    const nombre = document.getElementById("nombre").value;
-    // Aquí podrías enviar los datos por AJAX
-    alertify.success(`Objetivo de ahorro "${nombre}" actualizado correctamente`);
-    document.getElementById("modalActualizar").style.display = "none";
-  } catch (error) {
-    alertify.error("Error al actualizar el objetivo");
-  }
-});
+// 💾 Guardar actualización
+document.getElementById("btnGuardar").addEventListener("click", async () => {
+  const modal = document.getElementById("modalActualizar");
+  const objetivoId = modal.dataset.id;
 
-// Confirmar eliminación
-document.getElementById("btnEliminarSi").addEventListener("click", () => {
+  const inputNombre = document.getElementById("nombre");
+  const inputMonto = document.getElementById("monto");
+  const inputDesde = document.getElementById("desde");
+  const inputHasta = document.getElementById("hasta");
+
+  const data = {
+    nombre: inputNombre.value,
+    monto: inputMonto.value,
+    fecha_desde: inputDesde.value,
+    fecha_hasta: inputHasta.value,
+  };
+
   try {
-    if (selectedGoalEliminar) {
-      selectedGoalEliminar.remove();
-      alertify.success("Objetivo de ahorro eliminado correctamente");
+    const res = await fetch(`/objetivos/${objetivoId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await res.json();
+
+    if (res.status === 422 && result.errors) {
+      const mensajes = Object.values(result.errors).flat().join("<br>");
+      alertify.error(mensajes);
+      return;
     }
-    closeEliminarModal();
+
+    if (!res.ok || result.success === false) {
+      alertify.error(result.message || "Error al actualizar el objetivo.");
+      return;
+    }
+
+    // 🔹 Usar el nombre actualizado del input
+    alertify.success(`Objetivo de ahorro "${inputNombre.value}" actualizado correctamente.`);
+    modal.style.display = "none";
+    cargarObjetivos();
+
   } catch (error) {
-    alertify.error("Error al eliminar el objetivo");
+    console.error("Error:", error);
+    alertify.error("Error al conectar con el servidor.");
   }
 });
 
-// Cancelar eliminación
-document.getElementById("btnEliminarNo").addEventListener("click", () => {
-  closeEliminarModal();
+// ✅ Confirmación de eliminación
+document.getElementById("btnEliminarSi").addEventListener("click", async () => {
+  if (!selectedGoalEliminar) return;
+
+  const objetivoId = selectedGoalEliminar.dataset.id;
+
+  try {
+    const res = await fetch(`/objetivos/${objetivoId}`, {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+        "Accept": "application/json"
+      }
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      alertify.success(`Objetivo eliminado. $${data.monto_devuelto.toLocaleString()} devueltos a tu saldo.`);
+
+      // Actualizar saldo en la vista
+      saldoUsuario += parseFloat(data.monto_devuelto);
+      document.getElementById("saldoActualUsuario").innerText = `Saldo actual: $${saldoUsuario.toLocaleString()}`;
+
+      // Cerrar modal
+      document.getElementById("modalEliminarObjetivo").style.display = "none";
+
+      // Quitar tarjeta del objetivo
+      selectedGoalEliminar.remove();
+      selectedGoalEliminar = null;
+
+      // Actualizar contador de objetivos
+      const contador = document.getElementById("contador-objetivos");
+      const total = parseInt(contador.innerText.split('/')[0]) - 1;
+      contador.innerText = `${total}/100`;
+
+    } else {
+      alertify.error("Error al eliminar el objetivo.");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alertify.error("Error de conexión");
+  }
 });
 
-function closeEliminarModal() {
+// ❌ Cancelar eliminación
+document.getElementById("btnEliminarNo").addEventListener("click", () => {
   document.getElementById("modalEliminarObjetivo").style.display = "none";
-  selectedGoalEliminar = null;
-}
-
+});
 </script>
+
 
 
 <!-- Agrega Bootstrap Icons en tu <head> si no está -->
@@ -642,6 +708,8 @@ async function cargarObjetivos() {
       card.dataset.actual = montoActual;
       card.dataset.id = goal.id;
       card.dataset.nombre = goal.nombre;
+      card.dataset.fecha_desde = goal.fecha_desde;
+      card.dataset.fecha_hasta = goal.fecha_hasta;
 
       let abonarBtn = "";
       let iconos = "";
@@ -845,6 +913,8 @@ setTimeout(() => {
   });
 </script>
 
+
+
 <!-- Botón Ver Consejo -->
 <script>
   document.getElementById("btn-ver-consejo").addEventListener("click", function () {
@@ -930,6 +1000,7 @@ cantidadInput.addEventListener("blur", () => {
     btnGuardar.disabled = true;
     btnCancelar.disabled = true;
   }
+
 
   // 🚫 Cancelar solo limpia (no cierra el modal)
   btnCancelar.addEventListener("click", () => {

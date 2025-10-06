@@ -382,14 +382,9 @@ document.addEventListener("click", function(e) {
   const modalActualizar = document.getElementById("modalActualizar");
   const modalEliminar = document.getElementById("modalEliminarObjetivo");
 
-  // 🗑 Abrir modal eliminar
+  // 🗑 Abrir modal eliminar (ahora permite eliminar completados también)
   if (e.target && e.target.classList.contains("btn-eliminar")) {
     selectedGoalEliminar = e.target.closest(".goal-card");
-
-    if (selectedGoalEliminar.dataset.estado === "completado") {
-      alertify.alert("Solo se pueden eliminar objetivos que están en progreso");
-      return;
-    }
 
     const nombre = selectedGoalEliminar.dataset.nombre || "";
     const abonado = parseFloat(selectedGoalEliminar.dataset.actual || 0);
@@ -487,7 +482,7 @@ document.getElementById("btnGuardar").addEventListener("click", async () => {
       return;
     }
 
-    // 🔹 Usar el nombre actualizado del input
+    // 🔹 Usa el nombre actualizado del input
     alertify.success(`Objetivo de ahorro "${inputNombre.value}" actualizado correctamente.`);
     modal.style.display = "none";
     cargarObjetivos();
@@ -686,16 +681,21 @@ async function cargarObjetivos() {
     const container = document.getElementById("goals-container");
     const contador = document.getElementById("contador-objetivos");
 
-    // Actualizar contador de objetivos
+    // 🧮 Actualizar contador de objetivos
     if (contador) contador.innerText = `${objetivos.length}/100`;
 
     container.innerHTML = "";
 
+    // 🚫 Si no hay objetivos
     if (objetivos.length === 0) {
-      container.innerHTML = `<div class="alert alert-info text-center w-100">No tienes objetivos de ahorro registrados.</div>`;
+      container.innerHTML = `
+        <div class="alert alert-info text-center w-100">
+          No tienes objetivos de ahorro registrados.
+        </div>`;
       return;
     }
 
+    // 🔁 Generar tarjetas
     objetivos.forEach((goal, index) => {
       const montoActual = parseFloat(goal.monto_ahorrado ?? 0);
       const montoMeta = parseFloat(goal.monto ?? 0);
@@ -714,19 +714,36 @@ async function cargarObjetivos() {
       let abonarBtn = "";
       let iconos = "";
 
+      // ✅ Mostrar u ocultar íconos según progreso
       if (montoActual >= montoMeta) {
+        // Objetivo completado
         abonarBtn = `<button class="btn btn-success mt-2" disabled>Completado 🎉</button>`;
-        // No se muestran los íconos si está completado
+        // Solo mostrar el ícono de eliminar
+        iconos = `
+          <div style="position:absolute; top:10px; left:10px; display:flex; gap:10px;">
+            <i class="bi bi-trash btn-eliminar"
+               style="color:#2D555D; cursor:pointer; font-size:1.2rem;"
+               title="Eliminar"></i>
+          </div>
+        `;
+        card.dataset.estado = "completado";
       } else {
+        // Objetivo en progreso
         abonarBtn = `<button class="btn-goal btn btn-primary mt-2">Abonar</button>`;
         iconos = `
           <div style="position:absolute; top:10px; left:10px; display:flex; gap:10px;">
-            <i class="bi bi-trash btn-eliminar" style="color:#2D555D; cursor:pointer; font-size:1.2rem;" title="Eliminar"></i>
-            <i class="bi bi-pencil-square btn-actualizar" style="color:#2D555D; cursor:pointer; font-size:1.2rem;" title="Actualizar"></i>
+            <i class="bi bi-trash btn-eliminar"
+               style="color:#2D555D; cursor:pointer; font-size:1.2rem;"
+               title="Eliminar"></i>
+            <i class="bi bi-pencil-square btn-actualizar"
+               style="color:#2D555D; cursor:pointer; font-size:1.2rem;"
+               title="Actualizar"></i>
           </div>
         `;
+        card.dataset.estado = "progreso";
       }
 
+      // 🧱 Estructura HTML de cada tarjeta
       card.innerHTML = `
         ${iconos}
         <div class="goal-badge">${index + 1}</div>
@@ -746,6 +763,7 @@ async function cargarObjetivos() {
     console.error("Error cargando objetivos:", error);
   }
 }
+
 
   document.addEventListener("DOMContentLoaded", () => {
     cargarObjetivos();

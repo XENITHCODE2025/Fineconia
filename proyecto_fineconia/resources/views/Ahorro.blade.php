@@ -758,6 +758,34 @@ async function cargarObjetivos() {
     console.error("Error cargando objetivos:", error);
   }
 }
+
+function actualizarEstadoObjetivoEnTiempoReal(goalCard) {
+  const montoActual = parseFloat(goalCard.dataset.actual || 0);
+  const montoMeta = parseFloat(goalCard.dataset.meta || 0);
+
+  // Si el objetivo se completa
+  if (montoActual >= montoMeta) {
+    goalCard.dataset.estado = "completado";
+
+    // Eliminar íconos si existen
+    const iconos = goalCard.querySelectorAll(".btn-eliminar, .btn-actualizar");
+    iconos.forEach(icono => icono.style.display = "none");
+
+    // Desactivar el botón de abono
+    const abonarBtn = goalCard.querySelector(".btn-goal");
+    if (abonarBtn) {
+      abonarBtn.disabled = true;
+      abonarBtn.classList.remove("btn-primary");
+      abonarBtn.classList.add("btn-success");
+      abonarBtn.textContent = "Completado 🎉";
+    }
+
+    // Actualizar barra de progreso al 100%
+    const barra = goalCard.querySelector(".progress-bar");
+    if (barra) barra.style.width = "100%";
+  }
+}
+
   document.addEventListener("DOMContentLoaded", () => {
     cargarObjetivos();
 
@@ -894,7 +922,9 @@ if (data.nuevo_monto >= data.meta) {
   }
 }
 
+actualizarEstadoObjetivoEnTiempoReal(selectedGoal);
 alertify.success("Abono registrado correctamente ");
+
 
 // 🔽 Limpieza del formulario
 cantidadInput.value = "";

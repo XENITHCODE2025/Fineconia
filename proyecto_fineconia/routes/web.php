@@ -69,8 +69,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
 
-
-
+    Route::view('/historial', 'historial')->name('historial');
 
     /* Vista y datos de la gráfica de pastel de presupuestos
     pruebitas */

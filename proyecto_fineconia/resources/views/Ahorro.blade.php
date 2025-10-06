@@ -605,6 +605,7 @@ document.getElementById("btnEliminarNo").addEventListener("click", () => {
 
 
 
+
 <!-- Agrega Bootstrap Icons en tu <head> si no está -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -774,19 +775,13 @@ async function cargarObjetivos() {
 
       // ✅ Mostrar u ocultar íconos según progreso
       if (montoActual >= montoMeta) {
-        // Objetivo completado
+        // 🎉 Objetivo completado
         abonarBtn = `<button class="btn btn-success mt-2" disabled>Completado 🎉</button>`;
-        // Solo mostrar el ícono de eliminar
-        iconos = `
-          <div style="position:absolute; top:10px; left:10px; display:flex; gap:10px;">
-            <i class="bi bi-trash btn-eliminar"
-               style="color:#2D555D; cursor:pointer; font-size:1.2rem;"
-               title="Eliminar"></i>
-          </div>
-        `;
+        // ❌ No mostrar iconos
+        iconos = "";
         card.dataset.estado = "completado";
       } else {
-        // Objetivo en progreso
+        // 🔹 Objetivo en progreso
         abonarBtn = `<button class="btn-goal btn btn-primary mt-2">Abonar</button>`;
         iconos = `
           <div style="position:absolute; top:10px; left:10px; display:flex; gap:10px;">
@@ -821,8 +816,6 @@ async function cargarObjetivos() {
     console.error("Error cargando objetivos:", error);
   }
 }
-
-
   document.addEventListener("DOMContentLoaded", () => {
     cargarObjetivos();
 

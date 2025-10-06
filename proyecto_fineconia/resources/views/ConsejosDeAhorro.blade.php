@@ -394,7 +394,6 @@ function ejecutarBusqueda() {
   if (resultados.length > 0) {
     tarjeta.innerHTML = `
       <h3 id="consejo-titulo">Resultados de la búsqueda (${resultados.length} coincidencias):</h3>
-      <p class="palabra-buscada">Palabra buscada: <strong>"${buscador.value}"</strong></p>
       <ul class="subconsejos-list">
         ${resultados.map(lineas => 
           lineas.map(l => `<li>${l}</li>`).join('')
@@ -404,7 +403,6 @@ function ejecutarBusqueda() {
   } else {
     tarjeta.innerHTML = `
       <h3 id="consejo-titulo">No se han encontrado resultados para su búsqueda</h3>
-      <p class="palabra-buscada">Palabra buscada: <strong>"${buscador.value}"</strong></p>
     `;
   }
 
@@ -421,10 +419,6 @@ buscador.addEventListener('keydown', e => {
   }
 });
 </script>
-
-
-
-
 
 </body>
 </html>

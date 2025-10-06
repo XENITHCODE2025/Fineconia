@@ -13,31 +13,86 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
   @vite('resources/css/Ahorro.css')
+
+  <!-- 🔹 IMPORTACIÓN DE PONPINS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo-container">
-      <img src="img/LogoCompleto.jpg" alt="Logo" class="responsive-logo">
-    </div>
-    <div class="right-side">
-      <div class="nav-links">
-        <a class="btn nav-link" id="finanzas_personales">Finanzas Personales</a>
-        <a class="btn nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
-        <a class="btn nav-link" id="presupuestos">Presupuestos</a>
-        <a class="btn nav-link" id="ahorros">Ahorro</a>
-      </div>
-      @include('partials.header-user')
-    </div>
-  </nav>
-
-  <!-- Header -->
-  <div class="header">
-    <h1>AHORRO</h1>
-    <p>Optimiza tu capacidad de ahorro con esta sección dedicada. Aquí recibirás recomendaciones personalizadas para ahorrar y podrás configurar tus propios objetivos de ahorro. Además, tendrás acceso a gráficos de ahorro que te permitirán seguir tu progreso y mantenerte motivado hacia tus metas financieras.</p>
+<!-- Navbar -->
+<header class="header">
+  <!-- Logo -->
+  <div class="logo-container">
+    <img src="{{ asset('img/LogoCompleto.jpg') }}" alt="Logo" class="responsive-logo">
   </div>
+
+  <!-- Menú escritorio -->
+  <div class="menu">
+    <a href="{{ route('finanzas.personales') }}" class="nav-link" id="finanzas_personales">Finanzas Personales</a>
+    <a href="{{ route('gastos-ingresos') }}" class="nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
+    <a href="{{ route('presupuesto') }}" class="nav-link" id="presupuestos">Presupuestos</a>
+    <a href="{{ route('ahorro') }}" class="nav-link" id="ahorros">Ahorro</a>
+  </div>
+
+  <!-- Botón hamburguesa -->
+  <div class="menu-toggle" id="menu-toggle">
+    <i class="bi bi-list"></i>
+  </div>
+</header>
+
+<!-- Menú móvil -->
+<nav class="mobile-menu" id="mobile-menu">
+  <a href="{{ route('finanzas.personales') }}" class="mobile-nav-link" id="finanzas_personales_mobile">Finanzas Personales</a>
+  <a href="{{ route('gastos-ingresos') }}" class="mobile-nav-link" id="gastos_ingresos_mobile">Gastos e Ingresos</a>
+  <a href="{{ route('presupuesto') }}" class="mobile-nav-link" id="presupuestos_mobile">Presupuestos</a>
+  <a href="{{ route('ahorro') }}" class="mobile-nav-link" id="ahorros_mobile">Ahorro</a>
+</nav>
+
+<!-- Header contenido -->
+<section class="header-ahorro">
+  <h1>AHORRO</h1>
+  <p>
+    Optimiza tu capacidad de ahorro con esta sección dedicada. Aquí recibirás recomendaciones personalizadas para ahorrar y podrás configurar tus propios objetivos de ahorro. Además, tendrás acceso a gráficos de ahorro que te permitirán seguir tu progreso y mantenerte motivado hacia tus metas financieras.
+  </p>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const currentPage = "ahorros"; // Ajusta según la página actual
+
+  // 🔹 Enlaces escritorio
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if(link.id === currentPage) link.classList.add("active");
+    else link.classList.remove("active");
+  });
+
+  // 🔹 Enlaces móvil
+  const mobileMenu = document.getElementById("mobile-menu");
+  document.querySelectorAll(".mobile-nav-link").forEach(link => {
+    if(link.id.includes(currentPage)) link.classList.add("active");
+    else link.classList.remove("active");
+
+    // Cierra menú al hacer clic
+    link.addEventListener("click", () => {
+      mobileMenu.classList.remove("active");
+    });
+  });
+
+  // 🔹 Botón hamburguesa
+  const menuToggle = document.getElementById("menu-toggle");
+  menuToggle.addEventListener("click", () => {
+    mobileMenu.classList.toggle("active");
+  });
+
+  // 🔹 Cierra menú si pasa a escritorio
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      mobileMenu.classList.remove("active");
+    }
+  });
+});
+</script>
 
   <!-- Secciones -->
   <div class="container">
@@ -81,9 +136,12 @@
     <i class="bi bi-clock-history"></i> Historial de Abono
   </div>
   <div class="custom-card-body">
-    <p>Es un registro donde se detallan los abonos realizados para cumplir con metas previamente establecidas. En este historial se pueden visualizar las fechas, montos abonados, saldo pendiente y el progreso alcanzado en cada objetivo, permitiendo un control claro y ordenado del avance financiero.</p>
-    <button id="btn-ver-consejo" class="custom-btn">Ver Historial</button>
-  </div>
+  <p class="justificado">
+    Es un registro donde se detallan los abonos realizados para cumplir con metas previamente establecidas. En este historial se pueden visualizar las fechas, montos abonados, saldo pendiente y el progreso alcanzado en cada objetivo, permitiendo un control claro y ordenado del avance financiero.
+  </p>
+  <a href="{{ route('historial') }}" class="custom-btn">Ver Historial</a>
+</div>
+
 </div>
 
 
@@ -323,7 +381,7 @@
         font-weight:bold;
         background:#CB3737;
         color:#FFFFFF;">
-        Cancelar
+        Cancelar 
       </button>
     </div>
   </div>

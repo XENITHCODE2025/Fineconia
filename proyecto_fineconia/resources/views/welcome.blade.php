@@ -12,51 +12,89 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
+    <!-- 🔹 IMPORTACIÓN DE PONPINS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
     <!-- Tu CSS -->
     @vite('resources/css/welcome.css')
 </head>
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="img/LogoCompleto.jpg" alt="Logo" class="logo">
-        </div>
+<header class="header">
+  <!-- Logo -->
+  <div class="logo-container">
+    <img src="{{ asset('img/LogoCompleto.jpg') }}" alt="Logo" class="responsive-logo">
+  </div>
 
-        <!-- Botón hamburguesa (móvil) -->
-        <button class="hamburger" type="button" aria-label="Menú">
-            <i class="bi bi-list"></i>
-        </button>
+  <!-- Menú escritorio -->
+  <div class="menu">
+    <a href="{{ route('finanzas.personales') }}" class="nav-link" id="finanzas_personales">Finanzas Personales</a>
+    <a href="{{ route('gastos-ingresos') }}" class="nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
+    <a href="{{ route('presupuesto') }}" class="nav-link" id="presupuestos">Presupuestos</a>
+    <a href="{{ route('ahorro') }}" class="nav-link" id="ahorros">Ahorro</a>
+  </div>
 
-        <div class="right-side">
-            <div class="nav-links">
-                {{-- Usuario primero en móvil --}}
-                @auth
-                <a href="#" class="nav-link user-name">{{ Auth::user()->name }}</a>
-                @endauth
+  <!-- Botón hamburguesa -->
+  <div class="menu-toggle" id="menu-toggle">
+    <i class="bi bi-list"></i>
+  </div>
+</header>
 
-                <a class="btn nav-link" id="finanzas_personales">Finanzas Personales</a>
-                <a class="btn nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
-                <a class="btn nav-link" id="presupuestos">Presupuestos</a>
-                <a class="btn nav-link" id="ahorros">Ahorro</a>
-            </div>
+<!-- Menú móvil -->
+<nav class="mobile-menu" id="mobile-menu">
+  <a href="{{ route('finanzas.personales') }}" class="mobile-nav-link" id="finanzas_personales_mobile">Finanzas Personales</a>
+  <a href="{{ route('gastos-ingresos') }}" class="mobile-nav-link" id="gastos_ingresos_mobile">Gastos e Ingresos</a>
+  <a href="{{ route('presupuesto') }}" class="mobile-nav-link" id="presupuestos_mobile">Presupuestos</a>
+  <a href="{{ route('ahorro') }}" class="mobile-nav-link" id="ahorros_mobile">Ahorro</a>
+</nav>
 
-            {{-- Partial de usuario (desktop) --}}
-            <div class="header-user">
-                @include('partials.header-user')
-            </div>
-        </div>
-    </nav>
+<!-- Header contenido -->
+<section class="header-ahorro">
+  <h1>GASTOS E INGRESOS</h1>
+  <p>
+    En esta sección puedes llevar el control de todo tu dinero: cuánto ganas, cuánto gastas y en qué lo haces.
+    Accede a herramientas que te ayudarán a entender mejor tu comportamiento financiero y a tomar decisiones
+    informadas para mejorar tu economía personal.
+  </p>
+</section>
 
-    <!-- Header -->
-    <header class="header">
-        <h2>GASTOS E INGRESOS</h2>
-        <p>
-            En esta sección puedes llevar el control de todo tu dinero: cuánto ganas, cuánto gastas y en qué lo haces.
-            Accede a herramientas que te ayudarán a entender mejor tu comportamiento financiero y a tomar decisiones
-            informadas para mejorar tu economía personal.
-        </p>
-    </header>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const currentPage = "gastos_ingresos"; // Ajusta según la página actual
+
+  // 🔹 Enlaces escritorio
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if(link.id === currentPage) link.classList.add("active");
+    else link.classList.remove("active");
+  });
+
+  // 🔹 Enlaces móvil
+  const mobileMenu = document.getElementById("mobile-menu");
+  document.querySelectorAll(".mobile-nav-link").forEach(link => {
+    if(link.id.includes(currentPage)) link.classList.add("active");
+    else link.classList.remove("active");
+
+    // Cierra menú al hacer clic
+    link.addEventListener("click", () => {
+      mobileMenu.classList.remove("active");
+    });
+  });
+
+  // 🔹 Botón hamburguesa
+  const menuToggle = document.getElementById("menu-toggle");
+  menuToggle.addEventListener("click", () => {
+    mobileMenu.classList.toggle("active");
+  });
+
+  // 🔹 Cierra menú si pasa a escritorio
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      mobileMenu.classList.remove("active");
+    }
+  });
+});
+</script>
 
     <!-- Main content -->
     <div class="section-container">

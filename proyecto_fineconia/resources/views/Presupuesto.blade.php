@@ -9,56 +9,94 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+  <!-- 🔹 IMPORTACIÓN DE PONPINS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
   <!-- Tu CSS personalizado -->
   @vite('resources/css/Presupuesto.css')
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo-container">
-      <img src="img/LogoCompleto.jpg" alt="Logo" class="logo">
-    </div>
 
-    <!-- Botón hamburguesa (solo en móvil) -->
-    <button class="hamburger" type="button" aria-label="Menú">
-      <i class="bi bi-list"></i>
-    </button>
-
-    <div class="right-side">
-      <div class="nav-links">
-
-        <!-- Usuario logueado (solo visible dentro del menú móvil) -->
-        <a href="#" class="nav-link user-name">
-          {{ Auth::user()->name }}
-        </a>
-
-        <!-- Opciones de navegación -->
-        
-    <a href="{{ route('finanzas.personales') }}" class="nav-link">Finanzas Personales</a>
-    <a href="{{ route('gastos-ingresos') }}" class="nav-link">Gastos e Ingresos</a>
-    <a href="{{ route('presupuesto') }}" class="nav-link active">Presupuestos</a>
-    <a href="{{ route('ahorro') }}" class="nav-link">Ahorro</a>
+<!-- Navbar -->
+<header class="header">
+  <!-- Logo -->
+  <div class="logo-container">
+    <img src="{{ asset('img/LogoCompleto.jpg') }}" alt="Logo" class="responsive-logo">
   </div>
 
+  <!-- Menú escritorio -->
+  <div class="menu">
+    <a href="{{ route('finanzas.personales') }}" class="nav-link" id="finanzas_personales">Finanzas Personales</a>
+    <a href="{{ route('gastos-ingresos') }}" class="nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
+    <a href="{{ route('presupuesto') }}" class="nav-link" id="presupuestos">Presupuestos</a>
+    <a href="{{ route('ahorro') }}" class="nav-link" id="ahorros">Ahorro</a>
+  </div>
 
-      <!-- Partial de usuario (icono, logout, etc.) -->
-      <div class="header-user">
-        @include('partials.header-user')
-      </div>
+  <!-- Botón hamburguesa -->
+  <div class="menu-toggle" id="menu-toggle">
+    <i class="bi bi-list"></i>
+  </div>
 
-    </div>
-  </nav>
+</header>
 
-  <!-- Header -->
-  <header class="header">
-    <h2>PRESUPUESTOS</h2>
-    <p>
-      En esta sección puedes crear y administrar tus presupuestos mensuales para cada categoría de gastos. 
-      Establece límites, realiza ajustes cuando sea necesario y compara lo planificado con lo gastado 
-      realmente para mantener el control de tus finanzas.
-    </p>
-  </header>
+<!-- Menú móvil -->
+<nav class="mobile-menu" id="mobile-menu">
+
+  <!-- Opciones de navegación -->
+  <a href="{{ route('finanzas.personales') }}" class="mobile-nav-link" id="finanzas_personales_mobile">Finanzas Personales</a>
+  <a href="{{ route('gastos-ingresos') }}" class="mobile-nav-link" id="gastos_ingresos_mobile">Gastos e Ingresos</a>
+  <a href="{{ route('presupuesto') }}" class="mobile-nav-link" id="presupuestos_mobile">Presupuestos</a>
+  <a href="{{ route('ahorro') }}" class="mobile-nav-link" id="ahorros_mobile">Ahorro</a>
+</nav>
+
+<!-- Header contenido -->
+<section class="header-presupuesto">
+  <h1>PRESUPUESTOS</h1>
+  <p>
+    En esta sección puedes crear y administrar tus presupuestos mensuales para cada categoría de gastos. 
+    Establece límites, realiza ajustes cuando sea necesario y compara lo planificado con lo gastado 
+    realmente para mantener el control de tus finanzas.
+  </p>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const currentPage = "presupuestos"; // Ajusta según la página actual
+
+  // 🔹 Enlaces escritorio
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if(link.id === currentPage) link.classList.add("active");
+    else link.classList.remove("active");
+  });
+
+  // 🔹 Enlaces móvil
+  const mobileMenu = document.getElementById("mobile-menu");
+  document.querySelectorAll(".mobile-nav-link").forEach(link => {
+    if(link.id.includes(currentPage)) link.classList.add("active");
+    else link.classList.remove("active");
+
+    // Cierra menú al hacer clic
+    link.addEventListener("click", () => {
+      mobileMenu.classList.remove("active");
+    });
+  });
+
+  // 🔹 Botón hamburguesa
+  const menuToggle = document.getElementById("menu-toggle");
+  menuToggle.addEventListener("click", () => {
+    mobileMenu.classList.toggle("active");
+  });
+
+  // 🔹 Cierra menú si pasa a escritorio
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      mobileMenu.classList.remove("active");
+    }
+  });
+});
+</script>
+
   <!-- Main content -->
   <div class="section-container">
     <!-- Establecer presupuestos -->

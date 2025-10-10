@@ -36,6 +36,7 @@
       <a href="{{ route('consejos.ahorro') }}" class="nav-link">Consejos</a>
       <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
       <a href="{{ route('graficas.ahorro') }}" class="nav-link">Gráficas</a>
+      <a href="{{ route('historial') }}" class="nav-link {{ request()->routeIs('historial') ? 'active' : '' }}">Historial</a>
     </div>
 
     <div class="menu-toggle" id="menu-toggle">
@@ -47,6 +48,7 @@
   <a href="{{ route('consejos.ahorro') }}" class="mobile-nav-link {{ request()->is('consejos') ? 'active' : '' }}">Consejos</a>
   <a href="{{ route('objetivos.nuevo') }}" class="mobile-nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
   <a href="{{ route('graficas.ahorro') }}" class="mobile-nav-link {{ request()->routeIs('graficas.ahorro') ? 'active' : '' }}">Gráficas</a>
+ <a href="{{ route('historial') }}" class="mobile-nav-link {{ request()->routeIs('historial') ? 'active' : '' }}">Historial</a>
 </nav>
 
   <main class="contenido">
@@ -199,7 +201,7 @@
       }
 
       // Fecha Desde
-      if (fechaDesde === "") {
+      if (fechaDesde === "") { 
         actualizarIcono(desde, false, 'icon-desde');
         valido = false;
         erroresMostrados.fechaDesdePasado = false; // Resetear si está vacío
@@ -321,7 +323,7 @@ btnCancelar.addEventListener('click', function () {
       if (dialog && !dialog.dataset.cerradoPorBoton) {
         alertify.error('Acción cancelada');
       }
-    });
+    }); 
 
     // ✅ Marcar que se cerró por botón para que onclose no lo vuelva a disparar
     const okBtn = document.querySelector('.ajs-ok');

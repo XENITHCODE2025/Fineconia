@@ -28,6 +28,7 @@
       <a href="{{ route('consejos.ahorro') }}" class="nav-link active">Consejos</a>
       <a href="{{ route('objetivos.nuevo') }}" class="nav-link {{ request()->routeIs('objetivos.*') ? 'active' : '' }}">Objetivos</a>
       <a href="{{ route('graficas.ahorro') }}" class="nav-link {{ request()->is('graficas') ? 'active' : '' }}">Gráficas</a>
+      <a href="{{ route('historial') }}" class="nav-link {{ request()->routeIs('historial') ? 'active' : '' }}">Historial</a>
     </div>
 
     <div class="menu-toggle" id="menu-toggle">
@@ -40,6 +41,7 @@
     <a href="{{ route('consejos.ahorro') }}" class="mobile-nav-link active">Consejos</a>
     <a href="{{ route('objetivos.nuevo') }}" class="mobile-nav-link">Objetivos</a>
     <a href="{{ route('graficas.ahorro') }}" class="mobile-nav-link">Gráficas</a>
+    <a href="{{ route('historial') }}" class="mobile-nav-link {{ request()->routeIs('historial') ? 'active' : '' }}">Historial</a>
   </nav>
 
   <main class="contenido">

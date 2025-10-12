@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\IngresoController;
-
+use App\Http\Controllers\HistorialController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ObjetivoAhorroController;
 use App\Http\Controllers\TransaccionesController;
@@ -196,6 +196,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/ingresos', [IngresoController::class, 'store'])->name('ingresos.store');
     Route::delete('/ingresos/{id}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
     Route::put('/ingresos/{id}', [IngresoController::class, 'update'])->name('ingresos.update');
+
+    
+    // Rutas para el historial de abonos
+
+   Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
+   Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
+
+
 
 
     Route::get('/transacciones', [TransaccionesController::class, 'lista'])

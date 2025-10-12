@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+HTML: <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -14,6 +14,49 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 
   @vite('resources/css/historial.css')
+
+  <style>
+    /* --- Estilo adicional para el límite de la tabla --- */
+    .tabla-container {
+      max-height: 285px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .tabla-historial {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .tabla-historial th,
+    .tabla-historial td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .tabla-historial thead {
+      background-color: #62AF46;
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .tabla-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .tabla-container::-webkit-scrollbar-thumb {
+      background: #62AF46;
+      border-radius: 10px;
+    }
+
+    .tabla-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+  </style>
 </head>
 <body>
   <header class="header">
@@ -60,13 +103,11 @@
               <label for="objetivo">Objetivo:</label>
               <select id="objetivo" name="objetivo">
                 <option value="">Seleccionar</option>
-                <option value="alimentacion">Alimentación</option>
-                <option value="transporte">Transporte</option>
-                <option value="educacion">Educación</option>
               </select>
             </div>
             <div class="boton-buscar-container">
               <button class="btn-buscar" id="btn-buscar">Buscar</button>
+              <button class="btn-limpiar" id="btn-limpiar">Limpiar</button>
             </div>
           </div>
         </div>
@@ -99,7 +140,7 @@
   </footer>
 
   <script>
-    // Menú móvil
+    // --- Menú móvil ---
     document.getElementById("menu-toggle").addEventListener("click", () => {
       document.getElementById("mobile-menu").classList.toggle("active");
     });
@@ -110,59 +151,105 @@
       link.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('active'));
     });
 
-    // Datos de ejemplo
-    const registros = [
-      { fecha: '2025-06-05', objetivo: 'Alimentación', monto: 800, abonado: 0, estado: 'Pendiente' },
-      { fecha: '2025-06-05', objetivo: 'Alimentación', monto: 900, abonado: 800, estado: 'En proceso' },
-      { fecha: '2025-06-05', objetivo: 'Alimentación', monto: 800, abonado: 800, estado: 'Finalizado' },
-    ];
-
     const tablaBody = document.getElementById('tabla-body');
     const noResults = document.getElementById('no-results');
+    const selectObjetivo = document.getElementById('objetivo');
 
+    // --- Cargar objetivos ---
+    async function cargarObjetivos() {
+      try {
+        const res = await fetch('/historial/objetivos');
+        const data = await res.json();
+        if (data.status === 'success') {
+          data.data.forEach(obj => {
+            const option = document.createElement('option');
+            option.value = obj.nombre;
+            option.textContent = obj.nombre;
+            selectObjetivo.appendChild(option);
+          });
+        }
+      } catch (err) {
+        alertify.error("Error al cargar los objetivos.");
+      }
+    }
+
+    // --- Renderizar tabla ---
     function renderTabla(filtrados) {
       tablaBody.innerHTML = '';
-      if(filtrados.length === 0) {
+      if (filtrados.length === 0) {
         noResults.style.display = 'block';
         return;
       }
       noResults.style.display = 'none';
       filtrados.forEach(r => {
-        const restante = r.monto - r.abonado;
         tablaBody.innerHTML += `
           <tr class="${r.estado.toLowerCase().replace(' ', '-')}">
             <td>${r.fecha}</td>
-            <td>${r.objetivo}</td>
-            <td>$${r.monto.toFixed(2)}</td>
-            <td>$${r.abonado.toFixed(2)}</td>
-            <td>$${restante.toFixed(2)}</td>
+            <td>${r.nombre}</td>
+            <td>$${parseFloat(r.monto).toFixed(2)}</td>
+            <td>$${parseFloat(r.monto_ahorrado).toFixed(2)}</td>
+            <td>$${parseFloat(r.restante).toFixed(2)}</td>
             <td>${r.estado}</td>
           </tr>
         `;
       });
     }
 
-    document.getElementById('btn-buscar').addEventListener('click', () => {
+    // --- Buscar historial ---
+    document.getElementById('btn-buscar').addEventListener('click', async () => {
       try {
         const desde = document.getElementById('fecha-desde').value;
         const hasta = document.getElementById('fecha-hasta').value;
         const objetivo = document.getElementById('objetivo').value;
 
-        if((desde && !hasta) || (!desde && hasta)) { alertify.error('Debe seleccionar ambas fechas para filtrar por rango'); return; }
-        if(desde && hasta && desde > hasta) { alertify.error('La fecha "Desde" no puede ser mayor a la fecha "Hasta"'); return; }
+        if ((desde && !hasta) || (!desde && hasta)) {
+          alertify.error('Debe seleccionar ambas fechas para filtrar por rango');
+          return;
+        }
+        if (desde && hasta && desde > hasta) {
+          alertify.error('La fecha "Desde" no puede ser mayor a la fecha "Hasta"');
+          return;
+        }
 
-        let filtrados = registros;
-        if(objetivo) filtrados = filtrados.filter(r => r.objetivo === objetivo);
-        if(desde && hasta) filtrados = filtrados.filter(r => r.fecha >= desde && r.fecha <= hasta);
+        const params = new URLSearchParams({
+          fecha_desde: desde,
+          fecha_hasta: hasta,
+          objetivo: objetivo
+        });
 
-        renderTabla(filtrados);
+        const response = await fetch(`/historial/abonos?${params.toString()}`);
+        const data = await response.json();
+
+        if (data.status === 'error') {
+          tablaBody.innerHTML = '';
+          noResults.style.display = 'block';
+          alertify.warning(data.message);
+        } else {
+          renderTabla(data.data);
+        }
       } catch (error) {
         alertify.error("Ocurrió un error al cargar los datos. Intente nuevamente.");
       }
     });
 
-    // Inicialmente mostrar todos los registros
-    renderTabla(registros);
+    // --- Botón limpiar ---
+    document.getElementById('btn-limpiar').addEventListener('click', async () => {
+      document.getElementById('fecha-desde').value = '';
+      document.getElementById('fecha-hasta').value = '';
+      document.getElementById('objetivo').value = '';
+      const res = await fetch('/historial/abonos');
+      const data = await res.json();
+      if (data.status === 'success') renderTabla(data.data);
+      alertify.success("Filtros limpiados y datos restaurados.");
+    });
+
+    // --- Inicialización ---
+    window.onload = async () => {
+      await cargarObjetivos();
+      const res = await fetch('/historial/abonos');
+      const data = await res.json();
+      if (data.status === 'success') renderTabla(data.data);
+    };
   </script>
 </body>
 </html>

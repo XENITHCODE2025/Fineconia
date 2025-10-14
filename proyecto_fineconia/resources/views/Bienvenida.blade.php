@@ -61,10 +61,15 @@
     </div>
 
     <div class="card">
-      <div class="card-title">Educación Financiera</div>
-      <div class="card-text">Accede a cursos, guías y simuladores para aprender sobre dinero, inversión y planificación.</div>
-      <button class="btn">Acceder</button>
-    </div>
+  <div class="card-title">Educación Financiera</div>
+  <div class="card-text">
+    Accede a cursos, guías y simuladores para aprender sobre dinero, inversión y planificación.
+  </div>
+  <a href="{{ route('educacion.financiera') }}" style="text-decoration: none;">
+    <button class="btn">Acceder</button>
+  </a>
+</div>
+
 
     <div class="card">
       <div class="card-title">Economía</div>

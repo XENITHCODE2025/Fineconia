@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\IngresoController;
-
+use App\Http\Controllers\HistorialController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ObjetivoAhorroController;
 use App\Http\Controllers\TransaccionesController;
@@ -29,10 +29,18 @@ Route::get('/', function () {
     return view('Home');
 });
 
+Route::get('/educacion', function () {
+    return view('Educacion'); // tu archivo Educacion.blade.php
+})->name('educacion.financiera');
+
 // Registro
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
+// Rutas para el historial de abonos
+
+   Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
+   Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
 // Login
 Route::get('/login', function () {
     return view('LOGIN');

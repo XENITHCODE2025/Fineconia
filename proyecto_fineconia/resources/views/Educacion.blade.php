@@ -116,6 +116,9 @@
     </div>
     <p id="error-text" class="error-text">Ingrese al menos una palabra</p>
 
+    <p id="mensaje-favoritos" class="sin-resultados" style="display:none;">Aún no tienes guías guardadas como favoritas</p>
+    <p id="sin-resultados" class="sin-resultados" style="display:none;">No se han encontrado resultados para su búsqueda</p>
+
     <!-- CONTENEDOR GUIAS -->
     <div id="guias" class="guias-container">
       <!-- Ejemplo de guía -->
@@ -133,8 +136,6 @@
       </div>
       <!-- Agregar aquí las demás guías, tal como en tu código original -->
     </div>
-
-    <p id="sin-resultados" class="sin-resultados" style="display:none;">No se han encontrado resultados para su búsqueda</p>
   </main>
 
   <div class="linea-divisora"></div>
@@ -153,12 +154,13 @@
     </div>
   </footer>
 
- <script>
+<script>
 const inputBusqueda = document.getElementById('busqueda');
 const categoriaSelect = document.getElementById('categoria');
 const contenedorGuias = document.getElementById('guias');
 const sinResultados = document.getElementById('sin-resultados');
 const errorText = document.getElementById('error-text');
+const mensajeFavoritos = document.getElementById('mensaje-favoritos');
 const btnFavoritosTop = document.getElementById('favoritos');
 let mostrarFavoritos = false;
 
@@ -175,6 +177,7 @@ function filtrarGuias() {
   const categoriaSeleccionada = categoriaSelect.value.toLowerCase();
   const guias = contenedorGuias.querySelectorAll('.guia');
   let hayResultados = false;
+  let hayFavoritos = false;
 
   guias.forEach(g => {
     const tituloOriginal = g.querySelector('h3').dataset.original || g.querySelector('h3').textContent;
@@ -196,15 +199,37 @@ function filtrarGuias() {
     } else {
       g.style.display = 'none';
     }
+
+    if (esFavorita) hayFavoritos = true;
   });
 
-  sinResultados.style.display = hayResultados ? 'none' : 'block';
+  // Mostrar mensajes según situación
+  if (mostrarFavoritos && !hayFavoritos) {
+    mensajeFavoritos.style.display = 'block';
+    mensajeFavoritos.style.textAlign = 'center';
+    mensajeFavoritos.style.color = '#000';
+    sinResultados.style.display = 'none';
+  } else {
+    mensajeFavoritos.style.display = 'none';
+    sinResultados.style.display = hayResultados ? 'none' : 'block';
+  }
 }
 
 // Eventos
 inputBusqueda.addEventListener('input', () => {
-  errorText.style.display = inputBusqueda.value.trim() === '' ? 'block' : 'none';
+  // Ya no mostramos error al escribir, solo con Enter
   filtrarGuias();
+});
+
+inputBusqueda.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    if (inputBusqueda.value.trim() === '') {
+      errorText.style.display = 'block';
+    } else {
+      errorText.style.display = 'none';
+      filtrarGuias();
+    }
+  }
 });
 
 categoriaSelect.addEventListener('change', filtrarGuias);

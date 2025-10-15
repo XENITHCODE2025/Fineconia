@@ -1,0 +1,49 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+#  Instalar Node.js
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.x'
+  displayName: 'Instalar Node.js'
+
+#  Instalar dependencias y construir proyecto
+- script: |
+    npm install
+    npm run build
+  displayName: 'Instalar dependencias y build'
+
+#  Preparar análisis SonarQube
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'SonarQube-XenithCode'   # nombre exacto de tu Service Connection
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'xenithcode'      #  Tu Project Key en SonarQube
+    cliProjectName: 'XenithCode'      # Nombre visible en SonarQube
+    cliSources: '.'                  # Analiza todo el repo
+  displayName: 'Preparar análisis SonarQube'
+
+#  Ejecutar build nuevamente para SonarQube (opcional si ya se hizo arriba)
+- script: |
+    npm run build
+  displayName: 'Ejecutar build para SonarQube'
+
+#  Ejecutar análisis SonarQube
+- task: SonarQubeAnalyze@5
+  displayName: 'Ejecutar análisis SonarQube'
+
+#  Publicar resultados SonarQube (Quality Gate)
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
+  displayName: 'Publicar resultados SonarQube'

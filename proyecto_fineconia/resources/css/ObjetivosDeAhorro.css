@@ -1,0 +1,428 @@
+
+/* Tarea de crear objetivo de ahorro - frontend (completada) */
+/*  Aprovado */
+
+* {
+
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #31565e;
+  padding: 15px 30px;
+  color: white;
+  flex-wrap: wrap;
+}
+
+.logo img {
+  height: 35px;
+  max-width: 100%;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.menu .nav-link {
+  color: white;
+  text-decoration: none; /* 🔹 quitar subrayado */
+}
+
+.nombre {
+  font-weight: normal;
+  font-family: 'Open Sans', sans-serif;
+  color: white;
+}
+
+.user-icon {
+  font-size: 28px;
+  color: white;
+}
+
+/* Botón hamburguesa (oculto en escritorio) */
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+}
+
+/* Menú móvil */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background-color: #31565e;
+  padding: 10px;
+}
+
+.mobile-menu a {
+  color: white;
+  padding: 10px;
+  text-decoration: none; /* 🔹 quitar subrayado */
+  border-bottom: none;   /* 🔹 quitar línea */
+}
+
+.mobile-menu a:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.mobile-menu.active {
+  display: flex;
+}
+
+/* CONTENIDO */
+.contenido {
+  flex: 1 0 auto;
+  padding: 30px;
+  min-height: 400px;
+}
+
+/* FORMULARIO */
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  border: 1px solid black;
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  color: #000000;
+}
+
+.form-container label {
+  display: block;
+  margin: 10px 0 5px;
+  text-align: left;
+  font-family: 'Roboto Slab', serif;
+  color: #000000;
+  font-size: 16px;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 6px;
+  font-family: 'Roboto Slab', serif;
+  font-size: 14px;
+  padding-right: 30px;
+}
+
+.input-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.input-icon.show {
+  opacity: 1;
+}
+
+.fa-check-circle {
+  color: #2ecc71;
+}
+
+.fa-times-circle {
+  color: #e74c3c;
+}
+
+.fechas {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.fechas div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fechas div label {
+  font-family: 'Roboto Slab', serif;
+  color: #000000;
+  font-size: 16px;
+  min-width: 60px;
+}
+
+.fecha-input-container {
+  display: inline-block;
+  width: auto;
+}
+
+.fechas div input[type="date"] {
+  width: 150px;
+  padding: 6px 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid black;
+  font-family: 'Roboto Slab', serif;
+}
+
+
+.botones-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-cancelar,
+.btn-guardar {
+  width: 120px;
+  text-align: center;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+}
+
+/* CANCELAR */
+.btn-cancelar {
+  background-color: #DE3B3B;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-cancelar:hover {
+  background-color: #b83030; /* Un tono más oscuro para hover */
+}
+
+.btn-cancelar:disabled {
+  background-color: rgba(222, 59, 59, 0.5); /* Rojo con opacidad */
+  color: white;
+  cursor: not-allowed;
+}
+
+/* GUARDAR */
+.btn-guardar {
+  background-color: #427F2B;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-guardar:hover {
+  background-color: #356B22; /* Un tono más oscuro para hover */
+}
+
+.btn-guardar:disabled {
+  background-color: rgba(66, 127, 43, 0.5); /* Verde con opacidad */
+  color: white;
+  cursor: not-allowed;
+}
+
+/* FOOTER */
+.footer {
+  background-color: #31565e;
+  padding: 15px 30px;
+  color: white;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none; /* 🔹 quitar subrayado */
+  font-family: 'Poppins', sans-serif;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .menu .nav-link {
+    display: none;
+  }
+  .menu-toggle {
+    display: block;
+  }
+  
+  .fechas div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .fechas div label {
+    min-width: auto;
+  }
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  max-width: 300px;
+  min-width: 150px;
+  padding: 10px;
+}
+
+.responsive-logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Estilo para el enlace activo */
+.nav-link.active {
+  color: #F9B924;
+  font-weight: bold;
+} 
+
+/* Estilo para el enlace activo en el menú móvil */
+.mobile-nav-link.active {
+  color: #F9B924;
+  font-weight: bold;
+}
+
+input.error {
+  border: 2px solid #e74c3c;
+}
+
+input.success {
+  border: 2px solid #2ecc71;
+}
+
+/* Estilos adicionales */
+.nav-link {
+  cursor: pointer;
+}
+    
+.mobile-menu a {
+  cursor: pointer;
+}
+
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Footer links */
+.footer-links a {
+  color: white;
+  text-decoration: underline;   /* Subrayado */
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+/* Contenedor principal del diálogo */
+.alertify .ajs-dialog {
+  border-radius: 16px !important;
+  overflow: hidden;
+  top: 150px !important; /* más abajo en la pantalla */
+  border: 0.5px solid #000 !important; /* borde negro */
+}
+
+/* Header */
+.alertify .ajs-header {
+  background-color: #31565e !important;
+  color: #fff !important;
+  font-weight: 600;
+  min-height: 50px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Cuerpo del diálogo */
+.alertify .ajs-body {
+  text-align: center !important; /* centra el texto */
+  font-size: 16px; /* opcional, ajustar tamaño */
+}
+
+/* Botón Sí (rojo) */
+.alertify .ajs-footer .ajs-buttons .ajs-ok {
+  background-color: #CB3737 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  padding: 6px 14px;
+  border: none !important;
+}
+
+/* Botón No (azul verdoso) */
+.alertify .ajs-footer .ajs-buttons .ajs-cancel {
+  background-color: #31565E !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  padding: 6px 14px;
+  border: none !important;
+}
+
+/* Estilo para la X (cerrar) */
+.alertify .ajs-closer {
+  color: #fff !important;
+  font-size: 26px !important;
+  position: absolute !important;
+  right: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%);
+  opacity: 0.9 !important;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Hover de la X */
+.alertify .ajs-closer:hover {
+  color: #CB3737 !important;
+  transform: scale(1.3);
+}
+
+/* Tipografía general para todos los elementos de AlertifyJS */
+.ajs-dialog,
+.ajs-header,
+.ajs-body,
+.ajs-footer,
+.ajs-content,
+.ajs-message,
+.ajs-button,
+.ajs-ok,
+.ajs-cancel {
+  font-family: 'Open Sans', sans-serif !important;
+  font-weight: 400; /* Regular */
+}

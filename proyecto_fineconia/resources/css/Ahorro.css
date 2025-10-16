@@ -5,108 +5,219 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  /* Navbar */
-  .navbar {
-    background-color: #31565e;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+/* Importar tipografía Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-  .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+/* ==================================
+   🔹 GLOBAL
+================================== */
+body {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 400 !important;
+  margin: 0;
+  padding: 0;
+  color: #000000;
+}
 
-  .logo {
-    width: 32px;
-    height: 32px;
-  }
+/* ==================================
+   🔹 HEADER / NAVBAR
+================================== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-primary, #31565e);
+  padding: 15px 30px;
+  color: #FFFFFF;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: 'Poppins', sans-serif !important;
+}
 
-  .brand {
-    color: white;
-    font-weight: bold;
-    font-size: 20px;
-  }
+/* Logo */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  max-width: 300px;
+  min-width: 150px;
+  padding: 10px;
+}
+.responsive-logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
-  .right-side {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-  }
+/* Menú escritorio */
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
 
-  .nav-links {
-    display: flex;
-    gap: 25px;
-  }
+/* Links */
+.nav-link,
+.mobile-nav-link,
+.user-name {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 400 !important;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 14px;
+}
+.nav-link:hover,
+.mobile-nav-link:hover {
+  text-decoration: underline;
+}
 
-  .nav-link {
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-  }
+/* Usuario (escritorio) */
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 2rem;
+  white-space: nowrap;
+  color: #FFFFFF;
+}
 
-  .nav-link:hover {
-    text-decoration: underline;
-  }
+/* Usuario móvil */
+.user-name {
+  display: block;
+  font-weight: 700 !important;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
 
-  .user-icon {
-    font-size: 28px;
-    color: white;
-  }
+/* Enlace activo */
+.nav-link.active,
+.mobile-nav-link.active {
+  color: #F9B924;
+  font-weight: 700 !important;
+}
 
-  /* Encabezado */
-  .header {
-    background-color: #31565e;
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-  }
+/* Botón hamburguesa */
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #FFFFFF;
+}
 
-  .header h1 {
-    font-weight: 700;
-  }
+/* Menú móvil */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background-color: var(--color-primary, #31565e);
+  padding: 10px;
+}
+.mobile-menu a {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 400 !important;
+  color: #FFFFFF;
+  padding: 10px;
+  text-decoration: none;
+}
+.mobile-menu a:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+.mobile-menu.active {
+  display: flex;
+}
 
-  /* Tarjetas */
-  .custom-card {
-    background-color: #2d5d63;
-    border-radius: 10px;
-    margin: 30px auto;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    overflow: hidden;
-    max-width: 900px;
-  }
+/* ==================================
+   🔹 HEADER CONTENIDO (Presupuesto y Ahorro)
+================================== */
+.header-presupuesto,
+.header-ahorro {
+  background-color: var(--color-primary, #31565e);
+  color: #FFFFFF;
+  padding: 20px 20px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif !important;
+}
 
-  .custom-card-header {
-    background-color: #a3d4dd;
-    color: white;
-    padding: 10px 20px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+.header-presupuesto h1,
+.header-ahorro h1 {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 700 !important;
+  margin-bottom: 10px;
+  color: #FFFFFF;
+}
 
-  .custom-card-body {
-    padding: 20px;
-  }
+.header-presupuesto p,
+.header-ahorro p {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: #FFFFFF;
+  text-align: justify;
+  max-width: 720px;
+  margin: 5px auto 0;
+}
 
-  .custom-btn {
-    background-color: white;
-    color: #1f4c55;
-    border-radius: 999px;
-    padding: 8px 20px;
-    border: none;
-    font-weight: 600;
-    margin-top: 10px;
+/* ==================================
+   🔹 RESPONSIVE
+================================== */
+@media (max-width: 768px) {
+  .menu {
+    display: none;
   }
+  .menu-toggle {
+    display: block;
+  }
+}
 
-  .custom-btn:hover {
-    background-color: #e8e8e8;
-  }
+/* Importar fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600&display=swap');
+
+/* Tarjetas */
+.custom-card {
+  background-color: #2d5d63;
+  border-radius: 10px;
+  margin: 30px auto;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  max-width: 900px;
+}
+
+.custom-card-header {
+  background-color: #a3d4dd;
+  color: white;
+  padding: 10px 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Poppins', sans-serif; /* Header Poppins */
+}
+
+.custom-card-body {
+  padding: 20px;
+  font-family: 'Open Sans', sans-serif !important; /* Cuerpo Open Sans, fuerza el cambio */
+  text-align: justify !important; /* Justifica el texto */
+}
+
+.custom-card p {
+  font-family: 'Open Sans', sans-serif !important;
+}
+
+.custom-btn {
+  background-color: #000000;
+  color: #000000;
+  border-radius: 8px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400; /* peso similar al contenido de la tabla */
+  font-size: 14px;  /* opcional: ajusta tamaño como el de la tabla */
+}
 
   /* Sección Objetivos */
   .goal-section {
@@ -152,3 +263,346 @@
       display: none;
     }
   }
+
+  .logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* Cambia a 'flex-start' o 'flex-end' si quieres alinear a izquierda o derecha */
+  width: 50%;               /* Ajusta según qué tan grande quieres el contenedor */
+  max-width: 300px;         /* Límite máximo de crecimiento */
+  min-width: 150px;         /* Límite mínimo */
+  padding: 10px;
+}
+
+.responsive-logo {
+  width: 100%;              /* Imagen ocupa todo el contenedor */
+  height: auto;             /* Mantiene proporción */
+  display: block;           /* Evita espacio en línea por defecto */
+}
+
+.custom-btn {
+  text-decoration: none; /* Quita la línea */
+}
+
+/* (0) Reset por si quedó centrado antes el contenido interno */
+.custom-card-body,
+.goal-card {
+  text-align: initial;
+}
+
+/* (1) Centrar SOLO el texto de la parte superior (títulos) de cada contenedor */
+.custom-card-header {          /* Recomendaciones / Gráficos de ahorro, etc. */
+  justify-content: center;     /* es flex, así centramos el contenido */
+  text-align: center;
+}
+.goal-section h2,              /* Objetivos de ahorro */
+.goal-card h2,
+.goal-card h3 {
+  text-align: center;
+}
+
+/* (2) Justificar y reducir el ancho del texto que va debajo de "Ahorro" (en el encabezado) */
+.header p {
+  text-align: justify;
+  max-width: 720px;            /* reduce el contenedor del texto */
+  margin: 10px auto 0;         /* centra el bloque sin afectar el h1 */
+  line-height: 1.6;
+}
+
+/* (3) Centrar los botones "Ver consejos", "Gráficas" y "Crear objetivo"
+      sin centrar el resto del texto */
+.custom-card-body .custom-btn { /* Ver consejos / Ver gráficas dentro de tarjetas */
+  display: block;
+  margin: 12px auto 0;
+}
+.goal-card .btn-goal {          /* Crear objetivo */
+  display: block;
+  margin: 12px auto 0;
+}
+
+/* Unificar estilo de TODOS los botones */
+.custom-btn,
+.btn-goal {
+  display: inline-block;
+  text-align: center;
+  background-color: #ffffff;
+  color: #070707;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;      /* Tamaño uniforme */
+  min-width: 160px;        /* Todos del mismo ancho mínimo */
+  max-width: 180px;        /* Opcional: evita que uno se estire demasiado */
+  margin: 12px auto 0;
+  cursor: pointer;
+}
+
+/* Hover igual para todos */
+.custom-btn:hover,
+.btn-goal:hover {
+  background-color: #ffffff;
+  color: #070707;
+}
+
+/* Contenedor general estilo tarjeta */
+.goal-wrapper {
+  background-color: #31565E;
+  padding: 40px 20px;
+  border-radius: 15px;
+  margin: 30px auto;
+  max-width: 900px;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+.goal-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Contenedor scrollable */
+.goals-scroll-container {
+  max-height: 500px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-right: 10px;
+}
+
+.goal-card {
+  background-color: white;
+  color: #31565E; /* ← aquí aplicamos el color de fuente correcto */
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+/* Barra de progreso */
+.goal-card .progress {
+  height: 10px;
+  border-radius: 20px;
+  background-color: #e0e0e0;
+  margin: 10px 0;
+}
+
+.goal-card .progress-bar {
+  background-color: #4caf50;
+  border-radius: 20px;
+}
+
+/* Botón */
+.goal-card .btn-goal {
+  background-color: #2d5d63;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 20px;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* ---- Modal Abonar personalizado ---- */
+#modalAbonar .modal-content {
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#modalAbonar .modal-header {
+  background: #2a4145;
+  color: #fff;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+#modalAbonar .modal-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+#modalAbonar .btn-dark {
+  background-color: #427F2B;
+  border: none;
+}
+
+#modalAbonar .btn-dark:hover {
+  background-color: #427F2B;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Open+Sans&display=swap');
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.goal-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.goal-counter {
+  font-family: 'Roboto Slab', serif;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.custom-limite-modal {
+  border-radius: 12px;
+  background-color: #ffffff;
+  padding: 30px;
+}
+
+.custom-limite-modal .modal-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+.custom-limite-modal .btn-dark {
+  background-color: #2a4145;
+  border-radius: 20px;
+  padding: 10px 25px;
+  border: none;
+  font-weight: 600;
+}
+
+.titulo-objetivos {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: #2d555d;
+  color: white;
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.titulo-objetivos h2,
+.titulo-objetivos .contador {
+  margin: 0;
+  font-size: 2.7rem; /* Mismo tamaño para ambos */
+  font-weight: bold;
+}
+
+#goals-container {
+  padding: 20px;
+  background-color: #2d555d;
+  max-height: 550px;
+  overflow-y: auto;
+
+  /* Oculta la scrollbar (pero mantiene el scroll funcional) */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.goal-card {
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.goal-badge {
+  position: absolute;
+  top: 0;
+  right: 0; /* Cambiado de left: 0 a right: 0 */
+  background-color: #fff;
+  color: #2d555d;
+  font-weight: bold;
+  font-size: 0.85rem;
+  padding: 5px 8px;
+  border-top-right-radius: 10px; /* Cambiar la esquina redondeada */
+  border-bottom-left-radius: 10px; /* Para que coincida con el nuevo lado */
+}
+
+#contador-objetivos {
+  cursor: default;
+}
+
+.titulo {
+  cursor: default;
+}
+
+#modalAbonar .btn-secondary {
+  background-color: #DE3B3B;
+  color: rgb(255, 255, 255);
+  border: none;
+  font-weight: 600;
+}
+
+#modalAbonar .btn-secondary:hover {
+  background-color: #DE3B3B;
+}
+
+input.form-control.is-invalid,
+input.form-control.is-valid {
+  background-image: none !important;
+}
+
+.roboto-slab {
+  font-family: 'Roboto Slab', serif;
+}
+
+h5 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; /* 700 = Bold */
+}
+
+/* Subtítulos y textos secundarios del modal Abonar */
+#modalAbonar label,
+#modalAbonar p,
+#modalAbonar .modal-text {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400; /* Regular */
+  color: #000000;   /* Negro */
+}
+
+/* Título del modal Abonar */
+#modalAbonar .modal-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; /* Bold */
+  color: #FFFFFF;   /* Blanco */
+}
+
+#modalEliminarObjetivo,
+#modalEliminarObjetivo * {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+/* Icono Eliminar */
+.btn-eliminar {
+  color: #DE3B3B !important;      /* color rojo */
+  font-size: 24px;                /* tamaño del icono */
+  cursor: pointer;                /* indica que es clickeable */
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  transform: scale(1.2);          /* efecto ligero al pasar mouse */
+}
+
+/* Icono Actualizar */
+.btn-actualizar {
+  color: #3B75A8 !important;      /* color verde */
+  font-size: 24px;                /* tamaño del icono */
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.btn-actualizar:hover {
+  transform: scale(1.2);
+}
+

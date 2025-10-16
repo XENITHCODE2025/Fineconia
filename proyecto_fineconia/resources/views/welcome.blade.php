@@ -12,51 +12,89 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
+    <!-- 🔹 IMPORTACIÓN DE PONPINS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
     <!-- Tu CSS -->
     @vite('resources/css/welcome.css')
 </head>
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="img/LogoCompleto.jpg" alt="Logo" class="logo">
-        </div>
+<header class="header">
+  <!-- Logo -->
+  <div class="logo-container">
+    <img src="{{ asset('img/LogoCompleto.jpg') }}" alt="Logo" class="responsive-logo">
+  </div>
 
-        <!-- Botón hamburguesa (móvil) -->
-        <button class="hamburger" type="button" aria-label="Menú">
-            <i class="bi bi-list"></i>
-        </button>
+  <!-- Menú escritorio -->
+  <div class="menu">
+    <a href="{{ route('finanzas.personales') }}" class="nav-link" id="finanzas_personales">Finanzas Personales</a>
+    <a href="{{ route('gastos-ingresos') }}" class="nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
+    <a href="{{ route('presupuesto') }}" class="nav-link" id="presupuestos">Presupuestos</a>
+    <a href="{{ route('ahorro') }}" class="nav-link" id="ahorros">Ahorro</a>
+  </div>
 
-        <div class="right-side">
-            <div class="nav-links">
-                {{-- Usuario primero en móvil --}}
-                @auth
-                  <a href="#" class="nav-link user-name">{{ Auth::user()->name }}</a>
-                @endauth
+  <!-- Botón hamburguesa -->
+  <div class="menu-toggle" id="menu-toggle">
+    <i class="bi bi-list"></i>
+  </div>
+</header>
 
-                <a class="btn nav-link" id="finanzas_personales">Finanzas Personales</a>
-                <a class="btn nav-link" id="gastos_ingresos">Gastos e Ingresos</a>
-                <a class="btn nav-link" id="presupuestos">Presupuestos</a>
-                <a class="btn nav-link" id="ahorros">Ahorro</a>
-            </div>
+<!-- Menú móvil -->
+<nav class="mobile-menu" id="mobile-menu">
+  <a href="{{ route('finanzas.personales') }}" class="mobile-nav-link" id="finanzas_personales_mobile">Finanzas Personales</a>
+  <a href="{{ route('gastos-ingresos') }}" class="mobile-nav-link" id="gastos_ingresos_mobile">Gastos e Ingresos</a>
+  <a href="{{ route('presupuesto') }}" class="mobile-nav-link" id="presupuestos_mobile">Presupuestos</a>
+  <a href="{{ route('ahorro') }}" class="mobile-nav-link" id="ahorros_mobile">Ahorro</a>
+</nav>
 
-            {{-- Partial de usuario (desktop) --}}
-            <div class="header-user">
-                @include('partials.header-user')
-            </div>
-        </div>
-    </nav>
+<!-- Header contenido -->
+<section class="header-ahorro">
+  <h1>GASTOS E INGRESOS</h1>
+  <p>
+    En esta sección puedes llevar el control de todo tu dinero: cuánto ganas, cuánto gastas y en qué lo haces.
+    Accede a herramientas que te ayudarán a entender mejor tu comportamiento financiero y a tomar decisiones
+    informadas para mejorar tu economía personal.
+  </p>
+</section>
 
-    <!-- Header -->
-    <header class="header">
-        <h2>GASTOS E INGRESOS</h2>
-        <p>
-            En esta sección puedes llevar el control de todo tu dinero: cuánto ganas, cuánto gastas y en qué lo haces.
-            Accede a herramientas que te ayudarán a entender mejor tu comportamiento financiero y a tomar decisiones
-            informadas para mejorar tu economía personal.
-        </p>
-    </header>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const currentPage = "gastos_ingresos"; // Ajusta según la página actual
+
+  // 🔹 Enlaces escritorio
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if(link.id === currentPage) link.classList.add("active");
+    else link.classList.remove("active");
+  });
+
+  // 🔹 Enlaces móvil
+  const mobileMenu = document.getElementById("mobile-menu");
+  document.querySelectorAll(".mobile-nav-link").forEach(link => {
+    if(link.id.includes(currentPage)) link.classList.add("active");
+    else link.classList.remove("active");
+
+    // Cierra menú al hacer clic
+    link.addEventListener("click", () => {
+      mobileMenu.classList.remove("active");
+    });
+  });
+
+  // 🔹 Botón hamburguesa
+  const menuToggle = document.getElementById("menu-toggle");
+  menuToggle.addEventListener("click", () => {
+    mobileMenu.classList.toggle("active");
+  });
+
+  // 🔹 Cierra menú si pasa a escritorio
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      mobileMenu.classList.remove("active");
+    }
+  });
+});
+</script>
 
     <!-- Main content -->
     <div class="section-container">
@@ -169,20 +207,17 @@
                     </td>
                     <td class="action-cell">
                         @php
-                            $filaId = $transaccion->tipo === 'Gasto'
-                                ? $transaccion->id_Gasto
-                                : $transaccion->id_Ingreso;
-                            $rutaEliminar = $transaccion->tipo === 'Gasto'
-                                ? route('gastos.destroy', $filaId)
-                                : route('ingresos.destroy', $filaId);
+                        $filaId = $transaccion->tipo === 'Gasto'
+                        ? $transaccion->id_Gasto
+                        : $transaccion->id_Ingreso;
+                        $rutaEliminar = $transaccion->tipo === 'Gasto'
+                        ? route('gastos.destroy', $filaId)
+                        : route('ingresos.destroy', $filaId);
                         @endphp
 
-                        <a href="javascript:void(0)" class="edit-btn" 
-                           data-tipo="{{ $transaccion->tipo }}" 
-                           data-id="{{ $filaId }}" 
-                           data-descripcion="{{ $transaccion->descripcion }}" 
-                           data-categoria="{{ $transaccion->categoria }}" 
-                           data-monto="{{ $transaccion->monto }}">
+                        <a href="javascript:void(0)" class="edit-btn" data-tipo="{{ $transaccion->tipo }}"
+                            data-id="{{ $filaId }}" data-descripcion="{{ $transaccion->descripcion }}"
+                            data-categoria="{{ $transaccion->categoria }}" data-monto="{{ $transaccion->monto }}">
                             <i class="bi bi-pencil-square"></i>
                         </a>
 
@@ -207,13 +242,13 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const btnMenu = document.querySelector('.hamburger');
-        const menu    = document.querySelector('.nav-links');
+        const menu = document.querySelector('.nav-links');
         btnMenu.addEventListener('click', () => menu.classList.toggle('active'));
     });
     </script>
 
     <!-- Confirmación y buscador (igual que antes) -->
-       <script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
         const forms = document.querySelectorAll('.delete-form');
 
@@ -310,54 +345,61 @@
 
     <!-- UPDATE  -->
     <script>
-   document.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-        e.preventDefault();
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
 
-        const tipo        = btn.dataset.tipo;          // “Gasto” | “Ingreso”
-        const id          = btn.dataset.id;
-        const descActual  = btn.dataset.descripcion;
-        const catActual   = btn.dataset.categoria;
-        const montoActual = btn.dataset.monto;
+            const tipo = btn.dataset.tipo; // “Gasto” | “Ingreso”
+            const id = btn.dataset.id;
+            const descActual = btn.dataset.descripcion;
+            const catActual = btn.dataset.categoria;
+            const montoActual = btn.dataset.monto;
 
-        // ---------- Construir HTML del modal ----------
-        let contenido = '';
-        if (tipo === 'Gasto') {
-            const inpIdMonto = `monto-${id}-${Date.now()}`;
-            contenido = `
+            // ---------- Construir HTML del modal ----------
+            let contenido = '';
+            if (tipo === 'Gasto') {
+                const inpIdMonto = `monto-${id}-${Date.now()}`;
+                contenido = `
                 <label>Monto:</label><br>
                 <input id="${inpIdMonto}" type="number" value="${montoActual}"
                        style="width:100%;margin-bottom:10px;">
             `;
-            alertify.confirm(`Editar ${tipo}`, contenido,
-                () => {
-                    const nuevoMonto = document.getElementById(inpIdMonto).value;
-                    fetch(`/gastos/${id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({ monto:nuevoMonto })
-                    })
-                    .then(r => r.ok ? location.reload() :
-                          alertify.error('No se pudo actualizar'))
-                },
-                () => {}
-            ).set('labels',{ok:'Guardar',cancel:'Cancelar'});
-        } else { /* Ingreso */
-            const suf       = Date.now();
-            const inpDesc   = `desc-${id}-${suf}`;
-            const inpMonto  = `monto-${id}-${suf}`;
-            const selCat    = `cat-${id}-${suf}`;
+                alertify.confirm(`Editar ${tipo}`, contenido,
+                    () => {
+                        const nuevoMonto = document.getElementById(inpIdMonto).value;
+                        fetch(`/gastos/${id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    monto: nuevoMonto
+                                })
+                            })
+                            .then(r => r.ok ? location.reload() :
+                                alertify.error('No puedes editar en una catidad menor este ingreso porque ya forma parte de tu saldo  y afectaria tus presupuestos'))
+                    },
+                    () => {}
+                ).set('labels', {
+                    ok: 'Guardar',
+                    cancel: 'Cancelar'
+                });
+            } else {
+                /* Ingreso */
+                const suf = Date.now();
+                const inpDesc = `desc-${id}-${suf}`;
+                const inpMonto = `monto-${id}-${suf}`;
+                const selCat = `cat-${id}-${suf}`;
 
-            const opciones  = @json(\App\Models\CategoriaIngreso::pluck('nombre','id_categoriaIngreso'));
-            let optsHtml    = '';
-            for (const [idCat,nombre] of Object.entries(opciones)) {
-                optsHtml += `<option value="${idCat}" ${nombre===catActual?'selected':''}>${nombre}</option>`;
-            }
+                const opciones = @json(\App\Models\CategoriaIngreso::pluck('nombre','id_categoriaIngreso'));
+                let optsHtml = '';
+                for (const [idCat, nombre] of Object.entries(opciones)) {
+                    optsHtml +=
+                        `<option value="${idCat}" ${nombre===catActual?'selected':''}>${nombre}</option>`;
+                }
 
-            contenido = `
+                contenido = `
               <label>Descripción:</label><br>
               <input id="${inpDesc}"  type="text"   value="${descActual}"  style="width:100%;margin-bottom:10px;"><br>
               <label>Categoría:</label><br>
@@ -366,51 +408,70 @@
               <input id="${inpMonto}" type="number" value="${montoActual}" style="width:100%;margin-bottom:10px;">
             `;
 
-            alertify.confirm(`Editar ${tipo}`, contenido,
-                () => {
-                    fetch(`/ingresos/${id}`, {
-                        method:'PUT',
-                        headers:{
-                            'Content-Type':'application/json',
-                            'X-CSRF-TOKEN':'{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            descripcion : document.getElementById(inpDesc).value,
-                            categoria_id: document.getElementById(selCat).value,
-                            monto       : document.getElementById(inpMonto).value
-                        })
-                    })
-                    .then(r => r.ok ? location.reload() :
-                          alertify.error('No se pudo actualizar'));
-                },
-                () => {}
-            ).set('labels',{ok:'Guardar',cancel:'Cancelar'});
-        }
+                alertify.confirm(`Editar ${tipo}`, contenido,
+                    () => {
+                        fetch(`/ingresos/${id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    descripcion: document.getElementById(inpDesc).value,
+                                    categoria_id: document.getElementById(selCat).value,
+                                    monto: document.getElementById(inpMonto).value
+                                })
+                            })
+                            .then(r => r.ok ? location.reload() :
+                                alertify.error('No se pudo actualizar, por que ya tienes un presupuesto creado.'));
+                    },
+                    () => {}
+                ).set('labels', {
+                    ok: 'Guardar',
+                    cancel: 'Cancelar'
+                });
+            }
+        });
     });
-});
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Selecciona el contenedor del partial
+        const headerUser = document.querySelector('.header-user');
+
+        if (!headerUser) return;
+
+        // Función que muestra/oculta según ancho
+        function toggleHeaderUser() {
+            if (window.innerWidth <= 768) {
+                headerUser.style.display = 'none';
+            } else {
+                headerUser.style.display = '';
+            }
+        }
+
+        // Ejecuta al cargar…
+        toggleHeaderUser();
+
+        // …y cada vez que se redimensiona la ventana
+        window.addEventListener('resize', toggleHeaderUser);
+    });
+
+
+
+
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Selecciona el contenedor del partial
-  const headerUser = document.querySelector('.header-user');
+@if(session('success'))
+    alertify.success("{{ session('success') }}");
+@endif
 
-  if (!headerUser) return;
-
-  // Función que muestra/oculta según ancho
-  function toggleHeaderUser() {
-    if (window.innerWidth <= 768) {
-      headerUser.style.display = 'none';
-    } else {
-      headerUser.style.display = '';
-    }
-  }
-
-  // Ejecuta al cargar…
-  toggleHeaderUser();
-
-  // …y cada vez que se redimensiona la ventana
-  window.addEventListener('resize', toggleHeaderUser);
-});
+@if(session('error'))
+    alertify.error("{{ session('error') }}");
+@endif
 </script>
+
+
+    
 
 </html>

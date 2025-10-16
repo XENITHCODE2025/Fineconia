@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gastos e Ingresos - Fineconia</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    @vite('resources/css/GastosIngresos.css')
+    <link rel="stylesheet" href="resources/css/GastosIngresos.css">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
             </div>
             <div class="user-icon"><i class="bi bi-person-circle"></i></div>
         </div>
-    </nav>
+    </nav> 
 
     <!-- Header -->
     <header class="header">

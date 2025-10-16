@@ -7,12 +7,19 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\GraficasController;
 use App\Http\Controllers\IngresoController;
+use App\Http\Controllers\HistorialController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ObjetivoAhorroController;
 use App\Http\Controllers\TransaccionesController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\GraficasPresupuestoController;
+use App\Http\Controllers\ConsejosController;
+use App\Models\ObjetivoAhorro;
+use App\Http\Controllers\ObjetivoController;
+use App\Http\Controllers\AhorroController;
+
+
 use App\Models\Gasto;
 use App\Models\Presupuesto;
 use App\Models\Ingreso;
@@ -22,10 +29,18 @@ Route::get('/', function () {
     return view('Home');
 });
 
+Route::get('/educacion', function () {
+    return view('Educacion'); // tu archivo Educacion.blade.php
+})->name('educacion.financiera');
+
 // Registro
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
+// Rutas para el historial de abonos
+
+   Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
+   Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
 // Login
 Route::get('/login', function () {
     return view('LOGIN');
@@ -36,7 +51,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/bienvenida', fn() => view('Bienvenida'))->name('bienvenida');
     Route::get('/finanzas-personales', fn() => view('Finanzas_personales'))->name('finanzas.personales');
-    Route::get('/ahorro', fn() => view('Ahorro'))->name('ahorro');
+
 
     Route::get('/reportes', [ReporteController::class, 'index'])
         ->name('reportes');
@@ -60,7 +75,12 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    /* Vista y datos de la gráfica de pastel de presupuestos */
+    Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
+
+    Route::view('/historial', 'historial')->name('historial');
+
+    /* Vista y datos de la gráfica de pastel de presupuestos
+    pruebitas */
     Route::get(
         '/graficas/presupuestos',
         [GraficasPresupuestoController::class, 'index']
@@ -71,7 +91,7 @@ Route::middleware(['auth'])->group(function () {
         [GraficasPresupuestoController::class, 'data']
     )->name('graficas.presupuesto.data');
 
-     //Boton Ajustar Presupuesto
+    //Boton Ajustar Presupuesto
     Route::get('/presupuestos/registro', [PresupuestoController::class, 'index'])->name('presupuestos.index');
     // Presupuestos – eliminar
     Route::delete('/presupuestos/{id_Presupuesto}', [PresupuestoController::class, 'destroy'])->name('presupuestos.destroy');
@@ -81,8 +101,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Mostrar todos los ingresos y gastos 
     // Mostrar solo los ingresos
-
-
     Route::get('/gastos-ingresos', function () {
 
         $userId = auth()->id();
@@ -130,7 +148,8 @@ Route::middleware(['auth'])->group(function () {
 
         /* ───── LISTA FINAL ─────
        concat() evita el error “getKey()” porque no necesita
-       las llaves internas del modelo → */
+       las llaves internas del modelo → 
+       probando*/
         $transacciones = $gastos
             ->concat($ingresos)
             ->sortByDesc('fecha')
@@ -139,11 +158,38 @@ Route::middleware(['auth'])->group(function () {
         return view('welcome', compact('transacciones', 'saldoDisponible'));
     })->name('gastos-ingresos');
 
+    // CRUD Objetivos
+    Route::get('/ahorro', [ObjetivoAhorroController::class, 'indexMostrar'])->name('ahorro');
+    Route::get('/objetivos', [ObjetivoAhorroController::class, 'index'])->name('objetivos.index');
+    Route::post('/objetivos', [ObjetivoAhorroController::class, 'store'])->name('objetivos.store');
+    Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
+    Route::put('/objetivos/{id}', [ObjetivoAhorroController::class, 'update'])->name('objetivos.update'); // Actualizar un objetivo
+    Route::delete('/objetivos/{id}', [ObjetivoAhorroController::class, 'destroy'])->name('objetivos.destroy'); // Eliminar un objetivo
+    // para ver lo que abonaste
+    Route::get('/objetivos/{id}/abonado', [AhorroController::class, 'getAbonado'])->name('objetivos.abonado');
 
 
 
+    // Agregar esta ruta para verificar el conteo de objetivos
+    Route::get('/objetivos/count', [ObjetivoAhorroController::class, 'count'])->name('objetivos.count');
+
+    // Abonar a un objetivo
+    Route::post('/objetivos/{id}/abonar', [AhorroController::class, 'abonar'])->name('objetivos.abonar');
+
+    //Graficas de objetivos de ahorro
+    Route::middleware('auth')->get('/api/objetivos', [AhorroController::class, 'apiObjetivos']);
+
+    //crud consejos de ahorro
+    Route::get('/consejos', [ConsejosController::class, 'index'])->name('consejos.ahorro');
+    Route::get('/consejos/{id}', [ConsejosController::class, 'getConsejo']);
 
 
+    // Rutas para consejos de ahorro y gráficas de ahorro
+    Route::get('/ahorro.con', [App\Http\Controllers\AhorroController::class, 'indexConsejos'])
+        ->name('consejos.ahorro');
+
+
+    Route::get('/ahorro.gra', [AhorroController::class, 'indexGraficasAhorro'])->name('graficas.ahorro');
 
     // CRUD Gastos
     Route::prefix('gastos')->middleware(['auth'])->group(function () {
@@ -157,7 +203,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ingresos/crear', [IngresoController::class, 'create'])->name('ingresos.create');
     Route::post('/ingresos', [IngresoController::class, 'store'])->name('ingresos.store');
     Route::delete('/ingresos/{id}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
-    Route::put   ('/ingresos/{id}', [IngresoController::class, 'update'])->name('ingresos.update');
+    Route::put('/ingresos/{id}', [IngresoController::class, 'update'])->name('ingresos.update');
+
+    
+    // Rutas para el historial de abonos
+
+   Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
+   Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
+
+
 
 
     Route::get('/transacciones', [TransaccionesController::class, 'lista'])

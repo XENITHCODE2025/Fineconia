@@ -2,7 +2,7 @@
 /node_modules
 /public/build
 /public/hot
-/public/storage
+/public/storage/
 /storage/*.key
 /vendor
 .env.backup
@@ -17,3 +17,12 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+
+# --- PERMITIR GUIAS Y MINIATURAS ---
+!storage/app/public/
+!storage/app/public/guias/
+!storage/app/public/guias/**
+!storage/app/public/thumbnails/
+!storage/app/public/thumbnails/**
+# ------------------------------------

@@ -1,4 +1,4 @@
-HTML: <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -56,6 +56,7 @@ HTML: <!DOCTYPE html>
     .tabla-container::-webkit-scrollbar-track {
       background: #f1f1f1;
     }
+    
   </style>
 </head>
 <body>

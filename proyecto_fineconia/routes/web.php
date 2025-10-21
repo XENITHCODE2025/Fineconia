@@ -19,6 +19,9 @@ use App\Models\ObjetivoAhorro;
 use App\Http\Controllers\ObjetivoController;
 use App\Http\Controllers\AhorroController;
 
+use App\Http\Controllers\GuiaController;
+use App\Http\Controllers\FavoritoController;
+
 
 use App\Models\Gasto;
 use App\Models\Presupuesto;
@@ -29,9 +32,8 @@ Route::get('/', function () {
     return view('Home');
 });
 
-Route::get('/educacion', function () {
-    return view('Educacion'); // tu archivo Educacion.blade.php
-})->name('educacion.financiera');
+// Ruta para la página de educación financiera
+Route::get('/educacion', [GuiaController::class, 'index'])->name('educacion');
 
 // Registro
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -216,6 +218,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/transacciones', [TransaccionesController::class, 'lista'])
         ->name('transacciones.lista');
+
+
+        // Rutas para Favoritos
+    Route::post('/favorito/toggle', [FavoritoController::class, 'toggle'])->name('favorito.toggle');
+    Route::get('/favoritos', [FavoritoController::class, 'getUserFavoritos'])->name('favoritos.user');
 });
 
 

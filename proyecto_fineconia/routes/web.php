@@ -33,6 +33,10 @@ Route::get('/educacion', function () {
     return view('Educacion'); // tu archivo Educacion.blade.php
 })->name('educacion.financiera');
 
+Route::get('/educacion-financiera-inicio', function () {
+    return view('AquiVerGuia'); // tu archivo blade
+})->name('educacion.financiera.inicio');
+
 // Registro
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);

@@ -35,6 +35,10 @@ Route::get('/', function () {
 // Ruta para la página de educación financiera
 Route::get('/educacion', [GuiaController::class, 'index'])->name('educacion');
 
+Route::get('/educacion-financiera-inicio', function () {
+    return view('AquiVerGuia'); // tu archivo blade
+})->name('educacion.financiera.inicio');
+
 // Registro
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);

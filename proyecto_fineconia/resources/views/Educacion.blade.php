@@ -21,338 +21,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .guia-portada-container {
-      width: 100%;
-      height: 160px;
-      /* fija la altura del espacio de la portada */
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #f0f0f0;
-      /* opcional: color de fondo para portadas vacías */
-      border-bottom: 1px solid #ddd;
-      /* opcional: separación visual */
-    }
-
-    .guia-portada-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-
-    body {
-      background-color: #fff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* HEADER */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #31565e;
-      padding: 15px 30px;
-      color: white;
-      flex-wrap: wrap;
-    }
-
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo-container img {
-      width: 140px;
-      height: auto;
-      object-fit: contain;
-    }
-
-    .logo-container h1 {
-      font-size: 22px;
-      font-weight: 700;
-      color: white;
-    }
-
-    .user-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .user-icon {
-      font-size: 26px;
-      cursor: pointer;
-      color: white;
-    }
-
-    .user-icon:hover {
-      color: #f9b924;
-    }
-
-    /* CONTENIDO */
-    .contenido {
-      flex: 1;
-      padding: 30px 40px;
-    }
-
-    .contenido h2 {
-      color: #62AF46;
-      font-size: 26px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .contenido h2 i {
-      color: #62AF46;
-    }
-
-    /* BUSCADOR */
-    .buscador {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-bottom: 15px;
-      position: relative;
-    }
-
-    .buscador input {
-      flex: 1;
-      max-width: 250px;
-      padding: 10px 35px 10px 35px;
-      border: 1px solid #000;
-      border-radius: 8px;
-      font-family: 'Open Sans', sans-serif;
-    }
-
-    .buscador input::placeholder {
-      color: #A49696;
-    }
-
-    .buscador i.fa-search {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #A49696;
-    }
-
-    .buscador select {
-      padding: 10px;
-      border: 1px solid #000;
-      border-radius: 8px;
-      font-family: 'Open Sans', sans-serif;
-    }
-
-    .buscador label {
-      font-weight: 600;
-      color: #000;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .buscador button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #000;
-      font-size: 22px;
-    }
-
-    .buscador button:hover {
-      transform: scale(1.1);
-    }
-
-    .error-text {
-      color: #DE3B3B;
-      font-size: 14px;
-      margin-top: 5px;
-      display: none;
-    }
-
-    /* GRID DE GUIAS */
-    .guias-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
-      background: #fff;
-      border: 1px solid #D0D0D0;
-      border-radius: 10px;
-      padding: 15px;
-      max-height: 500px;
-      overflow-y: auto;
-    }
-
-    .guia {
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-      background-color: #fdfdfd;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease;
-    }
-
-    .guia:hover {
-      transform: scale(1.02);
-    }
-
-    .guia img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-    }
-
-    .guia-info {
-      padding: 15px;
-    }
-
-    .guia-info .marca {
-      color: #3ba64c;
-      font-weight: 600;
-      font-size: 13px;
-      margin-bottom: 3px;
-      font-family: 'Open Sans', sans-serif;
-    }
-
-    .guia-info .tipo-guia {
-      color: #000;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-family: 'Open Sans', sans-serif;
-    }
-
-    .guia-info h3 {
-      font-size: 17px;
-      margin-top: 10px;
-      margin-bottom: 12px;
-      font-weight: 700;
-      color: #000;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .guia-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 15px 15px 15px;
-    }
-
-    .btn-iniciar {
-      background-color: #31565e;
-      color: white;
-      border: none;
-      padding: 7px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .btn-iniciar:hover {
-      background-color: #3b6e76;
-    }
-
-    .btn-favorito {
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      color: #000;
-      font-size: 18px;
-    }
-
-    .btn-favorito.activo {
-      color: #000000;
-    }
-
-    .sin-resultados {
-      text-align: center;
-      color: #000;
-      font-weight: 500;
-      margin-top: 15px;
-    }
-
-    /* LINEA DIVISORA */
-    .linea-divisora {
-      width: 100%;
-      height: 1px;
-      background-color: #000;
-      margin-top: 40px;
-    }
-
-    /* FOOTER */
-    .footer {
-      background-color: #31565e;
-      color: #fff;
-      padding: 25px 20px;
-    }
-
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      max-width: 1200px;
-      margin: 0 auto;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .footer-links,
-    .footer-contact {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .footer-links a,
-    .footer-contact a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 15px;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .footer-links a:hover,
-    .footer-contact a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 992px) {
-      .guias-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 600px) {
-      .guias-container {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Resaltar búsqueda */
-    .resaltado {
-      background-color: #F9B924;
-      padding: 0 2px;
-      border-radius: 2px;
-    }
-  </style>
+  @vite('resources/css/Educacion.css')
 </head>
 
 <body>
@@ -361,9 +30,183 @@
     <div class="logo-container" style="max-width: 200px; width: 100%;">
       <img src="img/LogoCompleto.jpg" alt="Logo" style="height: 100px; width: 100%; object-fit: contain;">
     </div>
-    <div class="user-section">
-      @include('partials.header-user') {{-- ← nuevo partial --}}
+    <!-- BOTÓN DE USUARIO -->
+<div class="user-section" id="btn-user">
+  @include('partials.header-user') {{-- ← partial del usuario --}}
+</div>
+
+<!-- DESPLEGABLE DEL MENÚ USUARIO -->
+<div class="user-menu" id="userMenu">
+  <div class="menu-container">
+    <div class="menu-header">
+      <i class="bi bi-person-circle"></i>
+      <span>{{ Auth::user()->name }}</span>
     </div>
+
+    <div class="menu-item" id="btn-datos">
+      <span>Datos Generales</span>
+      <i class="bi bi-chevron-right"></i>
+    </div>
+
+    <div class="menu-item">
+      <span>Mis Objetivos</span>
+      <i class="bi bi-chevron-right"></i>
+    </div>
+
+    <div class="menu-item">
+      <span>Ayuda</span>
+      <i class="bi bi-chevron-right"></i>
+    </div>
+
+    <button class="logout-btn" id="btnLogout">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- ÍCONOS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+/* 🎨 VARIABLES DE CONTROL */
+:root {
+  --menu-top: 95px;      /* posición vertical del desplegable */
+  --menu-right: 30px;    /* posición horizontal del desplegable */
+  --menu-text-color: #000; /* color principal del texto */
+  --menu-bg: #fff;       /* color del fondo del menú */
+  --menu-hover: #f7f7f7; /* color de fondo al pasar el mouse */
+  --menu-accent: #31565e; /* color de detalles y bordes */
+}
+
+/* MENÚ DESPLEGABLE */
+.user-menu {
+  position: absolute;
+  top: var(--menu-top);
+  right: var(--menu-right);
+  display: none;
+  z-index: 9999;
+  background-color: transparent;
+}
+
+/* CAJA DEL MENÚ */
+.menu-container {
+  background-color: var(--menu-bg);
+  width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  animation: fadeIn 0.25s ease;
+  color: var(--menu-text-color);
+}
+
+/* CABECERA DEL MENÚ */
+.menu-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu-header i {
+  font-size: 28px;
+  color: var(--menu-accent);
+  margin-right: 10px;
+}
+
+.menu-header span {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--menu-text-color);
+}
+
+/* ELEMENTOS DEL MENÚ */
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+  color: var(--menu-text-color);
+}
+
+.menu-item:hover {
+  background-color: var(--menu-hover);
+}
+
+.menu-item:last-of-type {
+  border-bottom: none;
+}
+
+.menu-item i {
+  font-size: 18px;
+  color: var(--menu-text-color);
+}
+
+/* BOTÓN DE CERRAR SESIÓN */
+.logout-btn {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 20px auto;
+  padding: 10px 0;
+  background: transparent;
+  border: 1px solid var(--menu-accent);
+  color: var(--menu-text-color);
+  font-size: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: var(--menu-accent);
+  color: #fff;
+}
+
+/* ANIMACIÓN DE APARICIÓN */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+
+<script>
+  const userBtn = document.getElementById('btn-user');
+  const userMenu = document.getElementById('userMenu');
+  const btnDatos = document.getElementById('btn-datos');
+  const btnLogout = document.getElementById('btnLogout');
+
+  // Mostrar / ocultar menú al hacer clic en el botón del usuario
+  userBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isVisible = userMenu.style.display === 'block';
+    userMenu.style.display = isVisible ? 'none' : 'block';
+  });
+
+  // Redirigir al hacer clic en "Datos Generales"
+  btnDatos.addEventListener('click', () => {
+    window.location.href = "{{ route('centro.usuario') }}";
+  });
+
+  // Cerrar menú si se hace clic fuera
+  document.addEventListener('click', (e) => {
+    if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+      userMenu.style.display = 'none';
+    }
+  });
+
+  // Simulación de cierre de sesión
+  btnLogout.addEventListener('click', () => {
+    alert('Sesión cerrada');
+    userMenu.style.display = 'none';
+  });
+</script>
   </header>
 
   <!-- CONTENIDO -->
@@ -423,10 +266,10 @@
 
     <div class="guia-footer">
       <button
-        class="btn-iniciar"
-        onclick="window.open('{{ Storage::url($guia['ruta']) }}', '_blank')">
-        Iniciar
-      </button>
+    class="btn-iniciar"
+    onclick="window.location.href='{{ route('ruta.guia') }}'">
+    Iniciar
+</button>
       <button class="btn-favorito">
         <i class="fa-regular fa-star"></i>
       </button>

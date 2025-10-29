@@ -32,8 +32,25 @@ Route::get('/', function () {
     return view('Home');
 });
 
+Route::get('/guia', function () {
+    return view('AquiVerGuia');
+})->name('ruta.guia');
+
+// Ruta para la pantalla Centro de Usuario
+Route::get('/centro-de-usuario', function () {
+    return view('CentroDeUsuario');
+})->name('centro.usuario');
+
+Route::get('/fineconia-home', function () {
+    return view('Bienvenida'); // Aquí pones el nombre de tu vista Blade de Fineconia
+})->name('fineconia.home');
+
 // Ruta para la página de educación financiera
 Route::get('/educacion', [GuiaController::class, 'index'])->name('educacion');
+
+Route::get('/educacion-financiera-inicio', function () {
+    return view('AquiVerGuia'); // tu archivo blade
+})->name('educacion.financiera.inicio');
 
 // Registro
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');

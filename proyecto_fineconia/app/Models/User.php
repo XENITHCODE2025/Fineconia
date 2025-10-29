@@ -26,7 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'edad',
         'miembro',
     ];
-    
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -49,5 +49,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class);
     }
 }

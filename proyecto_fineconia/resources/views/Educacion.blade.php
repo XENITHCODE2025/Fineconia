@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <title>Educación Financiera - Fineconia</title>
 
   <!-- Iconos -->
@@ -16,8 +21,10 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
+
   <!-- Estilos externos -->
   @vite('resources/css/Educacion.css')
+
 </head>
 
 <body>
@@ -27,8 +34,10 @@
       <img src="img/LogoCompleto.jpg" alt="Logo" style="height: 100px; width: 100%; object-fit: contain;">
     </div>
     <div class="user-section">
+
       @include('partials.header-user')
     </div> 
+
   </header>
 
   <!-- CONTENIDO -->
@@ -42,11 +51,11 @@
       <label for="categoria">Categorías:</label>
       <select id="categoria">
         <option value="todas">Todas</option>
-        <option>Finanzas básicas</option>
+        <option>Finanzas basicas</option>
         <option>Ahorro y metas</option>
-        <option>Crédito y deudas</option>
-        <option>Inversión y futuro</option>
-        <option>Economía en la vida diaria</option>
+        <option>Credito y deudas</option>
+        <option>Inversion y futuro</option>
+        <option>Economia en la vida diaria</option>
         <option>Seguridad financiera</option>
         <option>Finanzas familiares</option>
         <option>Emprendimiento y trabajo</option>
@@ -58,6 +67,7 @@
 
     <p id="mensaje-favoritos" class="sin-resultados" style="display:none;">Aún no tienes guías guardadas como favoritas</p>
     <p id="sin-resultados" class="sin-resultados" style="display:none;">No se han encontrado resultados para su búsqueda</p>
+
 
     <!-- CONTENEDOR GUIAS -->
     <div id="guias" class="guias-container">
@@ -74,7 +84,23 @@
           <button class="btn-favorito"><i class="fa-regular fa-star"></i></button>
         </div>
       </div>
+
     </div>
+
+    <div class="guia-footer">
+      <button
+        class="btn-iniciar"
+        onclick="window.open('{{ Storage::url($guia['ruta']) }}', '_blank')">
+        Iniciar
+      </button>
+      <button class="btn-favorito">
+        <i class="fa-regular fa-star"></i>
+      </button>
+    </div>
+  </div>
+  @endforeach
+</div>
+
   </main>
 
   <div class="linea-divisora"></div>
@@ -92,6 +118,7 @@
       </div>
     </div>
   </footer>
+
 
   <!-- JS -->
   <script>
@@ -194,4 +221,5 @@
     });
   </script>
 </body>
+
 </html>

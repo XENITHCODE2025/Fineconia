@@ -65,7 +65,7 @@
   <div class="card-text">
     Accede a cursos, guías y simuladores para aprender sobre dinero, inversión y planificación.
   </div>
-  <a href="{{ route('educacion.financiera') }}" style="text-decoration: none;">
+  <a href="{{ route('educacion') }}" style="text-decoration: none;">
     <button class="btn">Acceder</button>
   </a>
 </div>

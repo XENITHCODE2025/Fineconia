@@ -1,5 +1,6 @@
 {
-    "private": true,
+
+"private": true,
     "type": "module",
     "scripts": {
         "build": "vite build",
@@ -18,4 +19,4 @@
     "dependencies": {
         "alertifyjs": "^1.14.0"
     }
-}
+

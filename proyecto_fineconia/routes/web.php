@@ -19,6 +19,9 @@ use App\Models\ObjetivoAhorro;
 use App\Http\Controllers\ObjetivoController;
 use App\Http\Controllers\AhorroController;
 
+use App\Http\Controllers\GuiaController;
+use App\Http\Controllers\FavoritoController;
+
 
 use App\Models\Gasto;
 use App\Models\Presupuesto;
@@ -29,9 +32,8 @@ Route::get('/', function () {
     return view('Home');
 });
 
-Route::get('/educacion', function () {
-    return view('Educacion'); // tu archivo Educacion.blade.php
-})->name('educacion.financiera');
+// Ruta para la página de educación financiera
+Route::get('/educacion', [GuiaController::class, 'index'])->name('educacion');
 
 Route::get('/educacion-financiera-inicio', function () {
     return view('AquiVerGuia'); // tu archivo blade
@@ -167,6 +169,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/objetivos', [ObjetivoAhorroController::class, 'index'])->name('objetivos.index');
     Route::post('/objetivos', [ObjetivoAhorroController::class, 'store'])->name('objetivos.store');
     Route::get('/objetivos/nuevo', [ObjetivoAhorroController::class, 'create'])->name('objetivos.nuevo');
+    Route::put('/objetivos/{id}', [ObjetivoAhorroController::class, 'update'])->name('objetivos.update'); // Actualizar un objetivo
+    Route::delete('/objetivos/{id}', [ObjetivoAhorroController::class, 'destroy'])->name('objetivos.destroy'); // Eliminar un objetivo
+    // para ver lo que abonaste
+    Route::get('/objetivos/{id}/abonado', [AhorroController::class, 'getAbonado'])->name('objetivos.abonado');
+
+
+
     // Agregar esta ruta para verificar el conteo de objetivos
     Route::get('/objetivos/count', [ObjetivoAhorroController::class, 'count'])->name('objetivos.count');
 
@@ -202,9 +211,22 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ingresos/{id}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
     Route::put('/ingresos/{id}', [IngresoController::class, 'update'])->name('ingresos.update');
 
+    
+    // Rutas para el historial de abonos
+
+   Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
+   Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
+
+
+
 
     Route::get('/transacciones', [TransaccionesController::class, 'lista'])
         ->name('transacciones.lista');
+
+
+        // Rutas para Favoritos
+    Route::post('/favorito/toggle', [FavoritoController::class, 'toggle'])->name('favorito.toggle');
+    Route::get('/favoritos', [FavoritoController::class, 'getUserFavoritos'])->name('favoritos.user');
 });
 
 

@@ -136,5 +136,16 @@ class AhorroController extends Controller
 
         return response()->json($objetivos);
     }
-}
 
+    // AhorroController.php
+    public function getAbonado($id)
+    {
+        $objetivo = ObjetivoAhorro::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        return response()->json([
+            'monto_ahorrado' => $objetivo->monto_ahorrado
+        ]);
+    }
+}

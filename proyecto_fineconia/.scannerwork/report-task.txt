@@ -1,0 +1,6 @@
+projectKey=Fineconia
+serverUrl=http://localhost:9000
+serverVersion=25.10.0.114319
+dashboardUrl=http://localhost:9000/dashboard?id=Fineconia
+ceTaskId=1e771766-48cc-406d-b3ea-05e62bf4d950
+ceTaskUrl=http://localhost:9000/api/ce/task?id=1e771766-48cc-406d-b3ea-05e62bf4d950

@@ -7,6 +7,9 @@
   <title>Fineconia</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
  @vite('resources/css/Bienvenida.css')
+
+ <!-- ÍCONOS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
   <div class="header">
@@ -14,9 +17,77 @@
       <div class="logo-container">
        <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
       </div>
-      <div class="user-section">
-         @include('partials.header-user')  {{-- ← nuevo partial --}}
-      </div> 
+      <!-- BOTÓN DE USUARIO -->
+<div class="user-section" id="btn-user">
+  @include('partials.header-user') {{-- ← partial del usuario --}}
+</div>
+
+<!-- DESPLEGABLE DEL MENÚ USUARIO -->
+<div class="user-menu" id="userMenu">
+  <div class="menu-container">
+    <div class="menu-header">
+      <i class="bi bi-person-circle"></i>
+      <span>{{ Auth::user()->name }}</span>
+    </div>
+
+    <div class="menu-item" id="btn-datos">
+      <span>Datos Generales</span>
+      <i class="bi bi-chevron-right"></i>
+    </div>
+
+    <div class="menu-item" id="btn-objetivos">    
+  <span>Mis Objetivos</span>    
+  <i class="bi bi-chevron-right"></i>    
+</div>
+
+
+    <div class="menu-item">
+      <span>Ayuda</span>
+      <i class="bi bi-chevron-right"></i>
+    </div>
+
+    <button class="logout-btn" id="btnLogout">Cerrar sesión</button>
+  </div>
+</div>
+
+<script>
+  const userBtn = document.getElementById('btn-user');
+  const userMenu = document.getElementById('userMenu');
+  const btnDatos = document.getElementById('btn-datos');
+  const btnLogout = document.getElementById('btnLogout');
+
+  // Mostrar / ocultar menú al hacer clic en el botón del usuario
+  userBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isVisible = userMenu.style.display === 'block';
+    userMenu.style.display = isVisible ? 'none' : 'block';
+  });
+
+  // Redirigir al hacer clic en "Datos Generales"
+  btnDatos.addEventListener('click', () => {
+    window.location.href = "{{ route('centro.usuario') }}";
+  });
+
+  // Cerrar menú si se hace clic fuera
+  document.addEventListener('click', (e) => {
+    if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+      userMenu.style.display = 'none';
+    }
+  });
+
+  // Simulación de cierre de sesión
+  btnLogout.addEventListener('click', () => {
+    alert('Sesión cerrada');
+    userMenu.style.display = 'none';
+  }); 
+
+  // Redirigir al hacer clic en "Mis Objetivos"
+const btnObjetivos = document.getElementById('btn-objetivos');
+btnObjetivos.addEventListener('click', () => {
+  window.location.href = "{{ route('centro.objetivos') }}";
+});
+
+</script>
     </div>
     <div class="logo-container" style="justify-content: center; margin-top: 10px;">
       <div class="logo">FINECONIA</div>

@@ -21,10 +21,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
-
-  <!-- Estilos externos -->
   @vite('resources/css/Educacion.css')
-
 </head>
 
 <body>
@@ -33,11 +30,183 @@
     <div class="logo-container" style="max-width: 200px; width: 100%;">
       <img src="img/LogoCompleto.jpg" alt="Logo" style="height: 100px; width: 100%; object-fit: contain;">
     </div>
-    <div class="user-section">
+    <!-- BOTÓN DE USUARIO -->
+<div class="user-section" id="btn-user">
+  @include('partials.header-user') {{-- ← partial del usuario --}}
+</div>
 
-      @include('partials.header-user')
-    </div> 
+<!-- DESPLEGABLE DEL MENÚ USUARIO -->
+<div class="user-menu" id="userMenu">
+  <div class="menu-container">
+    <div class="menu-header">
+      <i class="bi bi-person-circle"></i>
+      <span>{{ Auth::user()->name }}</span>
+    </div>
 
+    <div class="menu-item" id="btn-datos">
+      <span>Datos Generales</span>
+      <i class="bi bi-chevron-right"></i>
+    </div>
+
+    <div class="menu-item">
+      <span>Mis Objetivos</span>
+      <i class="bi bi-chevron-right"></i>
+    </div>
+
+    <div class="menu-item">
+      <span>Ayuda</span>
+      <i class="bi bi-chevron-right"></i>
+    </div>
+
+    <button class="logout-btn" id="btnLogout">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- ÍCONOS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+/* 🎨 VARIABLES DE CONTROL */
+:root {
+  --menu-top: 95px;      /* posición vertical del desplegable */
+  --menu-right: 30px;    /* posición horizontal del desplegable */
+  --menu-text-color: #000; /* color principal del texto */
+  --menu-bg: #fff;       /* color del fondo del menú */
+  --menu-hover: #f7f7f7; /* color de fondo al pasar el mouse */
+  --menu-accent: #31565e; /* color de detalles y bordes */
+}
+
+/* MENÚ DESPLEGABLE */
+.user-menu {
+  position: absolute;
+  top: var(--menu-top);
+  right: var(--menu-right);
+  display: none;
+  z-index: 9999;
+  background-color: transparent;
+}
+
+/* CAJA DEL MENÚ */
+.menu-container {
+  background-color: var(--menu-bg);
+  width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  animation: fadeIn 0.25s ease;
+  color: var(--menu-text-color);
+}
+
+/* CABECERA DEL MENÚ */
+.menu-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu-header i {
+  font-size: 28px;
+  color: var(--menu-accent);
+  margin-right: 10px;
+}
+
+.menu-header span {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--menu-text-color);
+}
+
+/* ELEMENTOS DEL MENÚ */
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+  color: var(--menu-text-color);
+}
+
+.menu-item:hover {
+  background-color: var(--menu-hover);
+}
+
+.menu-item:last-of-type {
+  border-bottom: none;
+}
+
+.menu-item i {
+  font-size: 18px;
+  color: var(--menu-text-color);
+}
+
+/* BOTÓN DE CERRAR SESIÓN */
+.logout-btn {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 20px auto;
+  padding: 10px 0;
+  background: transparent;
+  border: 1px solid var(--menu-accent);
+  color: var(--menu-text-color);
+  font-size: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: var(--menu-accent);
+  color: #fff;
+}
+
+/* ANIMACIÓN DE APARICIÓN */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+
+<script>
+  const userBtn = document.getElementById('btn-user');
+  const userMenu = document.getElementById('userMenu');
+  const btnDatos = document.getElementById('btn-datos');
+  const btnLogout = document.getElementById('btnLogout');
+
+  // Mostrar / ocultar menú al hacer clic en el botón del usuario
+  userBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isVisible = userMenu.style.display === 'block';
+    userMenu.style.display = isVisible ? 'none' : 'block';
+  });
+
+  // Redirigir al hacer clic en "Datos Generales"
+  btnDatos.addEventListener('click', () => {
+    window.location.href = "{{ route('centro.usuario') }}";
+  });
+
+  // Cerrar menú si se hace clic fuera
+  document.addEventListener('click', (e) => {
+    if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+      userMenu.style.display = 'none';
+    }
+  });
+
+  // Simulación de cierre de sesión
+  btnLogout.addEventListener('click', () => {
+    alert('Sesión cerrada');
+    userMenu.style.display = 'none';
+  });
+</script>
   </header>
 
   <!-- CONTENIDO -->
@@ -68,31 +237,39 @@
     <p id="mensaje-favoritos" class="sin-resultados" style="display:none;">Aún no tienes guías guardadas como favoritas</p>
     <p id="sin-resultados" class="sin-resultados" style="display:none;">No se han encontrado resultados para su búsqueda</p>
 
+<!-- CONTENEDOR GUIAS -->
+<div id="guias" class="guias-container">
+  @foreach($guias as $guia)
+  <div class="guia" data-path="{{ $guia['ruta'] }}" data-categoria="{{ $guia['categoria'] }}">
 
-    <!-- CONTENEDOR GUIAS -->
-    <div id="guias" class="guias-container">
-      <!-- Ejemplo de guía -->
-      <div class="guia" data-categoria="Finanzas básicas">
-        <img src="img/presupuesto.jpg" alt="Guía Presupuesto Familiar">
-        <div class="guia-info">
-          <div class="marca">FINECONIA</div>
-          <div class="tipo-guia"><i class="fa-solid fa-book-open"></i> Guía | Educación Financiera</div>
-          <h3>Cómo crear tu primer presupuesto familiar</h3>
-        </div>
-        <div class="guia-footer">
-          <a href="{{ route('educacion.financiera.inicio') }}" class="btn-iniciar">Iniciar</a>
-          <button class="btn-favorito"><i class="fa-regular fa-star"></i></button>
-        </div>
+    {{-- Contenedor para la miniatura o portada --}}
+    <div class="guia-portada-container"
+         style="display: flex; justify-content: center; align-items: center; width: 100%; height: 220px; overflow: hidden; background-color: #f8f8f8; border-radius: 8px;">
+      @php
+        $urlPortada = $guia['miniatura'] ? Storage::url($guia['miniatura']) : asset('img/portada-pdf.png');
+      @endphp
+
+      <img
+        src="{{ $urlPortada }}"
+        alt="Portada {{ $guia['titulo'] }}"
+        class="guia-portada"
+        style="width: 100%; height: 100%; object-fit: contain; display: block;">
+    </div>
+
+    <div class="guia-info">
+      <div class="marca">FINECONIA</div>
+      <div class="tipo-guia">
+        <i class="fa-solid fa-book-open"></i> Guía | {{ $guia['categoria'] }}
       </div>
-
+      <h3>{{ $guia['titulo'] }}</h3>
     </div>
 
     <div class="guia-footer">
       <button
-        class="btn-iniciar"
-        onclick="window.open('{{ Storage::url($guia['ruta']) }}', '_blank')">
-        Iniciar
-      </button>
+    class="btn-iniciar"
+    onclick="window.location.href='{{ route('ruta.guia') }}'">
+    Iniciar
+</button>
       <button class="btn-favorito">
         <i class="fa-regular fa-star"></i>
       </button>
@@ -119,107 +296,175 @@
     </div>
   </footer>
 
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const inputBusqueda = document.getElementById('busqueda');
+  const categoriaSelect = document.getElementById('categoria');
+  const contenedorGuias = document.getElementById('guias');
+  const sinResultados = document.getElementById('sin-resultados');
+  const errorText = document.getElementById('error-text');
+  const mensajeFavoritos = document.getElementById('mensaje-favoritos');
+  const btnFavoritosTop = document.getElementById('favoritos');
+  let mostrarFavoritos = false;
+  let favoritosGuardados = [];
 
-  <!-- JS -->
-  <script>
-    const inputBusqueda = document.getElementById('busqueda');
-    const categoriaSelect = document.getElementById('categoria');
-    const contenedorGuias = document.getElementById('guias');
-    const sinResultados = document.getElementById('sin-resultados');
-    const errorText = document.getElementById('error-text');
-    const mensajeFavoritos = document.getElementById('mensaje-favoritos');
-    const btnFavoritosTop = document.getElementById('favoritos');
-    let mostrarFavoritos = false;
-
-    function resaltarTexto(texto, busqueda) {
-      if (!busqueda) return texto;
-      const regex = new RegExp(`(${busqueda})`, 'gi');
-      return texto.replace(regex, '<span class="resaltado">$1</span>');
+  // --- Cargar favoritos desde base de datos ---
+  try {
+    const res = await fetch('/favoritos');
+    if (res.ok) {
+      favoritosGuardados = await res.json();
     }
+  } catch (err) {
+    console.error('Error al cargar favoritos:', err);
+  }
 
-    function filtrarGuias() {
-      const valorBusqueda = inputBusqueda.value.trim().toLowerCase();
-      const categoriaSeleccionada = categoriaSelect.value.toLowerCase();
-      const guias = contenedorGuias.querySelectorAll('.guia');
-      let hayResultados = false;
-      let hayFavoritos = false;
+  // --- Resalta coincidencias ---
+  function resaltarTexto(texto, busqueda) {
+    if (!busqueda) return texto;
+    const regex = new RegExp(`(${busqueda})`, 'gi');
+    return texto.replace(regex, '<span class="resaltado">$1</span>');
+  }
 
-      guias.forEach(g => {
-        const tituloOriginal = g.querySelector('h3').dataset.original || g.querySelector('h3').textContent;
-        g.querySelector('h3').dataset.original = tituloOriginal;
+  // --- Aplica filtros de búsqueda, categoría y favoritos ---
+  function filtrarGuias() {
+    const valorBusqueda = inputBusqueda.value.trim().toLowerCase();
+    const categoriaSeleccionada = categoriaSelect.value.toLowerCase();
+    const guias = contenedorGuias.querySelectorAll('.guia');
+    let hayResultados = false;
+    let hayFavoritos = false;
 
-        const categoria = g.dataset.categoria.toLowerCase();
-        const esFavorita = g.classList.contains('favorita');
+    guias.forEach((g) => {
+      const titulo = g.querySelector('h3');
+      const tituloOriginal = titulo.dataset.original || titulo.textContent;
+      titulo.dataset.original = tituloOriginal;
 
-        const cumpleBusqueda = valorBusqueda === '' || tituloOriginal.toLowerCase().includes(valorBusqueda) || categoria.includes(valorBusqueda);
-        const cumpleCategoria = categoriaSeleccionada === 'todas' || categoria === categoriaSeleccionada;
-        const cumpleFavoritos = !mostrarFavoritos || esFavorita;
+      const categoria = g.dataset.categoria.toLowerCase();
+      const path = g.dataset.path;
+      const esFavorita = favoritosGuardados.includes(path);
 
-        const mostrar = cumpleBusqueda && cumpleCategoria && cumpleFavoritos;
+      const cumpleBusqueda =
+        valorBusqueda === '' ||
+        tituloOriginal.toLowerCase().includes(valorBusqueda) ||
+        categoria.includes(valorBusqueda);
+      const cumpleCategoria =
+        categoriaSeleccionada === 'todas' || categoria === categoriaSeleccionada;
+      const cumpleFavoritos = !mostrarFavoritos || esFavorita;
 
-        if (mostrar) {
-          g.style.display = 'block';
-          g.querySelector('h3').innerHTML = resaltarTexto(tituloOriginal, valorBusqueda);
-          hayResultados = true;
-        } else {
-          g.style.display = 'none';
-        }
+      const mostrar = cumpleBusqueda && cumpleCategoria && cumpleFavoritos;
 
-        if (esFavorita) hayFavoritos = true;
-      });
-
-      if (mostrarFavoritos && !hayFavoritos) {
-        mensajeFavoritos.style.display = 'block';
-        sinResultados.style.display = 'none';
+      if (mostrar) {
+        g.style.display = 'block';
+        titulo.innerHTML = resaltarTexto(tituloOriginal, valorBusqueda);
+        hayResultados = true;
       } else {
-        mensajeFavoritos.style.display = 'none';
-        sinResultados.style.display = hayResultados ? 'none' : 'block';
+        g.style.display = 'none';
       }
+
+      if (esFavorita) hayFavoritos = true;
+    });
+
+    // --- Mostrar mensajes según el resultado ---
+    if (mostrarFavoritos && !hayFavoritos) {
+      mensajeFavoritos.style.display = 'block';
+      mensajeFavoritos.style.textAlign = 'center';
+      mensajeFavoritos.style.color = '#000';
+      sinResultados.style.display = 'none';
+    } else {
+      mensajeFavoritos.style.display = 'none';
+      sinResultados.style.display = hayResultados ? 'none' : 'block';
     }
 
-    inputBusqueda.addEventListener('input', filtrarGuias);
+    return { hayResultados, valorBusqueda };
+  }
 
-    inputBusqueda.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        if (inputBusqueda.value.trim() === '') {
-          errorText.style.display = 'block';
-        } else {
-          errorText.style.display = 'none';
-          filtrarGuias();
-        }
-      }
-    });
+  // --- Inicializar botones de favoritos ---
+  document.querySelectorAll('.btn-favorito').forEach((btn) => {
+    const guia = btn.closest('.guia');
+    const path = guia.dataset.path;
 
-    categoriaSelect.addEventListener('change', filtrarGuias);
+    if (favoritosGuardados.includes(path)) {
+      guia.classList.add('favorita');
+      btn.classList.add('activo');
+      btn.innerHTML = '<i class="fa-solid fa-star"></i>';
+    }
 
-    btnFavoritosTop.addEventListener('click', () => {
-      mostrarFavoritos = !mostrarFavoritos;
-      btnFavoritosTop.innerHTML = mostrarFavoritos ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
-      filtrarGuias();
-    });
+    btn.addEventListener('click', async () => {
+      try {
+        const res = await fetch('/favorito/toggle', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+          },
+          body: JSON.stringify({ guia_path: path })
+        });
 
-    document.querySelectorAll('.btn-favorito').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const guia = btn.closest('.guia');
-        guia.classList.toggle('favorita');
-        btn.classList.toggle('activo');
-        if (btn.classList.contains('activo')) {
+        const result = await res.json();
+
+        if (result.status === 'added') {
+          guia.classList.add('favorita');
+          btn.classList.add('activo');
           btn.innerHTML = '<i class="fa-solid fa-star"></i>';
+          if (!favoritosGuardados.includes(path)) favoritosGuardados.push(path);
           alertify.success("Guía agregada a favoritos con éxito.");
         } else {
+          guia.classList.remove('favorita');
+          btn.classList.remove('activo');
           btn.innerHTML = '<i class="fa-regular fa-star"></i>';
+          favoritosGuardados = favoritosGuardados.filter(p => p !== path);
           alertify.success("Guía desagregada de favoritos con éxito.");
         }
-        if (mostrarFavoritos) filtrarGuias();
-      });
-    });
 
-    document.querySelectorAll('.btn-iniciar').forEach(btn => {
-      btn.addEventListener('click', () => {
-        window.location.href = 'guia.html';
-      });
+        if (mostrarFavoritos) filtrarGuias();
+      } catch (err) {
+        console.error('Error al cambiar favorito:', err);
+      }
     });
-  </script>
+  });
+
+  // --- Filtro de favoritos ---
+  btnFavoritosTop.addEventListener('click', () => {
+    mostrarFavoritos = !mostrarFavoritos;
+    btnFavoritosTop.innerHTML = mostrarFavoritos
+      ? '<i class="fa-solid fa-star"></i>'
+      : '<i class="fa-regular fa-star"></i>';
+    filtrarGuias();
+    alertify.success('Listado de favoritos obtenido con éxito.');
+  });
+
+  // --- Búsqueda solo al presionar Enter ---
+  inputBusqueda.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const busqueda = inputBusqueda.value.trim();
+      if (busqueda === '') {
+        errorText.style.display = 'block';
+      } else {
+        errorText.style.display = 'none';
+        const { hayResultados } = filtrarGuias();
+        if (hayResultados) {
+          alertify.success('Búsqueda completada con éxito.');
+        } else {
+          alertify.error('No se han encontrado resultados para su búsqueda.');
+        }
+      }
+    }
+  });
+
+  // --- Restaurar guías al borrar búsqueda ---
+  inputBusqueda.addEventListener('input', () => {
+    if (inputBusqueda.value.trim() === '') {
+      errorText.style.display = 'none';
+      filtrarGuias(); // vuelve a mostrar todas las guías
+    }
+  });
+
+  // --- Cambio de categoría ---
+  categoriaSelect.addEventListener('change', filtrarGuias);
+
+  // --- Cargar favoritos al inicio ---
+  filtrarGuias();
+});
+</script>
 </body>
 
 </html>

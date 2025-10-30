@@ -29,8 +29,12 @@ use App\Models\Ingreso;
 
 // Página principal
 Route::get('/', function () {
-    return view('Home');
+    return view('CentroDeObjetivo');
 });
+
+Route::get('/centro-objetivos', function () {
+    return view('CentroDeObjetivo'); // nombre del archivo Blade
+})->name('centro.objetivos');
 
 Route::get('/guia', function () {
     return view('AquiVerGuia');

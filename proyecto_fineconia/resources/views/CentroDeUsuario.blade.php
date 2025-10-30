@@ -18,10 +18,9 @@
   <div class="logo-container" style="max-width: 200px; width: 100%;">
     <img src="img/LogoCompleto.jpg" alt="Logo" style="height: 100px; width: 100%; object-fit: contain;">
   </div>
-
   <div class="user-section header-user">
-  <a href="{{ route('fineconia.home') }}" class="nav-link">Home</a>
-</div>
+    <a href="{{ route('fineconia.home') }}" class="nav-link">Home</a>
+  </div>
 </nav>
 
 <!-- Contenedor principal -->

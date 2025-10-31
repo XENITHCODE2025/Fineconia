@@ -161,11 +161,12 @@ btnObjetivos.addEventListener('click', () => {
     </div>
 
     <div class="guia-footer">
-      <button
-    class="btn-iniciar"
-    onclick="window.location.href='{{ route('ruta.guia') }}'">
-    Iniciar
+     <button class="btn-iniciar"
+  onclick="window.location.href='{{ route('ruta.guia', ['path' => urlencode($guia['ruta'])]) }}'">
+  Iniciar
 </button>
+
+
       <button class="btn-favorito">
         <i class="fa-regular fa-star"></i>
       </button>

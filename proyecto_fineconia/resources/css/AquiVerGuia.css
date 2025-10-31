@@ -524,3 +524,80 @@ main.contenido {
     transform: translateY(0);
   }
 }
+
+/* Estilos adicionales para el visor PDF mejorado */
+
+/* Controles del PDF */
+.pdf-controls {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Miniaturas mejoradas */
+.mini-slide {
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.mini-slide:hover {
+  background-color: #f0f8f5;
+  transform: translateY(-2px);
+}
+
+.mini-slide.active {
+  background-color: #e1f0e1;
+  border: 2px solid #62AF46;
+}
+
+.mini-slide img {
+  width: 100%;
+  max-width: 80px;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mini-slide span {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #31565e;
+  text-align: center;
+}
+
+/* Estados de los botones de navegación 
+.navegacion {
+  transition: all 0.3s ease;
+}
+
+.navegacion:hover:not([style*="opacity: 0.5"]) {
+  background-color: #31565e;
+  color: white;
+  transform: scale(1.1);
+}*/
+
+/* Responsive para miniaturas */
+@media (max-width: 1024px) {
+  .mini-slide {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .mini-slide img {
+    width: 50px;
+  }
+  
+  .mini-slide span {
+    margin-top: 0;
+    font-size: 14px;
+  }
+}

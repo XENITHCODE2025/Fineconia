@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\File;
+
 use Illuminate\Support\Facades\Storage;
 
 class GuiaController extends Controller
@@ -45,4 +47,33 @@ class GuiaController extends Controller
         // Pasamos las guías a la vista
         return view('Educacion', compact('guias'));
     }
+
+  public function index1()
+{
+    // Obtener el parámetro y decodificarlo por si viene doblemente codificado
+    $path = request('path');
+    $path = urldecode($path);
+
+    if (!$path) {
+        abort(404, 'Ruta de guía no especificada');
+    }
+
+    // Verificamos que el archivo exista en el disco público
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404, 'La guía no existe o fue movida');
+    }
+
+    // Obtenemos información de la guía
+    $nombreArchivo = pathinfo($path, PATHINFO_FILENAME);
+    $categoria = basename(dirname($path));
+    $urlArchivo = Storage::url($path);
+
+    // Retornamos la vista con los datos
+    return view('AquiVerGuia', [
+        'titulo' => $nombreArchivo,
+        'categoria' => $categoria,
+        'urlArchivo' => $urlArchivo,
+    ]);
+}
+
 }

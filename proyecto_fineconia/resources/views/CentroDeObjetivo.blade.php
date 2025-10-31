@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,11 @@
 
   <!-- Íconos de Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  
+
   <!-- Estilos externos -->
   @vite('resources/css/CentroDeObjetivo.css')
 </head>
+
 <body>
 
   <!-- Barra de navegación -->
@@ -35,24 +37,31 @@
       </div>
     </div>
 
+    @php
+      // Filtrar solo los objetivos terminados
+      $objetivosTerminados = $objetivos->filter(function($o){
+          return $o->monto_ahorrado >= $o->monto;
+      });
+    @endphp
+
     <!-- Tarjeta de información -->
     <div class="info-card">
       <div class="info-header">
         <h3>Información Básica</h3>
 
-        <!-- Saldo -->
+        <!-- Saldo dinámico -->
         <div class="saldo-container">
           <label>Saldo</label>
-          <input type="text" value="$200" disabled>
+          <input type="text" value="${{ number_format($saldoDisponible) }}" disabled>
         </div>
       </div>
 
-      <!-- Subtítulo -->
+      <!-- Subtítulo con conteo de objetivos -->
       <p class="subtitulo">
-        <strong>Objetivos Completados</strong> | Total: 3
+        <strong>Objetivos Completados</strong> | Total: {{ $objetivosTerminados->count() }}
       </p>
 
-      <!-- Tabla -->
+      <!-- Tabla de objetivos terminados -->
       <table class="objetivos-table">
         <thead>
           <tr>
@@ -62,24 +71,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>05/06/2025</td>
-            <td>Alimentación</td>
-            <td>Terminado</td>
-          </tr>
-          <tr>
-            <td>05/06/2025</td>
-            <td>Alimentación</td>
-            <td>Terminado</td>
-          </tr>
-          <tr>
-            <td>05/06/2025</td>
-            <td>Alimentación</td>
-            <td>Terminado</td>
-          </tr>
+          @forelse($objetivosTerminados as $objetivo)
+            <tr>
+              <td>{{ \Carbon\Carbon::parse($objetivo->fecha_desde)->format('d/m/Y') }}</td>
+              <td>{{ $objetivo->nombre }}</td>
+              <td>Terminado</td>
+            </tr>
+          @empty
+            <tr>
+              <td colspan="3">No tienes objetivos de ahorro completados.</td>
+            </tr>
+          @endforelse
         </tbody>
       </table>
     </div>
   </div>
 </body>
+
 </html>

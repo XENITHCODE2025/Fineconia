@@ -1,93 +1,99 @@
-
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fineconia</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
- @vite('resources/css/Bienvenida.css')
+  @vite('resources/css/Bienvenida.css')
 
- <!-- ÍCONOS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <!-- ÍCONOS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
+
 <body>
   <div class="header">
     <div class="top-bar">
       <div class="logo-container">
-       <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
+        <img src="img/LogoCompleto.jpg" alt="Logo" style="height: 100px;">
       </div>
       <!-- BOTÓN DE USUARIO -->
-<div class="user-section" id="btn-user">
-  @include('partials.header-user') {{-- ← partial del usuario --}}
-</div>
+      <div class="user-section" id="btn-user">
+        @include('partials.header-user') {{-- ← partial del usuario --}}
+      </div>
 
-<!-- DESPLEGABLE DEL MENÚ USUARIO -->
-<div class="user-menu" id="userMenu">
-  <div class="menu-container">
-    <div class="menu-header">
-      <i class="bi bi-person-circle"></i>
-      <span>{{ Auth::user()->name }}</span>
-    </div>
+      <!-- DESPLEGABLE DEL MENÚ USUARIO -->
+      <div class="user-menu" id="userMenu">
+        <div class="menu-container">
+          <div class="menu-header">
+            <i class="bi bi-person-circle"></i>
+            <span>{{ Auth::user()->name }}</span>
+          </div>
 
-    <div class="menu-item" id="btn-datos">
-      <span>Datos Generales</span>
-      <i class="bi bi-chevron-right"></i>
-    </div>
+          <div class="menu-item" id="btn-datos">
+            <span>Datos Generales</span>
+            <i class="bi bi-chevron-right"></i>
+          </div>
 
-    <div class="menu-item" id="btn-objetivos">    
-  <span>Mis Objetivos</span>    
-  <i class="bi bi-chevron-right"></i>    
-</div>
+          <div class="menu-item" id="btn-objetivos">
+            <a href="{{ route('centro.objetivos') }}" style="text-decoration: none; color: inherit;">
+              <span>Mis Objetivos</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </div>
 
 
-    <div class="menu-item">
-      <span>Ayuda</span>
-      <i class="bi bi-chevron-right"></i>
-    </div>
 
-    <button class="logout-btn" id="btnLogout">Cerrar sesión</button>
-  </div>
-</div>
+          <div class="menu-item">
+            <span>Ayuda</span>
+            <i class="bi bi-chevron-right"></i>
+          </div>
 
-<script>
-  const userBtn = document.getElementById('btn-user');
-  const userMenu = document.getElementById('userMenu');
-  const btnDatos = document.getElementById('btn-datos');
-  const btnLogout = document.getElementById('btnLogout');
+          <form id="logoutForm" method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="logout-btn">Cerrar sesión</button>
+          </form>
+        </div>
+      </div>
 
-  // Mostrar / ocultar menú al hacer clic en el botón del usuario
-  userBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isVisible = userMenu.style.display === 'block';
-    userMenu.style.display = isVisible ? 'none' : 'block';
-  });
+      <script>
+        const userBtn = document.getElementById('btn-user');
+        const userMenu = document.getElementById('userMenu');
+        const btnDatos = document.getElementById('btn-datos');
+        const btnLogout = document.getElementById('btnLogout');
 
-  // Redirigir al hacer clic en "Datos Generales"
-  btnDatos.addEventListener('click', () => {
-    window.location.href = "{{ route('centro.usuario') }}";
-  });
+        // Mostrar / ocultar menú al hacer clic en el botón del usuario
+        userBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isVisible = userMenu.style.display === 'block';
+          userMenu.style.display = isVisible ? 'none' : 'block';
+        });
 
-  // Cerrar menú si se hace clic fuera
-  document.addEventListener('click', (e) => {
-    if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
-      userMenu.style.display = 'none';
-    }
-  });
+        // Redirigir al hacer clic en "Datos Generales"
+        btnDatos.addEventListener('click', () => {
+          window.location.href = "{{ route('centro.usuario') }}";
+        });
 
-  // Simulación de cierre de sesión
-  btnLogout.addEventListener('click', () => {
-    alert('Sesión cerrada');
-    userMenu.style.display = 'none';
-  }); 
+        // Cerrar menú si se hace clic fuera
+        document.addEventListener('click', (e) => {
+          if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+            userMenu.style.display = 'none';
+          }
+        });
 
-  // Redirigir al hacer clic en "Mis Objetivos"
-const btnObjetivos = document.getElementById('btn-objetivos');
-btnObjetivos.addEventListener('click', () => {
-  window.location.href = "{{ route('centro.objetivos') }}";
-});
+        // Simulación de cierre de sesión
+        btnLogout.addEventListener('click', () => {
+          alert('Sesión cerrada');
+          userMenu.style.display = 'none';
+        });
 
-</script>
+        // Redirigir al hacer clic en "Mis Objetivos"
+        const btnObjetivos = document.getElementById('btn-objetivos');
+        btnObjetivos.addEventListener('click', () => {
+          window.location.href = "{{ route('centro.objetivos') }}";
+        });
+      </script>
     </div>
     <div class="logo-container" style="justify-content: center; margin-top: 10px;">
       <div class="logo">FINECONIA</div>
@@ -132,14 +138,14 @@ btnObjetivos.addEventListener('click', () => {
     </div>
 
     <div class="card">
-  <div class="card-title">Educación Financiera</div>
-  <div class="card-text">
-    Accede a cursos, guías y simuladores para aprender sobre dinero, inversión y planificación.
-  </div>
-  <a href="{{ route('educacion') }}" style="text-decoration: none;">
-    <button class="btn">Acceder</button>
-  </a>
-</div>
+      <div class="card-title">Educación Financiera</div>
+      <div class="card-text">
+        Accede a cursos, guías y simuladores para aprender sobre dinero, inversión y planificación.
+      </div>
+      <a href="{{ route('educacion') }}" style="text-decoration: none;">
+        <button class="btn">Acceder</button>
+      </a>
+    </div>
 
 
     <div class="card">
@@ -161,11 +167,12 @@ btnObjetivos.addEventListener('click', () => {
 
   <!-- Enlace a la vista de Finanzas Personales -->
   <script>
-       document.getElementById('btn-finanzas-personales').addEventListener('click', function() {
-       window.location.href = "{{ route('finanzas.personales') }}";
-      });
+    document.getElementById('btn-finanzas-personales').addEventListener('click', function() {
+      window.location.href = "{{ route('finanzas.personales') }}";
+    });
   </script>
 
 
 </body>
+
 </html>

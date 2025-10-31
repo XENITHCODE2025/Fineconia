@@ -29,7 +29,7 @@ use App\Models\Ingreso;
 
 // Página principal
 Route::get('/', function () {
-    return view('CentroDeObjetivo');
+    return view('Home');
 });
 
 Route::get('/centro-objetivos', function () {
@@ -244,6 +244,15 @@ Route::middleware(['auth'])->group(function () {
         // Rutas para Favoritos
     Route::post('/favorito/toggle', [FavoritoController::class, 'toggle'])->name('favorito.toggle');
     Route::get('/favoritos', [FavoritoController::class, 'getUserFavoritos'])->name('favoritos.user');
+
+    // Ruta para cerrar sesión
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    //Para mostrar objetivos terminados
+    Route::get('/centro-objetivos', [ObjetivoAhorroController::class, 'indexCentroUsuario'])
+     ->name('centro.objetivos');
+
+
 });
 
 

@@ -438,3 +438,12 @@
     transform: translateY(0);
   }
 }
+
+.menu-item a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+}

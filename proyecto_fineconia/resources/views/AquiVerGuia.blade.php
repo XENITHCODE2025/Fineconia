@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,10 +12,10 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
   <!-- Alertify CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
 
-  <!-- Alertify JS --> 
+  <!-- Alertify JS -->
   <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
 
@@ -25,84 +26,86 @@
   @vite('resources/css/AquiVerGuia.css')
 </head>
 
-<body> 
+<body>
   <!-- HEADER -->
   <header class="header">
     <div class="logo-container" style="max-width: 200px; width: 100%;">
       <img src="img/LogoCompleto.jpg" alt="Logo" style="height: 100px; width: 100%; object-fit: contain;">
     </div>
     <!-- BOTÓN DE USUARIO -->
-<div class="user-section" id="btn-user">
-  @include('partials.header-user') {{-- ← partial del usuario --}}
-</div>
-
-<!-- DESPLEGABLE DEL MENÚ USUARIO -->
-<div class="user-menu" id="userMenu">
-  <div class="menu-container">
-    <div class="menu-header">
-      <i class="bi bi-person-circle"></i>
-      <span>{{ Auth::user()->name }}</span>
+    <div class="user-section" id="btn-user">
+      @include('partials.header-user') {{-- ← partial del usuario --}}
     </div>
 
-    <div class="menu-item" id="btn-datos">
-      <span>Datos Generales</span>
-      <i class="bi bi-chevron-right"></i>
+    <!-- DESPLEGABLE DEL MENÚ USUARIO -->
+    <div class="user-menu" id="userMenu">
+      <div class="menu-container">
+        <div class="menu-header">
+          <i class="bi bi-person-circle"></i>
+          <span>{{ Auth::user()->name }}</span>
+        </div>
+
+        <div class="menu-item" id="btn-datos">
+          <span>Datos Generales</span>
+          <i class="bi bi-chevron-right"></i>
+        </div>
+
+        <div class="menu-item" id="btn-objetivos">
+          <span>Mis Objetivos</span>
+          <i class="bi bi-chevron-right"></i>
+        </div>
+
+        <div class="menu-item">
+          <span>Ayuda</span>
+          <i class="bi bi-chevron-right"></i>
+        </div>
+
+        <form id="logoutForm" method="POST" action="{{ route('logout') }}">
+          @csrf
+          <button type="submit" class="logout-btn">Cerrar sesión</button>
+        </form>
+      </div>
     </div>
 
-    <div class="menu-item" id="btn-objetivos">    
-  <span>Mis Objetivos</span>    
-  <i class="bi bi-chevron-right"></i>    
-</div>
+    <script>
+      const userBtn = document.getElementById('btn-user');
+      const userMenu = document.getElementById('userMenu');
+      const btnDatos = document.getElementById('btn-datos');
+      const btnLogout = document.getElementById('btnLogout');
 
-    <div class="menu-item">
-      <span>Ayuda</span>
-      <i class="bi bi-chevron-right"></i>
-    </div>
+      // Mostrar / ocultar menú al hacer clic en el botón del usuario
+      userBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isVisible = userMenu.style.display === 'block';
+        userMenu.style.display = isVisible ? 'none' : 'block';
+      });
 
-    <button class="logout-btn" id="btnLogout">Cerrar sesión</button>
-  </div>
-</div>
+      // Redirigir al hacer clic en "Datos Generales"
+      btnDatos.addEventListener('click', () => {
+        window.location.href = "{{ route('centro.usuario') }}";
+      });
 
-<script>
-  const userBtn = document.getElementById('btn-user');
-  const userMenu = document.getElementById('userMenu');
-  const btnDatos = document.getElementById('btn-datos');
-  const btnLogout = document.getElementById('btnLogout');
+      // Cerrar menú si se hace clic fuera
+      document.addEventListener('click', (e) => {
+        if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+          userMenu.style.display = 'none';
+        }
+      });
 
-  // Mostrar / ocultar menú al hacer clic en el botón del usuario
-  userBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isVisible = userMenu.style.display === 'block';
-    userMenu.style.display = isVisible ? 'none' : 'block';
-  });
+      // Simulación de cierre de sesión
+      btnLogout.addEventListener('click', () => {
+        alert('Sesión cerrada');
+        userMenu.style.display = 'none';
+      });
 
-  // Redirigir al hacer clic en "Datos Generales"
-  btnDatos.addEventListener('click', () => {
-    window.location.href = "{{ route('centro.usuario') }}";
-  });
+      // Redirigir al hacer clic en "Mis Objetivos"
+      const btnObjetivos = document.getElementById('btn-objetivos');
+      btnObjetivos.addEventListener('click', () => {
+        window.location.href = "{{ route('centro.objetivos') }}";
+      });
+    </script>
 
-  // Cerrar menú si se hace clic fuera
-  document.addEventListener('click', (e) => {
-    if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
-      userMenu.style.display = 'none';
-    }
-  });
-
-  // Simulación de cierre de sesión
-  btnLogout.addEventListener('click', () => {
-    alert('Sesión cerrada');
-    userMenu.style.display = 'none';
-  });
-
-  // Redirigir al hacer clic en "Mis Objetivos"
-const btnObjetivos = document.getElementById('btn-objetivos');
-btnObjetivos.addEventListener('click', () => {
-  window.location.href = "{{ route('centro.objetivos') }}";
-});
-
-</script>
-
-  </header> 
+  </header>
 
   <!-- CONTENIDO -->
   <main class="contenido">
@@ -120,26 +123,26 @@ btnObjetivos.addEventListener('click', () => {
       <div class="contenido-flex" id="contenidoFlex">
 
         <!-- SIDEBAR tipo PowerPoint -->
-<aside class="sidebar" id="sidebar">
-  <div class="miniaturas">
-    <div class="mini-slide active" data-index="0">
-      <img src="img/slide0.jpg" alt="Objetivo" />
-      <span>Objetivo: elaborar un presupuesto sencillo...</span>
-      <span>1</span>
-    </div>
-    <div class="mini-slide" data-index="1">
-      <img src="img/slide1.jpg" alt="Introducción" />
-      <span>Introducción: importancia de organizar ingresos y gastos...</span>
-      <span>2</span>
-    </div>
-    <div class="mini-slide" data-index="2">
-      <img src="img/slide2.jpg" alt="Conceptos clave" />
-      <span>Conceptos clave: ingresos, gastos, ahorro...</span>
-      <span>3</span>
-    </div>
-    <!-- Agrega más miniaturas aquí siguiendo el mismo patrón -->
-  </div>
-</aside>
+        <aside class="sidebar" id="sidebar">
+          <div class="miniaturas">
+            <div class="mini-slide active" data-index="0">
+              <img src="img/slide0.jpg" alt="Objetivo" />
+              <span>Objetivo: elaborar un presupuesto sencillo...</span>
+              <span>1</span>
+            </div>
+            <div class="mini-slide" data-index="1">
+              <img src="img/slide1.jpg" alt="Introducción" />
+              <span>Introducción: importancia de organizar ingresos y gastos...</span>
+              <span>2</span>
+            </div>
+            <div class="mini-slide" data-index="2">
+              <img src="img/slide2.jpg" alt="Conceptos clave" />
+              <span>Conceptos clave: ingresos, gastos, ahorro...</span>
+              <span>3</span>
+            </div>
+            <!-- Agrega más miniaturas aquí siguiendo el mismo patrón -->
+          </div>
+        </aside>
 
 
         <!-- CONTENIDO CENTRAL tipo PowerPoint -->
@@ -183,56 +186,57 @@ btnObjetivos.addEventListener('click', () => {
   </footer>
 
   <!-- JS para navegación y miniaturas -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Inicializar alertify
-  if (typeof alertify === 'undefined') {
-    console.warn("Alertify no está cargado.");
-  }
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Inicializar alertify
+      if (typeof alertify === 'undefined') {
+        console.warn("Alertify no está cargado.");
+      }
 
-  const slides = document.querySelectorAll('.slide');
-  const miniSlides = document.querySelectorAll('.mini-slide');
-  let currentSlide = 0;
+      const slides = document.querySelectorAll('.slide');
+      const miniSlides = document.querySelectorAll('.mini-slide');
+      let currentSlide = 0;
 
-  const mostrarSlide = (index) => {
-    if(slides.length === 0) return;
+      const mostrarSlide = (index) => {
+        if (slides.length === 0) return;
 
-    if (index < 0) index = 0;
-    if (index >= slides.length) index = slides.length - 1;
+        if (index < 0) index = 0;
+        if (index >= slides.length) index = slides.length - 1;
 
-    slides.forEach((slide, i) => slide.style.display = i === index ? 'block' : 'none');
-    miniSlides.forEach((mini, i) => mini.classList.toggle('active', i === index));
-    currentSlide = index;
-  }
+        slides.forEach((slide, i) => slide.style.display = i === index ? 'block' : 'none');
+        miniSlides.forEach((mini, i) => mini.classList.toggle('active', i === index));
+        currentSlide = index;
+      }
 
-  try {
-    if(slides.length === 0) throw new Error("No se puede visualizar la guía");
+      try {
+        if (slides.length === 0) throw new Error("No se puede visualizar la guía");
 
-    // Botones de navegación
-    document.querySelector('.navegacion-derecha').addEventListener('click', () => {
-      if (currentSlide < slides.length - 1) mostrarSlide(currentSlide + 1);
+        // Botones de navegación
+        document.querySelector('.navegacion-derecha').addEventListener('click', () => {
+          if (currentSlide < slides.length - 1) mostrarSlide(currentSlide + 1);
+        });
+        document.querySelector('.navegacion-izquierda').addEventListener('click', () => {
+          if (currentSlide > 0) mostrarSlide(currentSlide - 1);
+        });
+
+        // Click en miniaturas
+        miniSlides.forEach(mini => {
+          mini.addEventListener('click', () => mostrarSlide(parseInt(mini.dataset.index)));
+        });
+
+        // Mostrar primer slide
+        mostrarSlide(currentSlide);
+
+        console.log("Carga exitosa: contenido de la guía mostrado correctamente.");
+      } catch (error) {
+        if (typeof alertify !== 'undefined') {
+          alertify.error("No se puede visualizar la guía");
+        } else {
+          alert("No se puede visualizar la guía"); // fallback
+        }
+      }
     });
-    document.querySelector('.navegacion-izquierda').addEventListener('click', () => {
-      if (currentSlide > 0) mostrarSlide(currentSlide - 1);
-    });
-
-    // Click en miniaturas
-    miniSlides.forEach(mini => {
-      mini.addEventListener('click', () => mostrarSlide(parseInt(mini.dataset.index)));
-    });
-
-    // Mostrar primer slide
-    mostrarSlide(currentSlide);
-
-    console.log("Carga exitosa: contenido de la guía mostrado correctamente.");
-  } catch (error) {
-    if (typeof alertify !== 'undefined') {
-      alertify.error("No se puede visualizar la guía");
-    } else {
-      alert("No se puede visualizar la guía"); // fallback
-    }
-  }
-});
-</script>
+  </script>
 </body>
+
 </html

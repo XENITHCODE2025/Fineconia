@@ -173,6 +173,23 @@ class ObjetivoAhorroController extends Controller
         $count = ObjetivoAhorro::where('user_id', Auth::id())->count();
         return response()->json(['count' => $count]);
     }
+
+    // En ObjetivoAhorroController.php
+    public function indexCentroUsuario()
+    {
+        $userId = auth()->id();
+
+        // SALDO: total ingresos - total presupuestos
+        $totalIngresos     = Ingreso::where('user_id', $userId)->sum('monto');
+        $totalPresupuestos = Presupuesto::where('user_id', $userId)->sum('monto');
+        $saldoDisponible   = $totalIngresos - $totalPresupuestos;
+
+        // OBJETIVOS DEL USUARIO
+        $objetivos = ObjetivoAhorro::where('user_id', $userId)->get();
+
+        // Retorna la vista con datos
+        return view('CentroDeObjetivo', compact('saldoDisponible', 'objetivos'));
+    }
 }
 
 /* Crear objetivo de ahorro - backend - correctamente funcional */

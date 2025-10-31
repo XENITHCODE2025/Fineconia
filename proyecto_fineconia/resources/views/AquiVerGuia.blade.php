@@ -4,12 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Educación Financiera - Fineconia</title>
+  <title>{{ $titulo }} - Fineconia</title>
 
   <!-- Iconos -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
   <!-- Alertify CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
@@ -18,23 +17,119 @@
   <!-- Alertify JS -->
   <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
+  <!-- PDF.js para procesar PDFs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 
   <!-- Tipografías -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- CSS externo -->
   @vite('resources/css/AquiVerGuia.css')
+  
+  <style>
+    /* Estilos adicionales para el visor PDF optimizado */
+    .pdf-viewer-container {
+      width: 100%;
+      height: 70vh;
+      max-height: 600px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    #pdfCanvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    /* Mejoras en las animaciones de miniaturas */
+    .mini-slide {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #fff;
+    }
+    
+    .mini-slide:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      border-color: #62AF46;
+      background: #f8fff8;
+    }
+    
+    .mini-slide.active {
+      transform: translateY(-2px) scale(1.03);
+      border-color: #62AF46;
+      background: #e8f5e8;
+      box-shadow: 0 4px 12px rgba(98, 175, 70, 0.3);
+    }
+    
+    .mini-slide img {
+      transition: all 0.3s ease;
+      border-radius: 4px;
+      filter: brightness(0.95);
+    }
+    
+    .mini-slide:hover img,
+    .mini-slide.active img {
+      filter: brightness(1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    
+    .mini-slide span {
+      transition: all 0.3s ease;
+      font-weight: 600;
+      color: #31565e;
+    }
+    
+    .mini-slide.active span {
+      color: #62AF46;
+      font-weight: 700;
+    }
+    
+    /* Efecto de carga para miniaturas */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .mini-slide {
+      animation: fadeInUp 0.4s ease forwards;
+    }
+    
+    /* Retirar el contador de páginas */
+    .pdf-controls-info {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
   <!-- HEADER -->
   <header class="header">
     <div class="logo-container" style="max-width: 200px; width: 100%;">
-      <img src="img/LogoCompleto.jpg" alt="Logo" style="height: 100px; width: 100%; object-fit: contain;">
+      <img src="{{ asset('img/LogoCompleto.jpg') }}" alt="Logo" style="height: 100px; width: 100%; object-fit: contain;">
     </div>
+
     <!-- BOTÓN DE USUARIO -->
     <div class="user-section" id="btn-user">
-      @include('partials.header-user') {{-- ← partial del usuario --}}
+      @include('partials.header-user')
     </div>
 
     <!-- DESPLEGABLE DEL MENÚ USUARIO -->
@@ -50,6 +145,10 @@
           <i class="bi bi-chevron-right"></i>
         </div>
 
+        <div class="menu-item" id="btn-objetivos">
+          <span>Mis Objetivos</span>
+          <i class="bi bi-chevron-right"></i>
+        </div>
         <div class="menu-item" id="btn-objetivos">
           <span>Mis Objetivos</span>
           <i class="bi bi-chevron-right"></i>
@@ -73,38 +172,32 @@
       const btnDatos = document.getElementById('btn-datos');
       const btnLogout = document.getElementById('btnLogout');
 
-      // Mostrar / ocultar menú al hacer clic en el botón del usuario
       userBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         const isVisible = userMenu.style.display === 'block';
         userMenu.style.display = isVisible ? 'none' : 'block';
       });
 
-      // Redirigir al hacer clic en "Datos Generales"
       btnDatos.addEventListener('click', () => {
         window.location.href = "{{ route('centro.usuario') }}";
       });
 
-      // Cerrar menú si se hace clic fuera
       document.addEventListener('click', (e) => {
         if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
           userMenu.style.display = 'none';
         }
       });
 
-      // Simulación de cierre de sesión
       btnLogout.addEventListener('click', () => {
         alert('Sesión cerrada');
         userMenu.style.display = 'none';
       });
 
-      // Redirigir al hacer clic en "Mis Objetivos"
       const btnObjetivos = document.getElementById('btn-objetivos');
       btnObjetivos.addEventListener('click', () => {
         window.location.href = "{{ route('centro.objetivos') }}";
       });
     </script>
-
   </header>
 
   <!-- CONTENIDO -->
@@ -114,8 +207,8 @@
       <div class="titulo-seccion" id="tituloSeccion">
         <i class="fa-solid fa-book-open"></i>
         <div>
-          <h2 class="titulo-guia">Educación Financiera</h2>
-          <p class="subtitulo-guia">Cómo crear tu primer presupuesto familiar</p>
+          <h2 class="titulo-guia">{{ $categoria }}</h2>
+          <p class="subtitulo-guia">{{ $titulo }}</p>
         </div>
       </div>
 
@@ -124,49 +217,25 @@
 
         <!-- SIDEBAR tipo PowerPoint -->
         <aside class="sidebar" id="sidebar">
-          <div class="miniaturas">
-            <div class="mini-slide active" data-index="0">
-              <img src="img/slide0.jpg" alt="Objetivo" />
-              <span>Objetivo: elaborar un presupuesto sencillo...</span>
-              <span>1</span>
-            </div>
-            <div class="mini-slide" data-index="1">
-              <img src="img/slide1.jpg" alt="Introducción" />
-              <span>Introducción: importancia de organizar ingresos y gastos...</span>
-              <span>2</span>
-            </div>
-            <div class="mini-slide" data-index="2">
-              <img src="img/slide2.jpg" alt="Conceptos clave" />
-              <span>Conceptos clave: ingresos, gastos, ahorro...</span>
-              <span>3</span>
-            </div>
-            <!-- Agrega más miniaturas aquí siguiendo el mismo patrón -->
+          <div class="miniaturas" id="miniaturas">
+            <!-- Las miniaturas se generarán dinámicamente con JavaScript -->
           </div>
         </aside>
 
-
-        <!-- CONTENIDO CENTRAL tipo PowerPoint -->
+        <!-- CONTENIDO CENTRAL OPTIMIZADO -->
         <div class="contenido-central" id="contenidoCentral">
-          <div class="slide" id="slide0">
-            <p>Al finalizar esta guía, podrás elaborar un presupuesto sencillo que te ayude a organizar tus ingresos y gastos de manera eficiente.</p>
+          <div class="pdf-viewer-container">
+            <canvas id="pdfCanvas"></canvas>
           </div>
-          <div class="slide" id="slide1" style="display:none;">
-            <p>La introducción explica la importancia de organizar tus ingresos y gastos para una mejor salud financiera familiar.</p>
-          </div>
-          <div class="slide" id="slide2" style="display:none;">
-            <p>Conceptos clave: ingresos, gastos, ahorro, balance financiero y cómo aplicarlos en tu presupuesto.</p>
-          </div>
-          <!-- Más slides aquí -->
         </div>
 
-        <!-- BOTONES DE NAVEGACIÓN -->
-        <div class="navegacion navegacion-izquierda">
+        <!-- BOTONES DE NAVEGACIÓN LATERALES -->
+        <div class="navegacion navegacion-izquierda" id="prevBtn">
           <i class="fas fa-chevron-left"></i>
         </div>
-        <div class="navegacion navegacion-derecha">
+        <div class="navegacion navegacion-derecha" id="nextBtn">
           <i class="fas fa-chevron-right"></i>
         </div>
-
       </div>
     </section>
   </main>
@@ -185,58 +254,152 @@
     </div>
   </footer>
 
-  <!-- JS para navegación y miniaturas -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Inicializar alertify
-      if (typeof alertify === 'undefined') {
-        console.warn("Alertify no está cargado.");
-      }
-
-      const slides = document.querySelectorAll('.slide');
-      const miniSlides = document.querySelectorAll('.mini-slide');
-      let currentSlide = 0;
-
-      const mostrarSlide = (index) => {
-        if (slides.length === 0) return;
-
-        if (index < 0) index = 0;
-        if (index >= slides.length) index = slides.length - 1;
-
-        slides.forEach((slide, i) => slide.style.display = i === index ? 'block' : 'none');
-        miniSlides.forEach((mini, i) => mini.classList.toggle('active', i === index));
-        currentSlide = index;
-      }
-
+    document.addEventListener('DOMContentLoaded', async () => {
       try {
-        if (slides.length === 0) throw new Error("No se puede visualizar la guía");
+        const pdfUrl = "{{ $urlArchivo }}";
+        if (!pdfUrl) throw new Error("No se proporcionó URL del PDF");
 
-        // Botones de navegación
-        document.querySelector('.navegacion-derecha').addEventListener('click', () => {
-          if (currentSlide < slides.length - 1) mostrarSlide(currentSlide + 1);
-        });
-        document.querySelector('.navegacion-izquierda').addEventListener('click', () => {
-          if (currentSlide > 0) mostrarSlide(currentSlide - 1);
-        });
+        // Configurar PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-        // Click en miniaturas
-        miniSlides.forEach(mini => {
-          mini.addEventListener('click', () => mostrarSlide(parseInt(mini.dataset.index)));
-        });
+        // Cargar el PDF
+        const loadingTask = pdfjsLib.getDocument(pdfUrl);
+        const pdf = await loadingTask.promise;
+        const totalPages = pdf.numPages;
 
-        // Mostrar primer slide
-        mostrarSlide(currentSlide);
+        let currentPage = 1;
+        const canvas = document.getElementById('pdfCanvas');
+        const ctx = canvas.getContext('2d');
+        const miniaturasDiv = document.getElementById('miniaturas');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
 
-        console.log("Carga exitosa: contenido de la guía mostrado correctamente.");
-      } catch (error) {
-        if (typeof alertify !== 'undefined') {
-          alertify.error("No se puede visualizar la guía");
-        } else {
-          alert("No se puede visualizar la guía"); // fallback
+        // Renderizar una página en el canvas principal
+        async function renderPage(pageNum) {
+          const page = await pdf.getPage(pageNum);
+          
+          // Calcular escala para que el PDF se ajuste al contenedor
+          const container = document.querySelector('.pdf-viewer-container');
+          const containerWidth = container.clientWidth - 40; // 40px de padding
+          const viewport = page.getViewport({ scale: 1.0 });
+          const scale = Math.min(containerWidth / viewport.width, 1.2); // Escala máxima de 1.2
+          
+          const scaledViewport = page.getViewport({ scale: scale });
+          canvas.width = scaledViewport.width;
+          canvas.height = scaledViewport.height;
+
+          await page.render({
+            canvasContext: ctx,
+            viewport: scaledViewport
+          }).promise;
+
+          currentPage = pageNum;
+          updateButtons();
+          updateActiveThumbnail();
         }
+
+        // Actualizar estado de botones
+        function updateButtons() {
+          prevBtn.style.opacity = currentPage <= 1 ? '0.4' : '1';
+          nextBtn.style.opacity = currentPage >= totalPages ? '0.4' : '1';
+          prevBtn.style.pointerEvents = currentPage <= 1 ? 'none' : 'auto';
+          nextBtn.style.pointerEvents = currentPage >= totalPages ? 'none' : 'auto';
+        }
+
+        // Generar miniaturas con animación escalonada
+        async function generateThumbnails() {
+          miniaturasDiv.innerHTML = '';
+          const maxThumbnails = Math.min(totalPages, 12); // Máximo 12 miniaturas
+          
+          for (let i = 1; i <= maxThumbnails; i++) {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 0.12 }); // Escala más pequeña para miniaturas
+            const thumbCanvas = document.createElement('canvas');
+            const thumbCtx = thumbCanvas.getContext('2d');
+            thumbCanvas.width = viewport.width;
+            thumbCanvas.height = viewport.height;
+
+            await page.render({ canvasContext: thumbCtx, viewport }).promise;
+
+            const thumb = document.createElement('div');
+            thumb.className = 'mini-slide';
+            if (i === 1) thumb.classList.add('active');
+
+            // Añadir delay escalonado para la animación
+            thumb.style.animationDelay = `${i * 0.1}s`;
+
+            const img = document.createElement('img');
+            img.src = thumbCanvas.toDataURL();
+            img.alt = `Página ${i}`;
+            
+            const span = document.createElement('span');
+            span.textContent = `Pág. ${i}`;
+
+            thumb.appendChild(img);
+            thumb.appendChild(span);
+            
+            // Añadir efecto de clic con feedback
+            thumb.addEventListener('click', function() {
+              // Efecto de clic momentáneo
+              this.style.transform = 'scale(0.95)';
+              setTimeout(() => {
+                this.style.transform = '';
+                renderPage(i);
+              }, 150);
+            });
+            
+            miniaturasDiv.appendChild(thumb);
+          }
+        }
+
+        // Resalta la miniatura activa con transición suave
+        function updateActiveThumbnail() {
+          const thumbs = document.querySelectorAll('.mini-slide');
+          thumbs.forEach((t, i) => {
+            const isActive = i + 1 === currentPage;
+            t.classList.toggle('active', isActive);
+          });
+        }
+
+        // Navegación por botones con feedback
+        prevBtn.addEventListener('click', function() {
+          if (currentPage > 1) {
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+              this.style.transform = '';
+              renderPage(currentPage - 1);
+            }, 150);
+          }
+        });
+
+        nextBtn.addEventListener('click', function() {
+          if (currentPage < totalPages) {
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+              this.style.transform = '';
+              renderPage(currentPage + 1);
+            }, 150);
+          }
+        });
+
+        // Navegación por teclado
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft' && currentPage > 1) renderPage(currentPage - 1);
+          if (e.key === 'ArrowRight' && currentPage < totalPages) renderPage(currentPage + 1);
+        });
+
+        // Inicializar todo
+        await generateThumbnails();
+        await renderPage(1);
+        updateButtons();
+
+        console.log(`PDF cargado correctamente (${totalPages} páginas).`);
+      } catch (error) {
+        console.error("Error al cargar el PDF:", error);
+        alertify?.error("No se puede visualizar la guía: " + error.message);
       }
     });
   </script>
 </body>
-
-</html
+</html>

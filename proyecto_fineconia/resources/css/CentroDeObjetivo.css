@@ -4,7 +4,7 @@ body {
   background-color: #fff;
   color: #333;
 }
-
+ 
 /* ---------- BARRA SUPERIOR ---------- */
 .navbar {
   background-color: #31565e;
@@ -16,7 +16,7 @@ body {
 }
 
 .navbar .logo {
-  display: flex; 
+  display: flex;  
   align-items: center;
 }
 
@@ -137,7 +137,7 @@ body {
 
 /* Usuario / Home link en el header */
 .user-section.header-user a {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: 'Open Sans', sans-serif !important; /* ← Cambiado a Open Sans */
   font-weight: 400 !important;
   color: #FFFFFF;
   text-decoration: none;
@@ -213,4 +213,29 @@ body {
 /* Quita borde inferior del último */
 .objetivos-table tr:last-child td {
   border-bottom: none;
+}
+
+/* ----------------------------------------
+   Importación de tipografías solicitadas
+   ---------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@400;700&display=swap');
+
+/* Tipografía base del sitio */
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: #000000;
+}
+
+/* Encabezados y títulos con Poppins */
+h1, h2, h3, h4, h5, h6, th, .titulo, .encabezado {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #000000;
+}
+
+/* Textos normales, campos, subtítulos, botones, etc. */
+p, td, input, label, a, span, button {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  color: #000000;
 }

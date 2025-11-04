@@ -329,6 +329,8 @@
       padding: 0 2px;
       border-radius: 2px;
     }
+/* ---------- FUENTE ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
 
 /* 🎨 VARIABLES DE CONTROL */
 :root {
@@ -361,6 +363,16 @@
   color: var(--menu-text-color);
 }
 
+/* 🔹 FUENTE GLOBAL DEL MENÚ */
+.menu-container *,
+.menu-container button,
+.menu-container span,
+.menu-container a,
+.menu-container i {
+  font-family: 'Open Sans', sans-serif !important;
+  color: var(--menu-text-color);
+}
+
 /* CABECERA DEL MENÚ */
 .menu-header {
   display: flex;
@@ -377,8 +389,7 @@
 
 .menu-header span {
   font-size: 17px;
-  font-weight: 500;
-  color: var(--menu-text-color);
+  font-weight: 600;
 }
 
 /* ELEMENTOS DEL MENÚ */
@@ -391,7 +402,6 @@
   cursor: pointer;
   border-bottom: 1px solid #f0f0f0;
   transition: background-color 0.2s;
-  color: var(--menu-text-color);
 }
 
 .menu-item:hover {
@@ -404,7 +414,15 @@
 
 .menu-item i {
   font-size: 18px;
-  color: var(--menu-text-color);
+}
+
+.menu-item a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
 }
 
 /* BOTÓN DE CERRAR SESIÓN */
@@ -415,11 +433,12 @@
   padding: 10px 0;
   background: transparent;
   border: 1px solid var(--menu-accent);
-  color: var(--menu-text-color);
   font-size: 15px;
   border-radius: 5px;
   cursor: pointer;
   transition: 0.3s;
+  font-family: 'Open Sans', sans-serif !important;
+  color: var(--menu-text-color);
 }
 
 .logout-btn:hover {
@@ -437,13 +456,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.menu-item a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  text-decoration: none;
-  color: inherit;
 }

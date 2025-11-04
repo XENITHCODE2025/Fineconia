@@ -25,12 +25,6 @@ body {
   margin-right: 8px;
 }
 
-.navbar .logo span {
-  font-size: 20px;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
 .navbar .menu {
   display: flex;
   align-items: center;
@@ -82,44 +76,14 @@ body {
   border-radius: 10px;
   padding: 25px 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  min-height: 400px; /* ajusta el valor según lo necesites */
+  min-height: 400px;
 }
 
 .info-card h3 {
-  margin-top: -10px; /* súbelo un poco */
+  margin-top: -10px;
   margin-bottom: 15px;
   font-size: 17px;
   font-weight: bold;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.form-group label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
-  font-weight: 600;
-}
-
-.form-group input {
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #f9f9f9;
-  color: #555;
-  font-size: 14px;
-  width: 90%; /* antes era 100% */
-  margin: 0 auto; /* los centra dentro del espacio */
-  display: block; /* necesario para centrar */
-}
-
-.form-group input:disabled {
-  color: #777;
-  background-color: #f1f1f1;
 }
 
 /* ---------- RESPONSIVE ---------- */
@@ -137,9 +101,9 @@ body {
 
 /* Usuario / Home link en el header */
 .user-section.header-user a {
-  font-family: 'Open Sans', sans-serif !important; /* ← Cambiado a Open Sans */
+  font-family: 'Poppins', sans-serif !important;
   font-weight: 400 !important;
-  color: #FFFFFF !important;
+  color: #FFFFFF;
   text-decoration: none;
   font-size: 14px;
   padding: 10px 15px;
@@ -148,27 +112,4 @@ body {
 
 .user-section.header-user a:hover {
   text-decoration: underline;
-}
-
-/* ----------------------------------------
-   Importación de tipografías solicitadas
-   ---------------------------------------- */
-
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@400;700&display=swap');
-
-/* Tipografía base del sitio */
-body {
-  font-family: 'Open Sans', sans-serif;
-}
-
-/* Encabezados con Poppins */
-h1, h2, h3, h4, h5, h6, th, .titulo, .encabezado {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-}
-
-/* Textos normales o campos */
-p, td, input, label, a, span {
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 400;
 }

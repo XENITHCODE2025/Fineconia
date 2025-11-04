@@ -11,7 +11,7 @@
 
   <!-- ÍCONOS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
+ 
 </head>
 
 <body>
@@ -45,19 +45,28 @@
             </a>
           </div>
 
-
-          <div class="menu-item">
-            <span>Ayuda</span>
-            <i class="bi bi-chevron-right"></i>
-          </div>
+          <a href="{{ url('/ayuda') }}" class="menu-item" style="text-decoration: none; color: inherit;">
+  <span>Ayuda</span>
+  <i class="bi bi-chevron-right"></i>
+</a>
 
           <form id="logoutForm" method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="logout-btn">Cerrar sesión</button>
-          </form>
+  @csrf
+  <button type="submit" class="logout-btn">Cerrar sesión</button>
+</form>
 
         </div>
       </div>
+
+      <script>
+  const logoutForm = document.getElementById('logoutForm');
+  logoutForm.addEventListener('submit', () => {
+    // Eliminar cualquier dato local almacenado
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    sessionStorage.clear();
+  });
+</script>
 
       <script>
         const userBtn = document.getElementById('btn-user');

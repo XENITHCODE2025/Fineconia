@@ -22,7 +22,7 @@
       <div class="user-section" id="btn-user">
         @include('partials.header-user') {{-- ← partial del usuario --}}
       </div>
-
+ 
       <!-- DESPLEGABLE DEL MENÚ USUARIO -->
       <div class="user-menu" id="userMenu">
         <div class="menu-container">
@@ -43,19 +43,27 @@
             </a>
           </div>
 
-
-
-          <div class="menu-item">
-            <span>Ayuda</span>
-            <i class="bi bi-chevron-right"></i>
-          </div>
+          <a href="{{ url('/ayuda') }}" class="menu-item" style="text-decoration: none; color: inherit;">
+  <span>Ayuda</span>
+  <i class="bi bi-chevron-right"></i>
+</a>
 
           <form id="logoutForm" method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="logout-btn">Cerrar sesión</button>
-          </form>
+  @csrf
+  <button type="submit" class="logout-btn">Cerrar sesión</button>
+</form>
         </div>
       </div>
+
+      <script>
+  const logoutForm = document.getElementById('logoutForm');
+  logoutForm.addEventListener('submit', () => {
+    // Eliminar cualquier dato local almacenado
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    sessionStorage.clear();
+  });
+</script>
 
       <script>
         const userBtn = document.getElementById('btn-user');
@@ -175,4 +183,4 @@
 
 </body>
 
-</html>
+</html> 

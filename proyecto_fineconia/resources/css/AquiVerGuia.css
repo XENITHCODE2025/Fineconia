@@ -415,15 +415,17 @@ main.contenido {
   background-color: #000;
   margin: 20px 0 0 0;
 }
+/* ---------- FUENTE ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
 
 /* 🎨 VARIABLES DE CONTROL */
 :root {
-  --menu-top: 95px;      /* posición vertical del desplegable */
-  --menu-right: 30px;    /* posición horizontal del desplegable */
-  --menu-text-color: #000; /* color principal del texto */
-  --menu-bg: #fff;       /* color del fondo del menú */
-  --menu-hover: #f7f7f7; /* color de fondo al pasar el mouse */
-  --menu-accent: #31565e; /* color de detalles y bordes */
+  --menu-top: 95px;
+  --menu-right: 30px;
+  --menu-text-color: #000;
+  --menu-bg: #fff;
+  --menu-hover: #f7f7f7;
+  --menu-accent: #31565e;
 }
 
 /* MENÚ DESPLEGABLE */
@@ -445,6 +447,17 @@ main.contenido {
   box-shadow: 0 6px 16px rgba(0,0,0,0.25);
   animation: fadeIn 0.25s ease;
   color: var(--menu-text-color);
+  font-family: 'Open Sans', sans-serif; /* 👈 se aplica a todo dentro */
+}
+
+/* Asegura que TODO texto dentro use la fuente */
+.menu-container *,
+.menu-container button,
+.menu-container span,
+.menu-container a,
+.menu-container i {
+  font-family: 'Open Sans', sans-serif !important;
+  color: var(--menu-text-color);
 }
 
 /* CABECERA DEL MENÚ */
@@ -463,8 +476,7 @@ main.contenido {
 
 .menu-header span {
   font-size: 17px;
-  font-weight: 500;
-  color: var(--menu-text-color);
+  font-weight: 600;
 }
 
 /* ELEMENTOS DEL MENÚ */
@@ -477,7 +489,6 @@ main.contenido {
   cursor: pointer;
   border-bottom: 1px solid #f0f0f0;
   transition: background-color 0.2s;
-  color: var(--menu-text-color);
 }
 
 .menu-item:hover {
@@ -501,11 +512,12 @@ main.contenido {
   padding: 10px 0;
   background: transparent;
   border: 1px solid var(--menu-accent);
-  color: var(--menu-text-color);
   font-size: 15px;
   border-radius: 5px;
   cursor: pointer;
   transition: 0.3s;
+  font-family: 'Open Sans', sans-serif !important; /* 👈 forzamos la fuente */
+  color: var(--menu-text-color);
 }
 
 .logout-btn:hover {
@@ -513,7 +525,7 @@ main.contenido {
   color: #fff;
 }
 
-/* ANIMACIÓN DE APARICIÓN */
+/* ANIMACIÓN */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -525,79 +537,11 @@ main.contenido {
   }
 }
 
-/* Estilos adicionales para el visor PDF mejorado */
-
-/* Controles del PDF */
-.pdf-controls {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.page-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Miniaturas mejoradas */
-.mini-slide {
-  transition: all 0.3s ease;
-  border-radius: 6px;
-  padding: 8px;
-  margin-bottom: 8px;
-}
-
-.mini-slide:hover {
-  background-color: #f0f8f5;
-  transform: translateY(-2px);
-}
-
-.mini-slide.active {
-  background-color: #e1f0e1;
-  border: 2px solid #62AF46;
-}
-
-.mini-slide img {
+.menu-item a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  max-width: 80px;
-  height: auto;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.mini-slide span {
-  display: block;
-  margin-top: 5px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #31565e;
-  text-align: center;
-}
-
-/* Estados de los botones de navegación 
-.navegacion {
-  transition: all 0.3s ease;
-}
-
-.navegacion:hover:not([style*="opacity: 0.5"]) {
-  background-color: #31565e;
-  color: white;
-  transform: scale(1.1);
-}*/
-
-/* Responsive para miniaturas */
-@media (max-width: 1024px) {
-  .mini-slide {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .mini-slide img {
-    width: 50px;
-  }
-  
-  .mini-slide span {
-    margin-top: 0;
-    font-size: 14px;
-  }
+  text-decoration: none;
+  color: inherit;
 }

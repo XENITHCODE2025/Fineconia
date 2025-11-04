@@ -36,7 +36,9 @@ Route::get('/centro-objetivos', function () {
     return view('CentroDeObjetivo'); // nombre del archivo Blade
 })->name('centro.objetivos');
 
-
+Route::get('/ayuda', function () {
+    return view('AyudaMeEstanMatandoo');
+});
 
 // Vista para leer una guía específica
 Route::get('/guia', [GuiaController::class, 'index1'])->name('ruta.guia');

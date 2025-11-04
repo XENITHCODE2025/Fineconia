@@ -282,7 +282,7 @@ body {
 /* 🎨 VARIABLES DE CONTROL */
 :root {
   --menu-top: 95px;      /* posición vertical del desplegable */
-  --menu-right: 30px;    /* posición horizontal del desplegable */
+  --menu-right: 15px;    /* posición horizontal del desplegable */
   --menu-text-color: #000; /* color principal del texto */
   --menu-bg: #fff;       /* color del fondo del menú */
   --menu-hover: #f7f7f7; /* color de fondo al pasar el mouse */
@@ -403,4 +403,16 @@ body {
   width: 100%;
   text-decoration: none;
   color: inherit;
+}
+
+/* ---------- FUENTE ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+/* ---------- TIPOGRAFÍA GENERAL ---------- */
+.menu-container,
+.menu-header,
+.menu-item,
+.logout-btn {
+  font-family: 'Open Sans', sans-serif;
+  color: var(--menu-text-color);
 }

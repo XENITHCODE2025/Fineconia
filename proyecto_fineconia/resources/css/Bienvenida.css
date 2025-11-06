@@ -198,15 +198,17 @@ body {
       max-height: 300px;
     }
   }
+/* ---------- FUENTE ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
 
 /* 🎨 VARIABLES DE CONTROL */
 :root {
-  --menu-top: 70px;      /* posición vertical del desplegable */
-  --menu-right: 30px;    /* posición horizontal del desplegable */
+  --menu-top: 70px;        /* posición vertical del desplegable */
+  --menu-right: 20px;      /* posición horizontal del desplegable */
   --menu-text-color: #000; /* color principal del texto */
-  --menu-bg: #fff;       /* color del fondo del menú */
-  --menu-hover: #f7f7f7; /* color de fondo al pasar el mouse */
-  --menu-accent: #31565e; /* color de detalles y bordes */
+  --menu-bg: #fff;         /* color del fondo del menú */
+  --menu-hover: #f7f7f7;   /* color de fondo al pasar el mouse */
+  --menu-accent: #31565e;  /* color de detalles y bordes */
 }
 
 /* MENÚ DESPLEGABLE */
@@ -228,6 +230,17 @@ body {
   box-shadow: 0 6px 16px rgba(0,0,0,0.25);
   animation: fadeIn 0.25s ease;
   color: var(--menu-text-color);
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* 🔹 FUENTE GLOBAL DENTRO DEL MENÚ */
+.menu-container *,
+.menu-container span,
+.menu-container a,
+.menu-container button,
+.menu-container i {
+  font-family: 'Open Sans', sans-serif !important;
+  color: var(--menu-text-color);
 }
 
 /* CABECERA DEL MENÚ */
@@ -246,8 +259,7 @@ body {
 
 .menu-header span {
   font-size: 17px;
-  font-weight: 500;
-  color: var(--menu-text-color);
+  font-weight: 600;
 }
 
 /* ELEMENTOS DEL MENÚ */
@@ -260,7 +272,6 @@ body {
   cursor: pointer;
   border-bottom: 1px solid #f0f0f0;
   transition: background-color 0.2s;
-  color: var(--menu-text-color);
 }
 
 .menu-item:hover {
@@ -273,7 +284,15 @@ body {
 
 .menu-item i {
   font-size: 18px;
-  color: var(--menu-text-color);
+}
+
+.menu-item a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
 }
 
 /* BOTÓN DE CERRAR SESIÓN */
@@ -284,11 +303,12 @@ body {
   padding: 10px 0;
   background: transparent;
   border: 1px solid var(--menu-accent);
-  color: var(--menu-text-color);
   font-size: 15px;
   border-radius: 5px;
   cursor: pointer;
   transition: 0.3s;
+  font-family: 'Open Sans', sans-serif !important;
+  color: var(--menu-text-color);
 }
 
 .logout-btn:hover {
@@ -306,24 +326,4 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
-
-  
 }
-
-.menu-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* texto a la izquierda, icono a la derecha */
-  padding: 10px 15px;
-  cursor: pointer;
-}
-
-.menu-item a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  text-decoration: none;
-  color: inherit;
-}
-

@@ -16,6 +16,9 @@
 
   <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+ 
+   <!-- Tipografías -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- AlertifyJS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css">
@@ -58,10 +61,10 @@
             </a>
           </div>
 
-        <div class="menu-item">
-          <span>Ayuda</span>
-          <i class="bi bi-chevron-right"></i>
-        </div>
+        <a href="{{ url('/ayuda') }}" class="menu-item" style="text-decoration: none; color: inherit;">
+  <span>Ayuda</span>
+  <i class="bi bi-chevron-right"></i>
+</a>
 
         <form id="logoutForm" method="POST" action="{{ route('logout') }}">
           @csrf

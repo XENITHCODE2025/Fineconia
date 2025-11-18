@@ -32,6 +32,11 @@ Route::get('/', function () {
     return view('Home');
 });
 
+// Página de Términos y Condiciones
+Route::get('/terminos-condiciones', function () {
+    return view('TerminosCondiciones'); // Cambia 'terminos' por el nombre real de tu vista
+})->name('politica.privacidad');
+
 Route::get('/centro-objetivos', function () {
     return view('CentroDeObjetivo'); // nombre del archivo Blade
 })->name('centro.objetivos');

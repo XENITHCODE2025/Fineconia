@@ -681,7 +681,7 @@ h5 {
   align-items: center;
   justify-content: center;
   font-size: 13px;
-  color: #2a4145;
+  color: #000000;
   cursor: pointer;
   position: relative;
   transition: all 0.2s ease-in-out;
@@ -701,10 +701,7 @@ h5 {
   border-radius: 6px;
 }
 
-/* === Día de inicio === */
-.calendar-mini-day.inicio {
-  border-bottom: 3px solid #00c853;
-}
+
 .calendar-mini-day.inicio::after {
   content: 'Inicio';
   position: absolute;
@@ -721,10 +718,7 @@ h5 {
   opacity: 1;
 }
 
-/* === Día de fin === */
-.calendar-mini-day.fin {
-  border-top: 3px solid #d50000;
-}
+
 .calendar-mini-day.fin::after {
   content: 'Fin';
   position: absolute;
@@ -776,3 +770,4 @@ h5 {
 .calendario-tarjeta-desplegable * {
     font-family: 'Open Sans', sans-serif !important;
 }
+

@@ -1203,6 +1203,58 @@ function inicializarCalendarioEnTarjetas() {
         console.error('Contenedor de objetivos no encontrado');
         return;
     }
+
+    // Inyectar CSS necesario para la selección si no existe
+    (function injectCSS() {
+        if (document.getElementById('css-calendario-tarjeta')) return;
+        const style = document.createElement('style');
+        style.id = 'css-calendario-tarjeta';
+        style.innerHTML = `
+            .calendar-mini-days { display: grid; grid-template-columns: repeat(7, 28px); gap:6px; }
+            .calendar-mini-day { width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:4px; position:relative; }
+            .calendar-mini-day.other-month { opacity:0.35; cursor:default; }
+            .calendar-mini-day.hoy { border:1px solid #2D555D; }
+
+            /* 🔥 LÍNEAS ABAJO (inicio – verde) */
+            .calendar-mini-day.inicio::before {
+                content: "";
+                position: absolute;
+                bottom: -3px;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: #2ecc71;
+                border-radius: 4px;
+            }
+
+            /* 🔥 LÍNEAS ABAJO (fin – rojo) */
+            .calendar-mini-day.fin::before {
+                content: "";
+                position: absolute;
+                bottom: -3px;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: #e74c3c;
+                border-radius: 4px;
+            }
+
+            .calendario-tarjeta-desplegable { 
+                min-width: 260px; 
+                padding:10px; 
+                background:white; 
+                box-shadow:0 6px 18px rgba(0,0,0,0.08); 
+                border-radius:8px;
+            }
+            .calendar-mini-header .calendar-mini-nav button { 
+                background:none; 
+                border:none; 
+                cursor:pointer; 
+                padding:4px; 
+            }
+        `;
+        document.head.appendChild(style);
+    })();
     
     function agregarCalendarioATarjetas() {
         const tarjetas = document.querySelectorAll('.goal-card');
@@ -1243,25 +1295,32 @@ function inicializarCalendarioEnTarjetas() {
             
             const calendarioDesplegable = document.createElement('div');
             calendarioDesplegable.className = 'calendario-tarjeta-desplegable';
+
+            /* 🔥 CENTRAR EN PANTALLA */
+            calendarioDesplegable.style.position = 'fixed';
+            calendarioDesplegable.style.top = '50%';
+            calendarioDesplegable.style.left = '50%';
+            calendarioDesplegable.style.transform = 'translate(-50%, -50%)';
+            calendarioDesplegable.style.zIndex = '9999';
             calendarioDesplegable.style.display = 'none';
-            calendarioDesplegable.style.position = 'absolute';
-            calendarioDesplegable.style.top = '100%';
-            calendarioDesplegable.style.right = '0';
-            calendarioDesplegable.style.zIndex = '1000';
-            
+
             calendarioDesplegable.innerHTML = `
-                <div class="calendar-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div class="calendar-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <span class="month-name-tarjeta" style="font-weight: bold; color: #2A4145; font-size: 14px;"></span>
                 </div>
+
                 <div class="calendar-mini-container">
-                    <div class="calendar-mini-header">
-    <span class="month-mini"></span>
-    <div class="calendar-mini-nav">
-        <button class="btn-prev-month"><i class="bi bi-chevron-up"></i></button>
-        <button class="btn-next-month"><i class="bi bi-chevron-down"></i></button>
-    </div>
-</div>
-                    <div class="calendar-mini-weekdays">
+                    <div class="calendar-mini-header" style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+                        <span class="month-mini" style="margin-right:6px;"></span>
+                        <span class="rango-mini" style="font-size:12px; color:#456; user-select:none; margin-left:6px;"></span>
+
+                        <div class="calendar-mini-nav" style="margin-left:auto;">
+                            <button class="btn-prev-month" title="Mes anterior"><i class="bi bi-chevron-up"></i></button>
+                            <button class="btn-next-month" title="Mes siguiente"><i class="bi bi-chevron-down"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-mini-weekdays" style="display:grid; grid-template-columns:repeat(7,28px); gap:6px; font-size:11px; color:#666; margin:8px 0;">
                         <span>do.</span><span>lu.</span><span>ma.</span><span>mi.</span><span>ju.</span><span>vi.</span><span>sa.</span>
                     </div>
                     <div class="calendar-mini-days"></div>
@@ -1281,10 +1340,38 @@ function inicializarCalendarioEnTarjetas() {
         let calendarioAbierto = false;
         
         const monthElement = container.querySelector('.month-mini');
+        const rangoElement = container.querySelector('.rango-mini');
         const daysContainer = container.querySelector('.calendar-mini-days');
         const prevButton = container.querySelector('.btn-prev-month');
         const nextButton = container.querySelector('.btn-next-month');
         const iconoCalendario = container.parentNode.querySelector('.btn-calendario-tarjeta');
+
+        function highlightDay(fechaObj) {
+            const prev = container.querySelectorAll('.seleccionado-zoom');
+            prev.forEach(p => p.classList.remove('seleccionado-zoom'));
+
+            if (!fechaObj) return;
+
+            const diaBuscado = fechaObj.getDate();
+            const diaElems = container.querySelectorAll('.calendar-mini-day');
+
+            diaElems.forEach(d => {
+                if (d.classList.contains('other-month')) return;
+
+                const num = parseInt(d.textContent, 10);
+                if (num === diaBuscado) {
+                    const fechaTest = new Date(currentDate.getFullYear(), currentDate.getMonth(), num);
+                    if (
+                        fechaTest.getFullYear() === fechaObj.getFullYear() &&
+                        fechaTest.getMonth() === fechaObj.getMonth() &&
+                        fechaTest.getDate() === fechaObj.getDate()
+                    ) {
+                        d.classList.add('seleccionado-zoom');
+                        d.scrollIntoView({ block: 'nearest' });
+                    }
+                }
+            });
+        }
         
         function renderCalendarMini(date) {
             const year = date.getFullYear();
@@ -1315,13 +1402,20 @@ function inicializarCalendarioEnTarjetas() {
             
             const today = new Date();
 
-            // 🔥 CORRECCIÓN: Obtener las fechas REALES del objetivo
-            const fechaDesde = tarjeta.dataset.fecha_desde; // formato YYYY-MM-DD
-            const fechaHasta = tarjeta.dataset.fecha_hasta; // formato YYYY-MM-DD
+            const fechaDesde = tarjeta.dataset.fecha_desde;
+            const fechaHasta = tarjeta.dataset.fecha_hasta;
 
-            // Convertir a objetos Date
             const fechaInicio = fechaDesde ? new Date(fechaDesde + 'T12:00:00') : null;
             const fechaFin = fechaHasta ? new Date(fechaHasta + 'T12:00:00') : null;
+
+            if (fechaInicio && fechaFin) {
+                const opciones = { day: 'numeric', month: 'short' };
+                const inicioStr = fechaInicio.toLocaleDateString('es-ES', opciones);
+                const finStr = fechaFin.toLocaleDateString('es-ES', opciones);
+                rangoElement.textContent = ` ${inicioStr} – ${finStr}`;
+            } else {
+                rangoElement.textContent = '';
+            }
 
             for (let i = 1; i <= lastDate; i++) {
                 const day = document.createElement('div');
@@ -1330,28 +1424,59 @@ function inicializarCalendarioEnTarjetas() {
                 
                 const fechaActual = new Date(year, month, i);
 
-                // Marcar día actual
-                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                if (
+                    i === today.getDate() &&
+                    month === today.getMonth() &&
+                    year === today.getFullYear()
+                ) {
                     day.classList.add('hoy');
                 }
 
-                // Marcar fecha de inicio (si existe)
-                if (fechaInicio && 
+                if (
+                    fechaInicio &&
                     fechaActual.getDate() === fechaInicio.getDate() &&
                     fechaActual.getMonth() === fechaInicio.getMonth() &&
-                    fechaActual.getFullYear() === fechaInicio.getFullYear()) {
+                    fechaActual.getFullYear() === fechaInicio.getFullYear()
+                ) {
                     day.classList.add('inicio');
                 }
 
-                // Marcar fecha de fin (si existe)
-                if (fechaFin && 
+                if (
+                    fechaFin &&
                     fechaActual.getDate() === fechaFin.getDate() &&
                     fechaActual.getMonth() === fechaFin.getMonth() &&
-                    fechaActual.getFullYear() === fechaFin.getFullYear()) {
+                    fechaActual.getFullYear() === fechaFin.getFullYear()
+                ) {
                     day.classList.add('fin');
                 }
 
                 daysContainer.appendChild(day);
+
+                day.addEventListener('click', function () {
+                    const fechaSeleccionada = new Date(year, month, i);
+
+                    if (
+                        fechaInicio &&
+                        fechaSeleccionada.getDate() === fechaInicio.getDate() &&
+                        fechaSeleccionada.getMonth() === fechaInicio.getMonth() &&
+                        fechaSeleccionada.getFullYear() === fechaInicio.getFullYear()
+                    ) {
+                        if (typeof window.seleccionarFechaEnCalendarioGrande === "function") {
+                            window.seleccionarFechaEnCalendarioGrande(tarjeta, fechaInicio, "inicio");
+                        }
+                    }
+
+                    if (
+                        fechaFin &&
+                        fechaSeleccionada.getDate() === fechaFin.getDate() &&
+                        fechaSeleccionada.getMonth() === fechaFin.getMonth() &&
+                        fechaSeleccionada.getFullYear() === fechaFin.getFullYear()
+                    ) {
+                        if (typeof window.seleccionarFechaEnCalendarioGrande === "function") {
+                            window.seleccionarFechaEnCalendarioGrande(tarjeta, fechaFin, "fin");
+                        }
+                    }
+                });
             }
             
             for (let j = 1; j <= nextDays; j++) {
@@ -1360,15 +1485,67 @@ function inicializarCalendarioEnTarjetas() {
                 day.textContent = j;
                 daysContainer.appendChild(day);
             }
+
+            if (
+                fechaInicio &&
+                fechaInicio.getFullYear() === year &&
+                fechaInicio.getMonth() === month
+            ) {
+                highlightDay(fechaInicio);
+            } 
+            else if (
+                fechaFin &&
+                fechaFin.getFullYear() === year &&
+                fechaFin.getMonth() === month
+            ) {
+                highlightDay(fechaFin);
+            }
         }
-        
+
+        rangoElement.style.cursor = "pointer";
+
+        rangoElement.addEventListener("click", function (event) {
+            event.stopPropagation();
+
+            const fechaDesde = tarjeta.dataset.fecha_desde;
+            const fechaHasta = tarjeta.dataset.fecha_hasta;
+
+            let fechaObjetivo = null;
+
+            if (fechaDesde && fechaHasta) {
+                const rect = rangoElement.getBoundingClientRect();
+                const mitad = rect.left + rect.width / 2;
+
+                fechaObjetivo = (event.clientX < mitad)
+                    ? new Date(fechaDesde + "T12:00:00")
+                    : new Date(fechaHasta + "T12:00:00");
+            } else if (fechaDesde) {
+                fechaObjetivo = new Date(fechaDesde + "T12:00:00");
+            } else if (fechaHasta) {
+                fechaObjetivo = new Date(fechaHasta + "T12:00:00");
+            } else {
+                return;
+            }
+
+            currentDate = new Date(
+                fechaObjetivo.getFullYear(),
+                fechaObjetivo.getMonth(),
+                1
+            );
+
+            calendarioAbierto = true;
+            container.style.display = "block";
+
+            renderCalendarMini(currentDate);
+
+            setTimeout(() => highlightDay(fechaObjetivo), 40);
+        });
+
         iconoCalendario.addEventListener('click', function(e) {
             e.stopPropagation();
             calendarioAbierto = !calendarioAbierto;
             container.style.display = calendarioAbierto ? 'block' : 'none';
             if (calendarioAbierto) renderCalendarMini(currentDate);
-
-            container.classList.toggle('mostrar-centro', calendarioAbierto);
         });
         
         prevButton.addEventListener('click', function(e) {
@@ -1418,6 +1595,21 @@ document.addEventListener('DOMContentLoaded', function() {
 function actualizarCalendariosTarjetas() {
     inicializarCalendarioEnTarjetas();
 }
+
+/* ⭐ FUNCIÓN GLOBAL PARA PASAR FECHA AL CALENDARIO GRANDE ⭐ */
+window.seleccionarFechaEnCalendarioGrande = function (tarjeta, fecha, tipo) {
+    console.log("Fecha enviada al calendario grande:", fecha, "Tipo:", tipo);
+
+    if (tipo === "inicio") {
+        tarjeta.dataset.fecha_desde = fecha.toISOString().split('T')[0];
+    } else if (tipo === "fin") {
+        tarjeta.dataset.fecha_hasta = fecha.toISOString().split('T')[0];
+    }
+
+    if (typeof window.actualizarCalendariosTarjetas === "function") {
+        window.actualizarCalendariosTarjetas();
+    }
+};
 
 window.inicializarCalendarioEnTarjetas = inicializarCalendarioEnTarjetas;
 window.actualizarCalendariosTarjetas = actualizarCalendariosTarjetas;

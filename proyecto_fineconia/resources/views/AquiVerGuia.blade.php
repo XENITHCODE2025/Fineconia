@@ -152,6 +152,13 @@
             </a>
           </div>
 
+          <div class="menu-item" id="btn-objetivos">
+            <a href="{{ route('centro.objetivos') }}" style="text-decoration: none; color: inherit;">
+              <span>Historial</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </div>
+
         <a href="{{ url('/ayuda') }}" class="menu-item" style="text-decoration: none; color: inherit;">
   <span>Ayuda</span>
   <i class="bi bi-chevron-right"></i>
@@ -246,9 +253,14 @@
         <a href="#">Sugerencias y opiniones</a>
       </div>
       <div class="footer-contact">
-        <a href="mailto:fineconia@gmail.com"><i class="fa-regular fa-envelope"></i> fineconia@gmail.com</a>
-        <a href="#"><i class="fa-brands fa-facebook"></i> Fineconia</a>
-      </div>
+    <a href="mailto:codexenith@gmail.com">
+        <i class="fa-regular fa-envelope"></i> codexenith@gmail.com
+        </a>
+
+    <a href="https://www.facebook.com/Fineconia" target="_blank">
+        <i class="fa-brands fa-facebook"></i> Fineconia
+    </a>
+</div>
     </div>
   </footer>
 

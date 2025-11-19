@@ -32,6 +32,11 @@ Route::get('/', function () {
     return view('Home');
 });
 
+// Página de Términos y Condiciones
+Route::get('/terminos-condiciones', function () {
+    return view('TerminosCondiciones'); // Cambia 'terminos' por el nombre real de tu vista
+})->name('politica.privacidad');
+
 Route::get('/centro-objetivos', function () {
     return view('CentroDeObjetivo'); // nombre del archivo Blade
 })->name('centro.objetivos');
@@ -47,6 +52,11 @@ Route::get('/guia', [GuiaController::class, 'index1'])->name('ruta.guia');
 Route::get('/centro-de-usuario', function () {
     return view('CentroDeUsuario');
 })->name('centro.usuario');
+
+// Página de Políticas de Seguridad
+Route::get('/politica-seguridad', function () {
+    return view('PoliticaSeguridad');
+})->name('politica.seguridad');
 
 Route::get('/fineconia-home', function () {
     return view('Bienvenida'); // Aquí pones el nombre de tu vista Blade de Fineconia

@@ -29,7 +29,7 @@ use App\Models\Ingreso;
 
 // Página principal
 Route::get('/', function () {
-    return view('Home');
+    return view('CrearUnDios');
 });
 
 // Página de Términos y Condiciones

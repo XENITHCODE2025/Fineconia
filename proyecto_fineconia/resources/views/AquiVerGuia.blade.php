@@ -152,6 +152,13 @@
             </a>
           </div>
 
+          <div class="menu-item" id="btn-objetivos">
+            <a href="{{ route('centro.objetivos') }}" style="text-decoration: none; color: inherit;">
+              <span>Historial</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </div>
+
         <a href="{{ url('/ayuda') }}" class="menu-item" style="text-decoration: none; color: inherit;">
   <span>Ayuda</span>
   <i class="bi bi-chevron-right"></i>

@@ -43,6 +43,13 @@
             </a>
           </div>
 
+           <div class="menu-item" id="btn-objetivos">
+            <a href="{{ route('centro.objetivos') }}" style="text-decoration: none; color: inherit;">
+              <span>Historial</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </div>
+
           <a href="{{ url('/ayuda') }}" class="menu-item" style="text-decoration: none; color: inherit;">
   <span>Ayuda</span>
   <i class="bi bi-chevron-right"></i>
@@ -107,7 +114,7 @@
       <div class="logo">FINECONIA</div>
     </div>
     <div class="nav-buttons">
-      <button class="nav-btn">Finanzas <span>▼</span></button>
+      <button class="nav-btn">Finanzas</button>
       <button class="nav-btn">Educación Financiera</button>
       <button class="nav-btn">Economía</button>
     </div>
@@ -169,6 +176,37 @@
     </div>
   </div>
 
+<!-- FineBot flotante -->
+<div class="finebot-wrapper">
+
+  <div class="finebot-message" id="finebotMessage">
+    “¡Hola! Soy FineBot, tu asistente virtual. ¿En qué puedo ayudarte?”
+  </div>
+
+  <div class="finebot-container">
+    <img src="img/LogoCompleto.jpg" alt="FineBot" class="finebot-icon">
+  </div>
+
+</div>
+
+<div class="finebot-chat" id="finebotChat">
+    <div class="finebot-chat-header">
+        <img src="img/finebot.png" class="finebot-chat-logo">
+        <span>FineBot</span>
+    </div>
+
+    <div class="finebot-chat-body">
+        <div class="bot-bubble"></div>
+        <div class="user-bubble"></div>
+    </div>
+
+    <div class="finebot-chat-input">
+        <input type="text" placeholder="Escribe un mensaje...">
+        <button><i class="bi bi-send-fill"></i></button>
+    </div>
+</div>
+
+
   <div class="footer">
     Ayuda Opiniones y Sugerencias
   </div>
@@ -180,6 +218,49 @@
     });
   </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* ---------------------------
+       1. Mostrar mensaje flotante
+       --------------------------- */
+    const message = document.getElementById("finebotMessage");
+
+    // Mostrar después de 3 segundos
+    setTimeout(() => {
+      message.classList.add("show");
+    }, 3000);
+
+    // Ocultar 5 segundos después
+    setTimeout(() => {
+      message.classList.remove("show");
+    }, 8000);
+
+
+    /* ---------------------------
+       2. Control del panel del chat
+       --------------------------- */
+    const botIcon = document.querySelector(".finebot-icon");
+    const chatPanel = document.getElementById("finebotChat");
+
+    // Abrir/cerrar al tocar el bot
+    botIcon.addEventListener("click", function(event) {
+        event.stopPropagation();
+        chatPanel.style.display = (chatPanel.style.display === "flex") ? "none" : "flex";
+    });
+
+    // Evitar que se cierre al tocar dentro
+    chatPanel.addEventListener("click", function(event) {
+        event.stopPropagation();
+    });
+
+    // Cerrar si se toca fuera
+    document.addEventListener("click", function() {
+        chatPanel.style.display = "none";
+    });
+
+});
+</script>
 
 </body>
 

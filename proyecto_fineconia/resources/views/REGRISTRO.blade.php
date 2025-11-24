@@ -110,7 +110,7 @@
 
     // Redirección a Términos y Condiciones
     function goToTerms() {
-      window.location.href = "{{ route('politica.privacidad') }}";
+      window.location.href = "{{ route('terminos') }}";
     }
 
     // Redirección a Política y Seguridad

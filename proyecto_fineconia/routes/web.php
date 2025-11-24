@@ -21,6 +21,8 @@ use App\Http\Controllers\AhorroController;
 
 use App\Http\Controllers\GuiaController;
 use App\Http\Controllers\FavoritoController;
+use App\Http\Controllers\TerminosController;
+use App\Http\Controllers\PoliticaSeguridadController;
 
 
 use App\Models\Gasto;
@@ -29,13 +31,19 @@ use App\Models\Ingreso;
 
 // Página principal
 Route::get('/', function () {
-    return view('Home');
+    return view('CrearUnDios');
 });
 
-// Página de Términos y Condiciones
-Route::get('/terminos-condiciones', function () {
-    return view('TerminosCondiciones'); // Cambia 'terminos' por el nombre real de tu vista
-})->name('politica.privacidad');
+
+// Ruta para leer los terminos y condiciones
+Route::get('/terminos-condiciones', [TerminosController::class, 'index'])
+    ->name('terminos');
+
+//Ruta para leer las politicas de seguridad
+Route::get('/politica-privacidad', [PoliticaSeguridadController::class, 'index'])
+    ->name('politica.seguridad');
+
+
 
 Route::get('/centro-objetivos', function () {
     return view('CentroDeObjetivo'); // nombre del archivo Blade
@@ -53,10 +61,6 @@ Route::get('/centro-de-usuario', function () {
     return view('CentroDeUsuario');
 })->name('centro.usuario');
 
-// Página de Políticas de Seguridad
-Route::get('/politica-seguridad', function () {
-    return view('PoliticaSeguridad');
-})->name('politica.seguridad');
 
 Route::get('/fineconia-home', function () {
     return view('Bienvenida'); // Aquí pones el nombre de tu vista Blade de Fineconia
@@ -75,8 +79,8 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 // Rutas para el historial de abonos
 
-   Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
-   Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
+Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
+Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
 // Login
 Route::get('/login', function () {
     return view('LOGIN');
@@ -241,11 +245,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ingresos/{id}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
     Route::put('/ingresos/{id}', [IngresoController::class, 'update'])->name('ingresos.update');
 
-    
+
     // Rutas para el historial de abonos
 
-   Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
-   Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
+    Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
+    Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
 
 
 
@@ -254,7 +258,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('transacciones.lista');
 
 
-        // Rutas para Favoritos
+    // Rutas para Favoritos
     Route::post('/favorito/toggle', [FavoritoController::class, 'toggle'])->name('favorito.toggle');
     Route::get('/favoritos', [FavoritoController::class, 'getUserFavoritos'])->name('favoritos.user');
 
@@ -263,9 +267,7 @@ Route::middleware(['auth'])->group(function () {
 
     //Para mostrar objetivos terminados
     Route::get('/centro-objetivos', [ObjetivoAhorroController::class, 'indexCentroUsuario'])
-     ->name('centro.objetivos');
-
-
+        ->name('centro.objetivos');
 });
 
 

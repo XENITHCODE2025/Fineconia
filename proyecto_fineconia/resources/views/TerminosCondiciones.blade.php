@@ -55,20 +55,21 @@
     <!-- FORMULARIO DE TÉRMINOS -->
     <div class="policy-form">
 
-      <h2 class="policy-form-title">Términos y Condiciones de Uso</h2>
+      @foreach ($secciones as $sec)
 
-      <h3 class="policy-form-subtitle">Términos y condiciones de Fineconia (Anexos)</h3>
+      @if($sec->titulo)
+      <h2 class="policy-form-title">{{ $sec->titulo }}</h2>
+      @endif
 
-      <div class="policy-text">
-        <p>
-          Aquí debes agregar los términos y condiciones completos.  
-          Este texto es solo un ejemplo.  
-          Puedes colocar todo el contenido necesario.  
-          El cuadro soporta scroll automático si el texto es muy largo.
-        </p>
-      </div>
+      @if($sec->subtitulo)
+      <h3 class="policy-form-subtitle">{{ $sec->subtitulo }}</h3>
+      @endif
 
+      <p class="policy-text">{!! nl2br(e($sec->contenido)) !!}</p>
+
+      @endforeach
     </div>
+  </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -84,4 +85,5 @@
   </script>
 
 </body>
+
 </html>

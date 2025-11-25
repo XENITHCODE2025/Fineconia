@@ -74,31 +74,32 @@
             <h3 class="section-title">Permisos administrativos</h3>    
 
             <div class="checkbox-group">    
-                <input type="checkbox" id="permiso1">    
+                <input type="checkbox" class="permiso" id="permiso1">    
                 <label for="permiso1">Administrar Guías de Educación financiera</label>    
             </div>    
             <div class="checkbox-group">    
-                <input type="checkbox" id="permiso2">    
+                <input type="checkbox" class="permiso" id="permiso2">    
                 <label for="permiso2">Administrar Consejos de ahorro</label>    
             </div>    
             <div class="checkbox-group">    
-                <input type="checkbox" id="permiso3">    
+                <input type="checkbox" class="permiso" id="permiso3">    
                 <label for="permiso3">Administrar Noticias</label>    
             </div>    
 
             <div class="btn-container">    
                 <button class="btn-cancelar">Cancelar</button>    
-                <button class="btn-guardar">Guardar</button>    
+                <button class="btn-guardar" disabled style="opacity: 0.5; cursor: not-allowed;">Guardar</button>    
             </div>    
         </div>    
 
 
         <div class="photo-box">    
             <div>    
-                <div class="photo-icon">    
+                <div class="photo-icon" id="preview-photo">    
                     <i class="bi bi-person-circle"></i>    
                 </div>    
-                <button class="btn-upload">Subir Imagen</button>    
+                <button class="btn-upload" id="uploadBtn">Subir Imagen</button>    
+                <input type="file" id="fileInput" accept="image/*" style="display:none;">    
             </div>    
         </div>    
 
@@ -109,25 +110,80 @@
 
 <script>    
     document.addEventListener('DOMContentLoaded', function() {    
+
         const guardarBtn = document.querySelector('.btn-guardar');    
         const cancelarBtn = document.querySelector('.btn-cancelar');    
-            
-        guardarBtn.addEventListener('click', function() {    
+        const permisos = document.querySelectorAll('.permiso');    
+        const fileInput = document.getElementById('fileInput');    
+        const uploadBtn = document.getElementById('uploadBtn');    
+        const previewPhoto = document.getElementById('preview-photo');    
+
+        let imagenCargada = false;    
+
+        // Abrir explorador al presionar "Subir Imagen"    
+        uploadBtn.addEventListener('click', () => fileInput.click());    
+
+        // Mostrar vista previa y marcar imagen como cargada    
+        fileInput.addEventListener('change', function() {    
+            if (this.files && this.files[0]) {    
+                const reader = new FileReader();    
+                reader.onload = function(e) {    
+                    previewPhoto.innerHTML = `<img src="${e.target.result}" style="width:120px; height:120px; border-radius:50%; object-fit:cover;">`;    
+                }    
+                reader.readAsDataURL(this.files[0]);    
+                imagenCargada = true;    
+                validarFormulario();    
+            }    
+        });    
+
+
+        // Validaciones en tiempo real    
+        permisos.forEach(p => p.addEventListener('change', validarFormulario));    
+        document.querySelectorAll('#password, #confirm-password, #nombre, #apellido, #email').forEach(inp => {    
+            inp.addEventListener('input', validarFormulario);    
+        });    
+
+
+        function validarFormulario() {    
             const password = document.getElementById('password').value;    
             const confirmPassword = document.getElementById('confirm-password').value;    
-                
-            if (password !== confirmPassword) {    
-                alert('Las contraseñas no coinciden.');    
-                return;    
+
+            const permisosMarcados = [...permisos].some(p => p.checked);    
+
+            const todoCompleto =    
+                imagenCargada &&    
+                permisosMarcados &&    
+                password !== "" &&    
+                confirmPassword !== "" &&    
+                password === confirmPassword;    
+
+            if (todoCompleto) {    
+                guardarBtn.disabled = false;    
+                guardarBtn.style.opacity = "1";    
+                guardarBtn.style.cursor = "pointer";    
+            } else {    
+                guardarBtn.disabled = true;    
+                guardarBtn.style.opacity = "0.5";    
+                guardarBtn.style.cursor = "not-allowed";    
             }    
-                
+        }    
+
+
+        // Acción del botón Guardar    
+        guardarBtn.addEventListener('click', function() {    
             alert('Usuario creado exitosamente');    
         });    
-            
+
+
+        // Acción Cancelar    
         cancelarBtn.addEventListener('click', function() {    
             if (confirm('¿Cancelar y borrar todo?')) {    
                 document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]').forEach(i => i.value = '');    
-                document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);    
+                permisos.forEach(c => c.checked = false);    
+                fileInput.value = "";    
+                previewPhoto.innerHTML = '<i class="bi bi-person-circle"></i>';    
+                imagenCargada = false;    
+                validarFormulario();    
             }    
         });    
     });    

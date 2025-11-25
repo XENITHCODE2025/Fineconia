@@ -29,8 +29,21 @@ use App\Models\Ingreso;
 
 // Página principal
 Route::get('/', function () {
-    return view('CrearUnDios');
+    return view('Home'); // Cambia 'welcome' por el nombre real de tu vista
 });
+
+// ========== NOTICIAS ==========
+Route::get('/NoticiasNuevas', function () {
+    return view('NoticiasNuevas');
+})->name('noticias.nueva');
+
+Route::get('/NoticiasActualizar', function () {
+    return view('NoticiasActualizar');
+})->name('noticias.actualizar');
+
+Route::get('/NoticiasEliminar', function () {
+    return view('NoticiasEliminar');
+})->name('noticias.eliminar');
 
 // Página de Términos y Condiciones
 Route::get('/terminos-condiciones', function () {

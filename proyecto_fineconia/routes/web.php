@@ -33,19 +33,26 @@ use App\Models\Ingreso;
 
 // Página principal
 Route::get('/', function () {
-    return view('CrearUnDios');
+    return view('Home'); // Cambia 'welcome' por el nombre real de tu vista
 });
 
+// ========== NOTICIAS ==========
+Route::get('/NoticiasNuevas', function () {
+    return view('NoticiasNuevas');
+})->name('noticias.nueva');
 
-// Ruta para leer los terminos y condiciones
-Route::get('/terminos-condiciones', [TerminosController::class, 'index'])
-    ->name('terminos');
+Route::get('/NoticiasActualizar', function () {
+    return view('NoticiasActualizar');
+})->name('noticias.actualizar');
 
-//Ruta para leer las politicas de seguridad
-Route::get('/politica-privacidad', [PoliticaSeguridadController::class, 'index'])
-    ->name('politica.seguridad');
+Route::get('/NoticiasEliminar', function () {
+    return view('NoticiasEliminar');
+})->name('noticias.eliminar');
 
-
+// Página de Términos y Condiciones
+Route::get('/terminos-condiciones', function () {
+    return view('TerminosCondiciones'); // Cambia 'terminos' por el nombre real de tu vista
+})->name('politica.privacidad');
 
 Route::get('/centro-objetivos', function () {
     return view('CentroDeObjetivo'); // nombre del archivo Blade

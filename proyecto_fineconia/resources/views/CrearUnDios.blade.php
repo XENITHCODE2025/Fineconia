@@ -221,6 +221,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+function limpiarFormulario() {
+    document.getElementById('nombre').value = '';
+    document.getElementById('apellido').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('confirm-password').value = '';
+
+    permisos.forEach(c => c.checked = false);
+
+    fileInput.value = "";
+    previewPhoto.innerHTML = '<i class="bi bi-person-circle"></i>';
+
+    imagenCargada = false;
+
+    validarFormulario(); // vuelve a deshabilitar el botón
+}
+
 </script>
 
 </body>

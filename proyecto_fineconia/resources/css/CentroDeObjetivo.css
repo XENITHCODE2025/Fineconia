@@ -82,7 +82,7 @@ body {
   border-radius: 10px;
   padding: 25px 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  min-height: 400px; /* ajusta el valor según lo necesites */
+  min-height: 1000px !important; /* ajusta el valor según lo necesites */
 }
 
 .info-card h3 {

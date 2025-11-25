@@ -18,9 +18,11 @@ use App\Http\Controllers\ConsejosController;
 use App\Models\ObjetivoAhorro;
 use App\Http\Controllers\ObjetivoController;
 use App\Http\Controllers\AhorroController;
+use App\Http\Controllers\AdminUserController;
 
 use App\Http\Controllers\GuiaController;
 use App\Http\Controllers\FavoritoController;
+
 
 
 use App\Models\Gasto;
@@ -29,7 +31,7 @@ use App\Models\Ingreso;
 
 // Página principal
 Route::get('/', function () {
-    return view('Home');
+    return view('CrearUnDios');
 });
 
 // Página de Términos y Condiciones
@@ -265,6 +267,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/centro-objetivos', [ObjetivoAhorroController::class, 'indexCentroUsuario'])
      ->name('centro.objetivos');
 
+     
+
+     
+
+   
+
+   
+ 
+
 
 });
 
@@ -277,7 +288,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
+Route::post('/admin/usuarios', [AdminUserController::class, 'store'])
+     ->name('admin.usuarios.store');
 
 Route::get('/prueba-auth', function () {
     return Auth::check() ? 'Usuario autenticado' : 'No autenticado';

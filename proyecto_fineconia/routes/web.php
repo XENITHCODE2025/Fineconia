@@ -32,6 +32,18 @@ Route::get('/', function () {
     return view('Home'); // Cambia 'welcome' por el nombre real de tu vista
 });
 
+Route::get('/usuario/editar', function () {
+    return view('ActualizarDatosUsuario');
+})->name('usuario.editar');
+
+Route::get('/noticias/economia', function () {
+    return view('Noticias');
+})->name('noticias.economia');
+
+Route::get('/historial-general', function () {
+    return view('HistorialGeneral');
+})->name('centro.historial');
+
 // ========== NOTICIAS ==========
 Route::get('/NoticiasNuevas', function () {
     return view('NoticiasNuevas');

@@ -152,12 +152,12 @@
             </a>
           </div>
 
-          <div class="menu-item" id="btn-objetivos">
-            <a href="{{ route('centro.objetivos') }}" style="text-decoration: none; color: inherit;">
-              <span>Historial</span>
-              <i class="bi bi-chevron-right"></i>
-            </a>
-          </div>
+               <div class="menu-item" id="btn-historial">
+    <a href="{{ route('centro.historial') }}" style="text-decoration: none; color: inherit;">
+      <span>Historial General</span>
+      <i class="bi bi-chevron-right"></i>
+    </a>
+</div>
 
         <a href="{{ url('/ayuda') }}" class="menu-item" style="text-decoration: none; color: inherit;">
   <span>Ayuda</span>
@@ -202,6 +202,10 @@
       btnObjetivos.addEventListener('click', () => {
         window.location.href = "{{ route('centro.objetivos') }}";
       });
+              const btnHistorial = document.getElementById('btn-historial');
+btnHistorial.addEventListener('click', () => {
+  window.location.href = "{{ route('centro.historial') }}";
+});
     </script>
   </header>
 

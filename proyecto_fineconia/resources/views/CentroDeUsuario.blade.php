@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   @vite('resources/css/CentroDeUsuario.css')
 </head>
-<body>
+<body> 
 
 <nav class="navbar">
   <div class="logo-container" style="max-width: 200px; width: 100%;">
@@ -25,6 +25,11 @@
       <h2>Bienvenido</h2>
       <h1>{{ Auth::user()->name }}</h1>
     </div>
+  </div>
+
+  <!-- BOTÓN EDITAR DATOS -->
+  <div class="edit-btn-container">
+    <a href="{{ route('usuario.editar') }}" class="edit-btn">Editar Datos</a>
   </div>
 
   <div class="info-card">

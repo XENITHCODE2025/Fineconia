@@ -267,3 +267,20 @@ html, body {
     font-size: 18px;
   }
 }
+
+/* --- BOTÓN EXPORTAR (MISMO DISEÑO QUE LA IMAGEN) --- */
+.btn-exportar {
+    background-color: #0A66FF;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    font-size: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s ease-in-out;
+}
+
+.btn-exportar:hover {
+    background-color: #0059e6;
+}

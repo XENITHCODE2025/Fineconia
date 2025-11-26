@@ -1,0 +1,113 @@
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      background-color: #f3f3f3;
+    }
+
+    /* ---------- NAVBAR ---------- */
+    .navbar {
+      background-color: #31565e;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+    }
+
+    .logo-container {
+      max-width: 200px;
+      width: 100%;
+    }
+
+    .logo-container img {
+      height: 100px;
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .user-section a {
+      font-family: 'Open Sans', sans-serif !important;
+      font-weight: 400 !important;
+      color: #FFFFFF !important;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 10px 15px;
+      transition: all 0.2s ease;
+    }
+
+    .user-section a:hover {
+      text-decoration: underline;
+    }
+
+    /* -------- CONTENIDO -------- */
+    .contenido {
+      padding: 35px 50px;
+    }
+
+    /* TÍTULO + BOTÓN en la misma línea */
+    .header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .titulo {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: #000000;
+      margin: 0;
+    }
+
+    /* -------- BOTÓN EXPORTAR -------- */
+    .btn-exportar {
+      background-color: #0d6efd;
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      padding: 8px 22px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-exportar:hover {
+      background-color: #0b5ed7;
+    }
+
+    /* -------- TABLA -------- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    thead {
+      background-color: #e8e8e8;
+    }
+
+    thead th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #000000;
+      border-bottom: 1px solid #d4d4d4;
+      font-family: 'Roboto Slab', serif;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    tbody td {
+      padding: 12px;
+      color: #333;
+    }
+
+    tbody tr:hover {
+      background-color: #f4f4f4;
+    }

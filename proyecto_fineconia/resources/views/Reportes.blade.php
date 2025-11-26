@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 
 <head>
@@ -17,14 +17,17 @@
         </div>
         <div class="menu">
             <a href="#" id="gastos_ingresos" class="underline">Gastos e ingresos</a>
-             @include('partials.header-user')  {{-- ← nuevo partial --}}
+            @include('partials.header-user')
         </div>
     </div>
 
     <div class="content">
         <div class="report-title">REPORTES DETALLADOS</div>
+
+        <!-- 🔥 BUSCADOR + FILTRAR + EXPORTAR -->
         <div class="search-bar">
             <input type="text" placeholder="Buscar por descripción o categoría" />
+
             <div class="dropdown">
                 <button id="btnFiltro">Filtrar ▾</button>
                 <div class="dropdown-content">
@@ -33,6 +36,9 @@
                     <a href="#" data-filtro="ingreso">Ingresos</a>
                 </div>
             </div>
+
+            <!-- 🔥 Nuevo botón Exportar -->
+            <button id="btnExportar" class="btn-exportar">Exportar</button>
         </div>
 
         <div class="report-list" id="listaReportes">
@@ -44,6 +50,7 @@
                 </div>
                 <div class="info">21 Mayo 2025</div>
             </button>
+
             <button class="report-button">
                 <div>
                     <div class="info">Gasto</div>
@@ -51,6 +58,7 @@
                 </div>
                 <div class="info">21 Mayo 2025</div>
             </button>
+
         </div>
     </div>
 
@@ -62,18 +70,16 @@
     </div>
 
 
-   <script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-    /* ----------  Referencias DOM  ---------- */
+
     const lista        = document.getElementById('listaReportes');
     const inputBuscar  = document.querySelector('.search-bar input');
     const filtroLinks  = document.querySelectorAll('.dropdown-content a');
     const btnFiltro    = document.getElementById('btnFiltro');
 
-    /* '', 'gasto', 'ingreso' */
     let filtroTipo = '';
 
-    /* ----------  Plantilla de tarjeta  ---------- */
     const plantillaCard = (t) => {
         const hora = (t.hora || '')
             .toLowerCase()
@@ -99,13 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>`;
     };
 
-    /* ----------  Renderizar tarjetas  ---------- */
     const renderCards = (datos = []) => {
         lista.innerHTML = datos.length
             ? datos.map(plantillaCard).join('')
             : '<p class="sin-res">Sin resultados</p>';
 
-        // desplegar/contraer
         lista.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => {
                 card.classList.toggle('abierta');
@@ -115,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    /* ----------  Obtener datos del backend  ---------- */
     const fetchDatos = () => {
         const params = new URLSearchParams();
         if (filtroTipo)               params.append('tipo', filtroTipo);
@@ -127,36 +130,35 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(() => alertify.error('Error al cargar transacciones'));
     };
 
-    /* ----------  Eventos  ---------- */
-
-    /* Buscador con debounce */
     inputBuscar.addEventListener('input', () => {
         clearTimeout(inputBuscar._t);
         inputBuscar._t = setTimeout(fetchDatos, 300);
     });
 
-    /* Dropdown de filtro */
     filtroLinks.forEach(link => {
         link.addEventListener('click', e => {
             e.preventDefault();
-            filtroTipo = link.dataset.filtro;            // '', 'gasto', 'ingreso'
+            filtroTipo = link.dataset.filtro;
             btnFiltro.innerHTML = `Filtrar (${link.textContent}) ▾`;
             fetchDatos();
         });
     });
 
-    /* Primera carga */
     fetchDatos();
 });
 
-/* Enlace a la pantalla principal */
+
 document.getElementById('gastos_ingresos')
         .addEventListener('click', () => {
             window.location.href = "{{ route('gastos-ingresos') }}";
         });
+
+
+// 🔥 Acción del botón Exportar
+document.getElementById('btnExportar').addEventListener('click', () => {
+    alertify.success("Exportando reporte...");
+});
 </script>
 
-
 </body>
-
 </html>

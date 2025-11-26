@@ -14,7 +14,7 @@ body {
   align-items: center;
   padding: 12px 20px;
 }
-
+ 
 .navbar .logo {
   display: flex; 
   align-items: center;
@@ -171,4 +171,27 @@ h1, h2, h3, h4, h5, h6, th, .titulo, .encabezado {
 p, td, input, label, a, span {
   font-family: 'Open Sans', sans-serif;
   font-weight: 400;
+}
+
+/* Contenedor del botón */
+.edit-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+/* Botón Editar Datos */
+.edit-btn {
+  background-color: #31565e;
+  color: white;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: #274950;
 }

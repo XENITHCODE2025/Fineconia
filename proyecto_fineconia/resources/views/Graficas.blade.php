@@ -398,7 +398,7 @@
                         </div>
                         <div class="card-body d-flex flex-column align-items-center">
                           <small class="text-muted mb-2">
-                            Toca la gráfica o el segmento (por ejemplo, "Salario") para abrir el selector de color y personalizarla.
+                            Toca la gráfica para abrir el selector de color y personalizarla
                           </small>
                           <canvas id="pieChartMes" width="500" height="500" style="width:500px;height:500px"></canvas>
                           ${items.length === 0
@@ -529,7 +529,7 @@ card.innerHTML = `
     </div>
     <div class="card-body">
       <small class="text-muted d-block mb-2 text-center">
-        Toca una barra para abrir el selector de color y cambiar el color de ese mes.
+        Toca la gráfica para abrir el selector de color y personalizarla
       </small>
       <canvas id="barraIngresosGastos" width="700" height="400" style="width:100%;max-width:700px;height:400px"></canvas>
       ${mesesUnicos.length === 0
@@ -688,6 +688,67 @@ card.innerHTML = `
         btnMixto.click();
     });
     </script>
+
+    <script>
+/* ============================================================
+   MANEJO GLOBAL DE ERRORES DEL SELECTOR DE COLOR
+   ============================================================ */
+
+// Verifica si el panel pudo abrirse correctamente
+function safeShowColorPanel(action) {
+    try {
+        action(); // intenta ejecutar showColorPanelForPieSalario o showColorPanelForBar
+    } catch (error) {
+        console.error("Error al abrir el selector:", error);
+        alertify?.error("No se pudo abrir el selector de color.");
+    }
+}
+
+// Aplica el color de manera segura
+function safeApplyColor(applyFn) {
+    try {
+        applyFn(); // intenta aplicar colores a datasets
+    } catch (error) {
+        console.error("Error al aplicar color:", error);
+        alertify?.error("No se pudo actualizar el color de la gráfica.");
+    }
+}
+
+/* ============================================================
+   INTERCEPTA Y ENVUELVE LAS FUNCIONES DE TU SCRIPT ACTUAL
+   SIN MODIFICAR NADA DEL CÓDIGO BASE
+   ============================================================ */
+
+// 1. Interceptar apertura del panel
+(function interceptarOpen() {
+    const originalBar = window.showColorPanelForBar;
+    const originalPie = window.showColorPanelForPieSalario;
+
+    if (originalBar) {
+        window.showColorPanelForBar = function(chart) {
+            safeShowColorPanel(() => originalBar(chart));
+        };
+    }
+
+    if (originalPie) {
+        window.showColorPanelForPieSalario = function(chart, index) {
+            safeShowColorPanel(() => originalPie(chart, index));
+        };
+    }
+})();
+
+// 2. Interceptar aplicación de color
+(function interceptarColorPick() {
+    const originalPick = window.pickColorFromPalette;
+
+    if (originalPick) {
+        window.pickColorFromPalette = function(evt) {
+            safeApplyColor(() => originalPick(evt));
+        };
+    }
+})();
+</script>
+
 </body>
 
 </html>

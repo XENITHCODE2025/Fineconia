@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 
-<body>
+<body> 
   <div class="header">
     <div class="top-bar">
       <div class="logo-container">
@@ -43,12 +43,13 @@
             </a>
           </div>
 
-           <div class="menu-item" id="btn-objetivos">
-            <a href="{{ route('centro.objetivos') }}" style="text-decoration: none; color: inherit;">
-              <span>Historial</span>
-              <i class="bi bi-chevron-right"></i>
-            </a>
-          </div>
+           <div class="menu-item" id="btn-historial">
+    <a href="{{ route('centro.historial') }}" style="text-decoration: none; color: inherit;">
+      <span>Historial General</span>
+      <i class="bi bi-chevron-right"></i>
+    </a>
+</div>
+
 
           <a href="{{ url('/ayuda') }}" class="menu-item" style="text-decoration: none; color: inherit;">
   <span>Ayuda</span>
@@ -108,6 +109,12 @@
         btnObjetivos.addEventListener('click', () => {
           window.location.href = "{{ route('centro.objetivos') }}";
         });
+
+        const btnHistorial = document.getElementById('btn-historial');
+btnHistorial.addEventListener('click', () => {
+  window.location.href = "{{ route('centro.historial') }}";
+});
+
       </script>
     </div>
     <div class="logo-container" style="justify-content: center; margin-top: 10px;">
@@ -163,11 +170,16 @@
     </div>
 
 
-    <div class="card">
-      <div class="card-title">Economía</div>
-      <div class="card-text">Mantente informado con artículos actualizados sobre finanzas y economía, filtrados por sector e interés.</div>
+<div class="card">
+  <div class="card-title">Economía</div>
+  <div class="card-text">
+      Mantente informado con artículos actualizados sobre finanzas y economía, filtrados por sector e interés.
+  </div>
+
+  <a href="{{ route('noticias.economia') }}" style="text-decoration: none;">
       <button class="btn">Acceder</button>
-    </div>
+  </a>
+</div>
 
     <div class="card">
       <div class="card-title">Asistente Financiero con IA</div>
@@ -184,14 +196,14 @@
   </div>
 
   <div class="finebot-container">
-    <img src="img/LogoCompleto.jpg" alt="FineBot" class="finebot-icon">
+    <img src="img/Fin_bot-removebg-preview.png" alt="FineBot" class="finebot-icon">
   </div>
 
 </div>
 
 <div class="finebot-chat" id="finebotChat">
     <div class="finebot-chat-header">
-        <img src="img/finebot.png" class="finebot-chat-logo">
+        <img src="img/Fin_bot-removebg-preview.png" class="finebot-chat-logo">
         <span>FineBot</span>
     </div>
 

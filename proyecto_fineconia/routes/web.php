@@ -74,6 +74,13 @@ Route::get('/ayuda', function () {
     return view('AyudaMeEstanMatandoo');
 });
 
+// Ruta para leer los terminos y condiciones
+Route::get('/terminos-condiciones', [TerminosController::class, 'index'])
+    ->name('terminos');
+
+//Ruta para leer las politicas de seguridad
+Route::get('/politica-privacidad', [PoliticaSeguridadController::class, 'index'])
+    ->name('politica.seguridad');
 // Vista para leer una guía específica
 Route::get('/guia', [GuiaController::class, 'index1'])->name('ruta.guia');
 

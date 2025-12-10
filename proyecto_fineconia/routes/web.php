@@ -18,6 +18,14 @@ use App\Http\Controllers\ConsejosController;
 use App\Models\ObjetivoAhorro;
 use App\Http\Controllers\ObjetivoController;
 use App\Http\Controllers\AhorroController;
+use App\Http\Controllers\AdminUserController;
+
+use App\Http\Controllers\GuiaController;
+use App\Http\Controllers\FavoritoController;
+use App\Http\Controllers\TerminosController;
+use App\Http\Controllers\PoliticaSeguridadController;
+use App\Http\Controllers\UserController;
+
 
 
 use App\Models\Gasto;
@@ -26,12 +34,73 @@ use App\Models\Ingreso;
 
 // Página principal
 Route::get('/', function () {
-    return view('Home');
+    return view('Home'); // Cambia 'welcome' por el nombre real de tu vista
 });
 
-Route::get('/educacion', function () {
-    return view('Educacion'); // tu archivo Educacion.blade.php
-})->name('educacion.financiera');
+Route::get('/usuario/editar', function () {
+    return view('ActualizarDatosUsuario');
+})->name('usuario.editar');
+
+Route::get('/noticias/economia', function () {
+    return view('Noticias');
+})->name('noticias.economia');
+
+Route::get('/historial-general', function () {
+    return view('HistorialGeneral');
+})->name('centro.historial');
+
+// ========== NOTICIAS ==========
+Route::get('/NoticiasNuevas', function () {
+    return view('NoticiasNuevas');
+})->name('noticias.nueva');
+
+Route::get('/NoticiasActualizar', function () {
+    return view('NoticiasActualizar');
+})->name('noticias.actualizar');
+
+Route::get('/NoticiasEliminar', function () {
+    return view('NoticiasEliminar');
+})->name('noticias.eliminar');
+
+// Página de Términos y Condiciones
+Route::get('/terminos-condiciones', function () {
+    return view('TerminosCondiciones'); // Cambia 'terminos' por el nombre real de tu vista
+})->name('politica.privacidad');
+
+Route::get('/centro-objetivos', function () {
+    return view('CentroDeObjetivo'); // nombre del archivo Blade
+})->name('centro.objetivos');
+
+Route::get('/ayuda', function () {
+    return view('AyudaMeEstanMatandoo');
+});
+
+// Ruta para leer los terminos y condiciones
+Route::get('/terminos-condiciones', [TerminosController::class, 'index'])
+    ->name('terminos');
+
+//Ruta para leer las politicas de seguridad
+Route::get('/politica-privacidad', [PoliticaSeguridadController::class, 'index'])
+    ->name('politica.seguridad');
+// Vista para leer una guía específica
+Route::get('/guia', [GuiaController::class, 'index1'])->name('ruta.guia');
+
+// Ruta para la pantalla Centro de Usuario
+Route::get('/centro-de-usuario', function () {
+    return view('CentroDeUsuario');
+})->name('centro.usuario');
+
+
+Route::get('/fineconia-home', function () {
+    return view('Bienvenida'); // Aquí pones el nombre de tu vista Blade de Fineconia
+})->name('fineconia.home');
+
+// Ruta para la página de educación financiera
+Route::get('/educacion', [GuiaController::class, 'index'])->name('educacion');
+
+Route::get('/educacion-financiera-inicio', function () {
+    return view('AquiVerGuia'); // tu archivo blade
+})->name('educacion.financiera.inicio');
 
 // Registro
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -39,8 +108,8 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 // Rutas para el historial de abonos
 
-   Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
-   Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
+Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
+Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
 // Login
 Route::get('/login', function () {
     return view('LOGIN');
@@ -205,18 +274,41 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ingresos/{id}', [IngresoController::class, 'destroy'])->name('ingresos.destroy');
     Route::put('/ingresos/{id}', [IngresoController::class, 'update'])->name('ingresos.update');
 
-    
+
     // Rutas para el historial de abonos
 
-   Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
-   Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
+    Route::get('/historial/abonos', [HistorialController::class, 'obtenerHistorial'])->name('historial.abonos');
+    Route::get('/historial/objetivos', [HistorialController::class, 'listarObjetivos'])->name('historial.objetivos');
 
 
 
 
     Route::get('/transacciones', [TransaccionesController::class, 'lista'])
         ->name('transacciones.lista');
+
+
+    // Rutas para Favoritos
+    Route::post('/favorito/toggle', [FavoritoController::class, 'toggle'])->name('favorito.toggle');
+    Route::get('/favoritos', [FavoritoController::class, 'getUserFavoritos'])->name('favoritos.user');
+
+    // Ruta para cerrar sesión
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    //Para mostrar objetivos terminados
+    Route::get('/centro-objetivos', [ObjetivoAhorroController::class, 'indexCentroUsuario'])
+        ->name('centro.objetivos');
+
+    // Rutas para el perfil de usuario
+
+    Route::get('/perfil', [UserController::class, 'edit'])
+        ->name('perfil.usuario');
+
+    Route::post('/perfil/actualizar', [UserController::class, 'update'])
+        ->name('perfil.actualizar');
+    
 });
+
+Route::put('/user/actualizar-datos', [UserController::class, 'actualizarDatos']);
 
 
 Route::get('/verificacion-de-codigo', [VerificationCodeController::class, 'show'])->name('verificacion.codigo');
@@ -227,11 +319,16 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
+Route::post('/admin/usuarios', [AdminUserController::class, 'store'])
+     ->name('admin.usuarios.store');
 
 Route::get('/prueba-auth', function () {
     return Auth::check() ? 'Usuario autenticado' : 'No autenticado';
 });
+
+
+
+Route::get('/guias', [GuiaController::class, 'index1'])->name('guias.ver');
 
 
 

@@ -1,7 +1,7 @@
 body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 0; 
     background-color: #f5f5f5;
     color: #333;
   }
@@ -83,7 +83,7 @@ body {
   .welcome-section {
     padding: 30px 20px;
     background-color: white;
-    color: #333;
+    color: #333; 
     margin: 40px 20px 40px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -198,3 +198,277 @@ body {
       max-height: 300px;
     }
   }
+/* ---------- FUENTE ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+/* 🎨 VARIABLES DE CONTROL */
+:root {
+  --menu-top: 70px;        /* posición vertical del desplegable */
+  --menu-right: 20px;      /* posición horizontal del desplegable */
+  --menu-text-color: #000; /* color principal del texto */
+  --menu-bg: #fff;         /* color del fondo del menú */
+  --menu-hover: #f7f7f7;   /* color de fondo al pasar el mouse */
+  --menu-accent: #31565e;  /* color de detalles y bordes */
+}
+
+/* MENÚ DESPLEGABLE */
+.user-menu {
+  position: absolute;
+  top: var(--menu-top);
+  right: var(--menu-right);
+  display: none;
+  z-index: 9999;
+  background-color: transparent;
+}
+
+/* CAJA DEL MENÚ */
+.menu-container { 
+  background-color: var(--menu-bg);
+  width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  animation: fadeIn 0.25s ease;
+  color: var(--menu-text-color);
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* 🔹 FUENTE GLOBAL DENTRO DEL MENÚ */
+.menu-container *,
+.menu-container span,
+.menu-container a,
+.menu-container button,
+.menu-container i {
+  font-family: 'Open Sans', sans-serif !important;
+  color: var(--menu-text-color);
+}
+
+/* CABECERA DEL MENÚ */
+.menu-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu-header i {
+  font-size: 28px;
+  color: var(--menu-accent);
+  margin-right: 10px;
+}
+
+.menu-header span {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* ELEMENTOS DEL MENÚ */
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+  background-color: var(--menu-hover);
+}
+
+.menu-item:last-of-type {
+  border-bottom: none;
+}
+
+.menu-item i {
+  font-size: 18px;
+}
+
+.menu-item a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* BOTÓN DE CERRAR SESIÓN */
+.logout-btn {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 20px auto;
+  padding: 10px 0;
+  background: transparent;
+  border: 1px solid var(--menu-accent);
+  font-size: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: 'Open Sans', sans-serif !important;
+  color: var(--menu-text-color);
+}
+
+.logout-btn:hover {
+  background-color: var(--menu-accent);
+  color: #fff;
+}
+
+/* ANIMACIÓN DE APARICIÓN */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* POSICIÓN GENERAL */
+.finebot-wrapper {
+  position: fixed;
+  bottom: 50px; /* más abajo, como pediste */
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+}
+
+/* CONTENEDOR FLOTANTE REDONDO */
+.finebot-container {
+  width: 120px;
+  height: 120px;
+  background: #F9B924;
+  border-radius: 50%; /* círculo perfecto */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  border: 1px solid #F9B924;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ICONO DEL BOT */
+.finebot-icon {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.finebot-icon:hover {
+  transform: scale(1.07);
+}
+
+/* MENSAJE DEL BOT */
+.finebot-message {
+  background: #fffbe6;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #e0d28a;
+  font-size: 14px;
+  width: 210px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+}
+
+/* Mostrar mensaje */
+.finebot-message.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* PANEL COMPLETO */
+.finebot-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  height: 420px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  display: none; /* invisible hasta tocar el bot */
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 99999;
+}
+
+/* HEADER AMARILLO */
+.finebot-chat-header {
+  background: #ffcc33;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.finebot-chat-logo {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+/* CUERPO DEL CHAT */
+.finebot-chat-body {
+  padding: 15px;
+  flex: 1;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+/* BURBUJA BOT */
+.bot-bubble {
+  background: #f2f2f2;
+  padding: 12px;
+  border-radius: 15px;
+  width: 75%;
+  margin-bottom: 10px;
+}
+
+/* BURBUJA USUARIO */
+.user-bubble {
+  background: #d6eefc;
+  padding: 12px;
+  border-radius: 15px;
+  width: 60%;
+  margin-left: auto;
+  margin-bottom: 10px;
+}
+
+/* INPUT ABAJO */
+.finebot-chat-input {
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  background: #ffffff;
+}
+
+.finebot-chat-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.finebot-chat-input button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.finebot-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}

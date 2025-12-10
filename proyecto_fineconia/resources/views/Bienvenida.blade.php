@@ -1,28 +1,127 @@
-
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fineconia</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
- @vite('resources/css/Bienvenida.css')
+  @vite('resources/css/Bienvenida.css')
+
+  <!-- ÍCONOS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-<body>
+
+<body> 
   <div class="header">
     <div class="top-bar">
       <div class="logo-container">
-       <img src="img/LogoCompleto.jpg"  alt="Logo"  style="height: 100px;">
+        <img src="img/LogoCompleto.jpg" alt="Logo" style="height: 100px;">
       </div>
-      <div class="user-section">
-         @include('partials.header-user')  {{-- ← nuevo partial --}}
-      </div> 
+      <!-- BOTÓN DE USUARIO -->
+      <div class="user-section" id="btn-user">
+        @include('partials.header-user') {{-- ← partial del usuario --}}
+      </div>
+ 
+      <!-- DESPLEGABLE DEL MENÚ USUARIO -->
+      <div class="user-menu" id="userMenu">
+        <div class="menu-container">
+          <div class="menu-header">
+            <i class="bi bi-person-circle"></i>
+            <span>{{ Auth::user()->name }}</span>
+          </div>
+
+          <div class="menu-item" id="btn-datos">
+            <span>Datos Generales</span>
+            <i class="bi bi-chevron-right"></i>
+          </div>
+
+          <div class="menu-item" id="btn-objetivos">
+            <a href="{{ route('centro.objetivos') }}" style="text-decoration: none; color: inherit;">
+              <span>Mis Objetivos</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </div>
+
+           <div class="menu-item" id="btn-historial">
+    <a href="{{ route('centro.historial') }}" style="text-decoration: none; color: inherit;">
+      <span>Historial General</span>
+      <i class="bi bi-chevron-right"></i>
+    </a>
+</div>
+
+
+          <a href="{{ url('/ayuda') }}" class="menu-item" style="text-decoration: none; color: inherit;">
+  <span>Ayuda</span>
+  <i class="bi bi-chevron-right"></i>
+</a>
+
+          <form id="logoutForm" method="POST" action="{{ route('logout') }}">
+  @csrf
+  <button type="submit" class="logout-btn">Cerrar sesión</button>
+</form>
+        </div>
+      </div>
+
+      <script>
+  const logoutForm = document.getElementById('logoutForm');
+  logoutForm.addEventListener('submit', () => {
+    // Eliminar cualquier dato local almacenado
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    sessionStorage.clear();
+  });
+</script>
+
+      <script>
+        const userBtn = document.getElementById('btn-user');
+        const userMenu = document.getElementById('userMenu');
+        const btnDatos = document.getElementById('btn-datos');
+        const btnLogout = document.getElementById('btnLogout');
+
+        // Mostrar / ocultar menú al hacer clic en el botón del usuario
+        userBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isVisible = userMenu.style.display === 'block';
+          userMenu.style.display = isVisible ? 'none' : 'block';
+        });
+
+        // Redirigir al hacer clic en "Datos Generales"
+        btnDatos.addEventListener('click', () => {
+          window.location.href = "{{ route('centro.usuario') }}";
+        });
+
+        // Cerrar menú si se hace clic fuera
+        document.addEventListener('click', (e) => {
+          if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+            userMenu.style.display = 'none';
+          }
+        });
+
+        // Simulación de cierre de sesión
+        btnLogout.addEventListener('click', () => {
+          alert('Sesión cerrada');
+          userMenu.style.display = 'none';
+        });
+
+        // Redirigir al hacer clic en "Mis Objetivos"
+        const btnObjetivos = document.getElementById('btn-objetivos');
+        btnObjetivos.addEventListener('click', () => {
+          window.location.href = "{{ route('centro.objetivos') }}";
+        });
+
+        const btnHistorial = document.getElementById('btn-historial');
+btnHistorial.addEventListener('click', () => {
+  window.location.href = "{{ route('centro.historial') }}";
+});
+
+      </script>
     </div>
     <div class="logo-container" style="justify-content: center; margin-top: 10px;">
       <div class="logo">FINECONIA</div>
     </div>
     <div class="nav-buttons">
-      <button class="nav-btn">Finanzas <span>▼</span></button>
+      <button class="nav-btn">Finanzas</button>
       <button class="nav-btn">Educación Financiera</button>
       <button class="nav-btn">Economía</button>
     </div>
@@ -61,21 +160,26 @@
     </div>
 
     <div class="card">
-  <div class="card-title">Educación Financiera</div>
+      <div class="card-title">Educación Financiera</div>
+      <div class="card-text">
+        Accede a cursos, guías y simuladores para aprender sobre dinero, inversión y planificación.
+      </div>
+      <a href="{{ route('educacion') }}" style="text-decoration: none;">
+        <button class="btn">Acceder</button>
+      </a>
+    </div>
+
+
+<div class="card">
+  <div class="card-title">Economía</div>
   <div class="card-text">
-    Accede a cursos, guías y simuladores para aprender sobre dinero, inversión y planificación.
+      Mantente informado con artículos actualizados sobre finanzas y economía, filtrados por sector e interés.
   </div>
-  <a href="{{ route('educacion.financiera') }}" style="text-decoration: none;">
-    <button class="btn">Acceder</button>
+
+  <a href="{{ route('noticias.economia') }}" style="text-decoration: none;">
+      <button class="btn">Acceder</button>
   </a>
 </div>
-
-
-    <div class="card">
-      <div class="card-title">Economía</div>
-      <div class="card-text">Mantente informado con artículos actualizados sobre finanzas y economía, filtrados por sector e interés.</div>
-      <button class="btn">Acceder</button>
-    </div>
 
     <div class="card">
       <div class="card-title">Asistente Financiero con IA</div>
@@ -84,17 +188,92 @@
     </div>
   </div>
 
+<!-- FineBot flotante -->
+<div class="finebot-wrapper">
+
+  <div class="finebot-message" id="finebotMessage">
+    “¡Hola! Soy FineBot, tu asistente virtual. ¿En qué puedo ayudarte?”
+  </div>
+
+  <div class="finebot-container">
+    <img src="img/Fin_bot-removebg-preview.png" alt="FineBot" class="finebot-icon">
+  </div>
+
+</div>
+
+<div class="finebot-chat" id="finebotChat">
+    <div class="finebot-chat-header">
+        <img src="img/Fin_bot-removebg-preview.png" class="finebot-chat-logo">
+        <span>FineBot</span>
+    </div>
+
+    <div class="finebot-chat-body">
+        <div class="bot-bubble"></div>
+        <div class="user-bubble"></div>
+    </div>
+
+    <div class="finebot-chat-input">
+        <input type="text" placeholder="Escribe un mensaje...">
+        <button><i class="bi bi-send-fill"></i></button>
+    </div>
+</div>
+
+
   <div class="footer">
     Ayuda Opiniones y Sugerencias
   </div>
 
   <!-- Enlace a la vista de Finanzas Personales -->
   <script>
-       document.getElementById('btn-finanzas-personales').addEventListener('click', function() {
-       window.location.href = "{{ route('finanzas.personales') }}";
-      });
+    document.getElementById('btn-finanzas-personales').addEventListener('click', function() {
+      window.location.href = "{{ route('finanzas.personales') }}";
+    });
   </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* ---------------------------
+       1. Mostrar mensaje flotante
+       --------------------------- */
+    const message = document.getElementById("finebotMessage");
+
+    // Mostrar después de 3 segundos
+    setTimeout(() => {
+      message.classList.add("show");
+    }, 3000);
+
+    // Ocultar 5 segundos después
+    setTimeout(() => {
+      message.classList.remove("show");
+    }, 8000);
+
+
+    /* ---------------------------
+       2. Control del panel del chat
+       --------------------------- */
+    const botIcon = document.querySelector(".finebot-icon");
+    const chatPanel = document.getElementById("finebotChat");
+
+    // Abrir/cerrar al tocar el bot
+    botIcon.addEventListener("click", function(event) {
+        event.stopPropagation();
+        chatPanel.style.display = (chatPanel.style.display === "flex") ? "none" : "flex";
+    });
+
+    // Evitar que se cierre al tocar dentro
+    chatPanel.addEventListener("click", function(event) {
+        event.stopPropagation();
+    });
+
+    // Cerrar si se toca fuera
+    document.addEventListener("click", function() {
+        chatPanel.style.display = "none";
+    });
+
+});
+</script>
 
 </body>
-</html>
+
+</html> 

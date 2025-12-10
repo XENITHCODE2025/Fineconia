@@ -24,6 +24,7 @@ use App\Http\Controllers\GuiaController;
 use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\TerminosController;
 use App\Http\Controllers\PoliticaSeguridadController;
+use App\Http\Controllers\UserController;
 
 
 
@@ -296,7 +297,18 @@ Route::middleware(['auth'])->group(function () {
     //Para mostrar objetivos terminados
     Route::get('/centro-objetivos', [ObjetivoAhorroController::class, 'indexCentroUsuario'])
         ->name('centro.objetivos');
+
+    // Rutas para el perfil de usuario
+
+    Route::get('/perfil', [UserController::class, 'edit'])
+        ->name('perfil.usuario');
+
+    Route::post('/perfil/actualizar', [UserController::class, 'update'])
+        ->name('perfil.actualizar');
+    
 });
+
+Route::put('/user/actualizar-datos', [UserController::class, 'actualizarDatos']);
 
 
 Route::get('/verificacion-de-codigo', [VerificationCodeController::class, 'show'])->name('verificacion.codigo');

@@ -341,12 +341,12 @@ body {
 
 /* CONTENEDOR FLOTANTE REDONDO */
 .finebot-container {
-  width: 110px;
-  height: 110px;
-  background: #ffffff;
+  width: 120px;
+  height: 120px;
+  background: #F9B924;
   border-radius: 50%; /* círculo perfecto */
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  border: 1px solid #e6e6e6;
+  border: 1px solid #F9B924;
 
   display: flex;
   justify-content: center;
@@ -355,8 +355,8 @@ body {
 
 /* ICONO DEL BOT */
 .finebot-icon {
-  width: 85px;
-  height: 85px;
+  width: 80px;
+  height: 80px;
   cursor: pointer;
   transition: transform 0.2s;
 }

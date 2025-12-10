@@ -18,11 +18,14 @@ use App\Http\Controllers\ConsejosController;
 use App\Models\ObjetivoAhorro;
 use App\Http\Controllers\ObjetivoController;
 use App\Http\Controllers\AhorroController;
+use App\Http\Controllers\AdminUserController;
 
 use App\Http\Controllers\GuiaController;
 use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\TerminosController;
 use App\Http\Controllers\PoliticaSeguridadController;
+use App\Http\Controllers\UserController;
+
 
 
 use App\Models\Gasto;
@@ -31,19 +34,38 @@ use App\Models\Ingreso;
 
 // Página principal
 Route::get('/', function () {
-    return view('CrearUnDios');
+    return view('Home'); // Cambia 'welcome' por el nombre real de tu vista
 });
 
+Route::get('/usuario/editar', function () {
+    return view('ActualizarDatosUsuario');
+})->name('usuario.editar');
 
-// Ruta para leer los terminos y condiciones
-Route::get('/terminos-condiciones', [TerminosController::class, 'index'])
-    ->name('terminos');
+Route::get('/noticias/economia', function () {
+    return view('Noticias');
+})->name('noticias.economia');
 
-//Ruta para leer las politicas de seguridad
-Route::get('/politica-privacidad', [PoliticaSeguridadController::class, 'index'])
-    ->name('politica.seguridad');
+Route::get('/historial-general', function () {
+    return view('HistorialGeneral');
+})->name('centro.historial');
 
+// ========== NOTICIAS ==========
+Route::get('/NoticiasNuevas', function () {
+    return view('NoticiasNuevas');
+})->name('noticias.nueva');
 
+Route::get('/NoticiasActualizar', function () {
+    return view('NoticiasActualizar');
+})->name('noticias.actualizar');
+
+Route::get('/NoticiasEliminar', function () {
+    return view('NoticiasEliminar');
+})->name('noticias.eliminar');
+
+// Página de Términos y Condiciones
+Route::get('/terminos-condiciones', function () {
+    return view('TerminosCondiciones'); // Cambia 'terminos' por el nombre real de tu vista
+})->name('politica.privacidad');
 
 Route::get('/centro-objetivos', function () {
     return view('CentroDeObjetivo'); // nombre del archivo Blade
@@ -53,6 +75,13 @@ Route::get('/ayuda', function () {
     return view('AyudaMeEstanMatandoo');
 });
 
+// Ruta para leer los terminos y condiciones
+Route::get('/terminos-condiciones', [TerminosController::class, 'index'])
+    ->name('terminos');
+
+//Ruta para leer las politicas de seguridad
+Route::get('/politica-privacidad', [PoliticaSeguridadController::class, 'index'])
+    ->name('politica.seguridad');
 // Vista para leer una guía específica
 Route::get('/guia', [GuiaController::class, 'index1'])->name('ruta.guia');
 
@@ -268,7 +297,18 @@ Route::middleware(['auth'])->group(function () {
     //Para mostrar objetivos terminados
     Route::get('/centro-objetivos', [ObjetivoAhorroController::class, 'indexCentroUsuario'])
         ->name('centro.objetivos');
+
+    // Rutas para el perfil de usuario
+
+    Route::get('/perfil', [UserController::class, 'edit'])
+        ->name('perfil.usuario');
+
+    Route::post('/perfil/actualizar', [UserController::class, 'update'])
+        ->name('perfil.actualizar');
+    
 });
+
+Route::put('/user/actualizar-datos', [UserController::class, 'actualizarDatos']);
 
 
 Route::get('/verificacion-de-codigo', [VerificationCodeController::class, 'show'])->name('verificacion.codigo');
@@ -279,7 +319,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
+Route::post('/admin/usuarios', [AdminUserController::class, 'store'])
+     ->name('admin.usuarios.store');
 
 Route::get('/prueba-auth', function () {
     return Auth::check() ? 'Usuario autenticado' : 'No autenticado';

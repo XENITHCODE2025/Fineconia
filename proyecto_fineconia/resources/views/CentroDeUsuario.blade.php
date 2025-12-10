@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   @vite('resources/css/CentroDeUsuario.css')
 </head>
-<body>
+<body> 
 
 <nav class="navbar">
   <div class="logo-container" style="max-width: 200px; width: 100%;">
@@ -27,6 +27,10 @@
     </div>
   </div>
 
+  <!-- BOTÓN EDITAR DATOS -->
+  <div class="edit-btn-container">
+    <a href="{{ route('usuario.editar') }}" class="edit-btn">Editar Datos</a>
+  </div>
   <div class="info-card">
     <h3>Información Básica</h3>
 
@@ -42,22 +46,12 @@
       </div>
 
       <div class="form-group">
-        <label>Edad</label>
-        <input type="text" value="{{ Auth::user()->edad ?? 'No registrada' }}" disabled>
-      </div>
-
-      <div class="form-group">
         <label>Miembro familiar</label>
         <input type="text" value="{{ Auth::user()->miembro ?? 'No asignado' }}" disabled>
       </div>
-
-      <div class="form-group">
-        <label>Fecha de registro</label>
-        <input type="text" value="{{ Auth::user()->created_at->format('d/m/Y') }}" disabled>
       </div>
     </div>
   </div>
 </div>
-
 </body>
 </html>

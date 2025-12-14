@@ -13,6 +13,12 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'deepseek' => [
+    'key' => env('DEEPSEEK_API_KEY'),
+    'url' => env('DEEPSEEK_API_URL'),
+    
+    ],
+
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

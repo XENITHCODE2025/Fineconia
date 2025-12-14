@@ -19,7 +19,7 @@ use App\Models\ObjetivoAhorro;
 use App\Http\Controllers\ObjetivoController;
 use App\Http\Controllers\AhorroController;
 use App\Http\Controllers\AdminUserController;
-
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\GuiaController;
 use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\TerminosController;
@@ -305,6 +305,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/perfil/actualizar', [UserController::class, 'update'])
         ->name('perfil.actualizar');
+
+        
+
+    Route::post('/chatbot', [ChatbotController::class, 'chat']);
+
     
 });
 

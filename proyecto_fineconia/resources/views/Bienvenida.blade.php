@@ -272,6 +272,50 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+
+const input = document.querySelector('.finebot-chat-input input');
+const sendBtn = document.querySelector('.finebot-chat-input button');
+const chatBody = document.querySelector('.finebot-chat-body');
+
+function addMessage(text, type) {
+    const div = document.createElement('div');
+    div.className = type === 'user' ? 'user-bubble' : 'bot-bubble';
+    div.innerText = text;
+    chatBody.appendChild(div);
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+sendBtn.addEventListener('click', sendMessage);
+input.addEventListener('keypress', e => {
+    if (e.key === 'Enter') sendMessage();
+});
+
+function sendMessage() {
+    const message = input.value.trim();
+    if (!message) return;
+
+    addMessage(message, 'user');
+    input.value = '';
+
+    fetch('/chatbot', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ message })
+    })
+    .then(res => res.json())
+    .then(data => {
+        addMessage(data.reply, 'bot');
+    })
+    .catch(() => {
+        addMessage('Ocurrió un error. Intenta nuevamente.', 'bot');
+    });
+}
+
+
 </script>
 
 </body>
